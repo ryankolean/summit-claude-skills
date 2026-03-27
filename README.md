@@ -641,6 +641,43 @@ See [.github/workflows/repo-health-check.yml](.github/workflows/repo-health-chec
 
 ---
 
+## Summit Custom Skills
+
+Original skills built and maintained by Summit Software Solutions. These live in the `skills/` directory of this repository.
+
+| Skill | What It Does | Install Prompt |
+|---|---|---|
+| **[interrogate](skills/interrogate/SKILL.md)** | Discovery and scoping skill. Asks one question at a time — like a senior consultant — until Claude fully understands your goal, constraints, audience, and hidden assumptions. Auto-activates on ambiguous requests or trigger manually with "interrogate me". | `cp -r skills/interrogate ~/.claude/skills/` |
+
+<details>
+<summary><strong>Install Prompt — Interrogate Me (paste into Claude.ai)</strong></summary>
+
+```
+Before doing anything with my request, I want you to interview me first. Ask me one question at a time — like a senior consultant scoping a project — until you are confident you fully understand:
+
+1. What my actual goal is (not just what I asked for)
+2. The constraints and dealbreakers
+3. Who the audience is and how they'll use the output
+4. Any assumptions I haven't stated
+
+Rules:
+- One question per turn. Never stack multiple questions.
+- Briefly explain WHY you're asking each question.
+- Build each question on my previous answers.
+- Stop when you can confidently answer: what the output is, who it's for, what constraints apply, and what I haven't said.
+- For complex tasks, present a structured summary brief and wait for my confirmation before executing.
+- For simple tasks, restate the goal in one sentence as you begin.
+
+Tone: Friendly but direct. You're a consultant, not a waiter. Never apologize for asking.
+
+Start now with my request: [PASTE YOUR REQUEST HERE]
+```
+</details>
+
+*More custom skills coming soon. Suggest ideas via GitHub issues.*
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Minimum bar: 100+ stars, active (60 days), clear docs, open-source license.
