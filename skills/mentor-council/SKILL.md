@@ -53,6 +53,16 @@ entirely — even if that means only 2 mentors respond.
 | **Dr. Julie Smith** | emotional-regulation, anxiety, motivation, self-worth | stress, grief, confidence, sleep, emotional-health, mental-health |
 | **Nedra Tawwab** | boundaries, relationships, self-care, people-pleasing | communication, burnout, family-dynamics, workplace-dynamics, emotional-health |
 | **Mark Manson** | values, emotional-accountability, life-philosophy, self-improvement | relationships, decision-making, motivation, meaning, happiness |
+| **Mel Robbins** | motivation, activation, self-doubt, procrastination | confidence, habits, anxiety, self-improvement, decision-making |
+| **Jocko Willink** | ownership, discipline, leadership, accountability | team-building, decision-making, execution, resilience, conflict-resolution |
+| **Daniel Kahneman** | cognitive-biases, decision-making, risk-assessment, judgment | behavioral-economics, critical-thinking, prediction, problem-solving |
+| **Marcus Aurelius** | stoicism, self-mastery, adversity, perspective | leadership, emotional-regulation, decision-making, resilience, philosophy |
+| **Sun Tzu** | competitive-strategy, positioning, conflict, resource-allocation | negotiation, leadership, risk-management, market-entry, planning |
+| **Dale Carnegie** | influence, communication, relationships, rapport | leadership, sales, networking, conflict-resolution, persuasion |
+| **Seneca** | time-management, adversity-preparation, philosophy, tranquility | stoicism, resilience, wealth, simplicity, emotional-regulation |
+| **Miyamoto Musashi** | strategy, mastery, adaptability, discipline | competitive-strategy, focus, practice, decision-making, simplicity |
+| **Leonardo da Vinci** | creativity, innovation, observation, first-principles | design, problem-solving, curiosity, polymathy, prototyping, learning |
+| **W. Edwards Deming** | systems-thinking, continuous-improvement, quality, process-design | organizational-design, leadership, operations, metrics |
 
 **New mentors** created via the mentor-builder skill must include domain tags
 to be registered here.

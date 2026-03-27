@@ -679,6 +679,16 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-smith](skills/mentor-smith/SKILL.md)** | Practical CBT/DBT — Mood-Behavior Cycle, Confidence Equation, Stress Bucket, Anxiety Toolkit | "ask Dr. Smith", "Smith mode" |
 | **[mentor-tawwab](skills/mentor-tawwab/SKILL.md)** | Six Types of Boundaries, Boundary Statement Formula, Drama-Free, burnout as boundary problem | "ask Tawwab", "Tawwab mode" |
 | **[mentor-manson](skills/mentor-manson/SKILL.md)** | Values-based living, Backwards Law, Responsibility/Fault, Choose Your Struggle, Do Something Principle | "ask Manson", "Manson mode" |
+| **[mentor-robbins](skills/mentor-robbins/SKILL.md)** | 5 Second Rule, High Five Habit, Let Them Theory, activation energy | "ask Mel", "Robbins mode" |
+| **[mentor-jocko](skills/mentor-jocko/SKILL.md)** | Extreme Ownership, Discipline Equals Freedom, Dichotomy of Leadership, Prioritize and Execute | "ask Jocko", "Jocko mode" |
+| **[mentor-kahneman](skills/mentor-kahneman/SKILL.md)** | System 1/2, cognitive biases, loss aversion, planning fallacy, pre-mortem, WYSIATI | "ask Kahneman", "bias check" |
+| **[mentor-aurelius](skills/mentor-aurelius/SKILL.md)** | Stoic Meditations — dichotomy of control, memento mori, amor fati, the inner citadel | "ask Marcus", "Stoic mode" |
+| **[mentor-suntzu](skills/mentor-suntzu/SKILL.md)** | The Art of War — winning without fighting, terrain analysis, concentration of force, adaptability | "ask Sun Tzu", "Art of War mode" |
+| **[mentor-carnegie](skills/mentor-carnegie/SKILL.md)** | How to Win Friends — genuine interest, making others feel important, influence without argument | "ask Carnegie", "Carnegie mode" |
+| **[mentor-seneca](skills/mentor-seneca/SKILL.md)** | On the Shortness of Life, premeditatio malorum, voluntary discomfort, time as true wealth | "ask Seneca", "Seneca mode" |
+| **[mentor-musashi](skills/mentor-musashi/SKILL.md)** | Book of Five Rings — Five Elements, mastery through practice, do nothing useless, rhythm | "ask Musashi", "Musashi mode" |
+| **[mentor-davinci](skills/mentor-davinci/SKILL.md)** | Curiosity, polymathy, observation, first-principles invention, prototyping, cross-disciplinary thinking | "ask Leonardo", "Da Vinci mode" |
+| **[mentor-deming](skills/mentor-deming/SKILL.md)** | 94/6 rule (blame the system), PDSA cycle, common vs special cause variation, drive out fear | "ask Deming", "Deming mode" |
 | **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
 | **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
 
@@ -749,7 +759,7 @@ Each mentor skill encodes the **published decision-making frameworks** of a reco
 
 This is not "act as" roleplaying. Every framework is traceable to a specific book, podcast, or essay. No fictional quotes are ever generated.
 
-### The 17 Available Mentors
+### The 27 Available Mentors
 
 **Business & Strategy**
 
@@ -765,6 +775,15 @@ This is not "act as" roleplaying. Every framework is traceable to a specific boo
 | Chris Voss | Negotiation, conflict | Tactical Empathy, Mirroring, Labeling, Calibrated Questions | Never Split the Difference |
 | Patrick Lencioni | Teams, org health | Five Dysfunctions, Ideal Team Player, Death by Meeting | The Five Dysfunctions of a Team, The Advantage |
 | Sahil Bloom | Mental models, life design | 5 Types of Wealth, Razors, Luck Surface Area | The 5 Types of Wealth, Curiosity Chronicle |
+
+**Mindset & Performance**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Mel Robbins | Activation, self-doubt | 5 Second Rule, High Five Habit, Let Them Theory | The 5 Second Rule, The High 5 Habit, The Let Them Theory |
+| Jocko Willink | Ownership, discipline | Extreme Ownership, Discipline Equals Freedom, Dichotomy of Leadership | Extreme Ownership, Discipline Equals Freedom |
+| Daniel Kahneman | Cognitive biases, judgment | System 1/2, Loss Aversion, Planning Fallacy, WYSIATI, Pre-Mortem | Thinking, Fast and Slow; Noise |
+| Dale Carnegie | Influence, relationships | Genuine Interest, Feel Important, Can't Win an Argument | How to Win Friends and Influence People |
 
 **Emotional & Therapeutic**
 
@@ -782,6 +801,17 @@ This is not "act as" roleplaying. Every framework is traceable to a specific boo
 |---|---|---|---|
 | Peter Attia | Longevity, healthspan | Medicine 3.0, Four Horsemen, Centenarian Decathlon, Zone 2 | Outlive |
 | James Clear | Habits, systems | Four Laws, Two-Minute Rule, Habit Stacking, Identity-Based Change | Atomic Habits |
+
+**Historical**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Marcus Aurelius | Stoic self-mastery | Dichotomy of Control, Memento Mori, Amor Fati, Inner Citadel | Meditations |
+| Seneca | Time, adversity, tranquility | On the Shortness of Life, Premeditatio Malorum, Voluntary Discomfort | Letters to Lucilius, On the Shortness of Life |
+| Sun Tzu | Competitive strategy | Win Without Fighting, Terrain Analysis, Concentration of Force | The Art of War |
+| Miyamoto Musashi | Mastery, adaptability | Five Rings/Elements, Do Nothing Useless, Rhythm | The Book of Five Rings, Dokkodo |
+| Leonardo da Vinci | Creativity, first principles | Relentless Curiosity, Observation, Cross-Disciplinary Thinking | Notebooks; Isaacson's Leonardo da Vinci |
+| W. Edwards Deming | Systems, continuous improvement | 94/6 Rule, PDSA Cycle, Common vs Special Cause, Drive Out Fear | Out of the Crisis, The New Economics |
 
 ### How to Use Them
 
