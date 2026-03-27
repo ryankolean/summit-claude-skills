@@ -654,6 +654,7 @@ Original skills built and maintained by Summit Software Solutions. These live in
 | **[workflow-lock](skills/workflow-lock/SKILL.md)** | Captures a successful one-off interaction and converts it into a repeatable template with variables, trigger conditions, and quality checks. | "lock this workflow", "save this as a template" |
 | **[delegate](skills/delegate/SKILL.md)** | Decision framework scoring any task on 5 dimensions (repetitiveness, judgment, error tolerance, data sensitivity, time cost) to recommend: automate, AI-assist, or keep human. | "should I automate this?", "AI or human?" |
 | **[scribe-to-spec](skills/scribe-to-spec/SKILL.md)** | Transforms Scribe AI process documentation (step-by-step guides with screenshots) into a complete software solution design document with requirements, data model, integrations, and implementation roadmap. | "scribe to spec", or paste/upload Scribe output |
+| **[prompt-to-skill](skills/prompt-to-skill/SKILL.md)** | Converts a working Claude prompt into a permanent, installable SKILL.md with frontmatter, triggers, rules, and examples. Automatically adds it to this repo's README and pushes to GitHub. | "make this a skill", "prompt to skill", "install this permanently" |
 
 ### How They Chain Together
 
@@ -667,6 +668,8 @@ automate-audit → Find what to automate
    decompose → Break complex processes into steps
        ↓
 prompt-architect → Build the Claude prompt for each automatable step
+       ↓
+prompt-to-skill → Package the working prompt as a permanent installed skill
        ↓
  workflow-lock → Lock the working result into a reusable template
 ```
@@ -697,6 +700,8 @@ I want you to operate using Summit Software Solutions' custom skill set. Apply t
 6. DELEGATE: When I say "should I automate this?" or "AI or human?", score the task on 5 dimensions (repetitiveness, judgment, error tolerance, data sensitivity, time cost) and recommend: automate fully, AI-assist, or keep human.
 
 7. SCRIBE-TO-SPEC: When I paste Scribe AI output or say "scribe to spec", transform the process documentation into a complete software solution design document with requirements, data model, integrations, screens, and implementation roadmap.
+
+8. PROMPT-TO-SKILL: When I say "make this a skill" or "prompt to skill" after a working prompt, package it into a proper SKILL.md with frontmatter, triggers, rules, and examples. Then add it to the Summit Custom Skills table in the repo README and push to GitHub automatically. Always show me the SKILL.md for approval before deploying.
 
 For all skills: one question at a time, friendly but direct tone, and always produce actionable output.
 ```
