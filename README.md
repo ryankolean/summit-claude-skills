@@ -671,6 +671,14 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-bloom](skills/mentor-bloom/SKILL.md)** | 5 Types of Wealth, mental model razors, curiosity-driven growth, luck surface area | "ask Sahil", "Bloom mode" |
 | **[mentor-dalio](skills/mentor-dalio/SKILL.md)** | Principles-based decisions, radical transparency, 5-Step Process, believability-weighting | "ask Dalio", "Dalio mode" |
 | **[mentor-brown](skills/mentor-brown/SKILL.md)** | Vulnerability, courage, BRAVING trust inventory, Rising Strong, daring leadership | "ask Brené", "Brown mode" |
+| **[mentor-sinek](skills/mentor-sinek/SKILL.md)** | Start With Why, Golden Circle, Infinite Game, Just Cause, Circle of Safety | "ask Sinek", "Sinek mode" |
+| **[mentor-voss](skills/mentor-voss/SKILL.md)** | FBI negotiation — Tactical Empathy, Mirroring, Labeling, Calibrated Questions, Accusation Audit | "ask Voss", "Voss mode" |
+| **[mentor-lencioni](skills/mentor-lencioni/SKILL.md)** | Five Dysfunctions of a Team, Ideal Team Player, Death by Meeting, organizational health | "ask Lencioni", "Lencioni mode" |
+| **[mentor-cunningham](skills/mentor-cunningham/SKILL.md)** | Thinking Time, Dumb Tax, quality of questions, constraint-finding — the anti-hustle voice | "ask Cunningham", "Cunningham mode" |
+| **[mentor-perel](skills/mentor-perel/SKILL.md)** | Security vs adventure, relational systems, workplace dynamics, ambiguity tolerance | "ask Perel", "Perel mode" |
+| **[mentor-smith](skills/mentor-smith/SKILL.md)** | Practical CBT/DBT — Mood-Behavior Cycle, Confidence Equation, Stress Bucket, Anxiety Toolkit | "ask Dr. Smith", "Smith mode" |
+| **[mentor-tawwab](skills/mentor-tawwab/SKILL.md)** | Six Types of Boundaries, Boundary Statement Formula, Drama-Free, burnout as boundary problem | "ask Tawwab", "Tawwab mode" |
+| **[mentor-manson](skills/mentor-manson/SKILL.md)** | Values-based living, Backwards Law, Responsibility/Fault, Choose Your Struggle, Do Something Principle | "ask Manson", "Manson mode" |
 | **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
 | **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
 
@@ -730,6 +738,78 @@ For all skills: one question at a time, friendly but direct tone, and always pro
 </details>
 
 *More custom skills coming soon. Suggest ideas via [GitHub issues](https://github.com/ryankolean/summit-claude-skills/issues).*
+
+---
+
+## About the Mentor Skills
+
+### What These Are
+
+Each mentor skill encodes the **published decision-making frameworks** of a recognized thought leader. When you say "ask Hormozi" about your pricing, Claude doesn't impersonate Alex Hormozi — it applies the Value Equation, Grand Slam Offer framework, and CLOSER methodology from his books to your specific situation, names the framework it's using, and pushes you toward a concrete action.
+
+This is not "act as" roleplaying. Every framework is traceable to a specific book, podcast, or essay. No fictional quotes are ever generated.
+
+### The 17 Available Mentors
+
+**Business & Strategy**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Gary Vaynerchuk | Execution, attention, branding | Day Trading Attention, Jab Jab Right Hook, Document Don't Create | Crush It!, Jab Jab Jab Right Hook, Day Trading Attention, Twelve and a Half |
+| Tim Ferriss | Optimization, lifestyle design | 80/20, Fear-Setting, DiSSS, Minimum Effective Dose | The 4-Hour Workweek, The 4-Hour Body, Tools of Titans |
+| Alex Hormozi | Pricing, offers, scaling | Value Equation, Grand Slam Offer, CLOSER, Volume Negates Luck | $100M Offers, $100M Leads |
+| Naval Ravikant | Leverage, wealth creation | Specific Knowledge, Leverage, Productize Yourself | The Almanack of Naval Ravikant |
+| Ray Dalio | Principles, systems thinking | Pain+Reflection=Progress, 5-Step Process, Believability-Weighting | Principles: Life and Work |
+| Keith Cunningham | Critical thinking, risk | Thinking Time, Dumb Tax, Quality of Questions | The Road Less Stupid |
+| Simon Sinek | Purpose, leadership | Golden Circle, Infinite Game, Just Cause, Circle of Safety | Start with Why, The Infinite Game, Leaders Eat Last |
+| Chris Voss | Negotiation, conflict | Tactical Empathy, Mirroring, Labeling, Calibrated Questions | Never Split the Difference |
+| Patrick Lencioni | Teams, org health | Five Dysfunctions, Ideal Team Player, Death by Meeting | The Five Dysfunctions of a Team, The Advantage |
+| Sahil Bloom | Mental models, life design | 5 Types of Wealth, Razors, Luck Surface Area | The 5 Types of Wealth, Curiosity Chronicle |
+
+**Emotional & Therapeutic**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Brené Brown | Vulnerability, courage, trust | BRAVING, Rising Strong, Rumble, Clear Is Kind | Daring Greatly, Dare to Lead, Atlas of the Heart |
+| Esther Perel | Relationships, dynamics | Security vs Adventure, Three Sentences, Relational Systems | Mating in Captivity, How's Work? |
+| Dr. Julie Smith | CBT/DBT practical tools | Mood-Behavior Cycle, Confidence Equation, Stress Bucket | Why Has Nobody Told Me This Before? |
+| Nedra Tawwab | Boundaries, self-care | Six Types of Boundaries, Boundary Statement Formula | Set Boundaries Find Peace, Drama Free |
+| Mark Manson | Values, accountability | Backwards Law, Choose Your Struggle, Do Something Principle | The Subtle Art of Not Giving a F*ck |
+
+**Health & Habits**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Peter Attia | Longevity, healthspan | Medicine 3.0, Four Horsemen, Centenarian Decathlon, Zone 2 | Outlive |
+| James Clear | Habits, systems | Four Laws, Two-Minute Rule, Habit Stacking, Identity-Based Change | Atomic Habits |
+
+### How to Use Them
+
+**Individual mentor:**
+```
+Ask Hormozi — should I raise my consulting rate from $150/hr to $300/hr?
+```
+
+**Mentor council (domain-matched):**
+```
+Convene the council — I'm considering leaving my W-2 to run my side business full-time.
+```
+The council automatically selects only the mentors with domain-relevant frameworks. For this question, it might bring in Naval (leverage, wealth creation), Ferriss (lifestyle design, fear-setting), Cunningham (risk management, thinking time), and Manson (choose your struggle) — while excluding Attia, Smith, and Tawwab who have no domain-specific frameworks for career transitions.
+
+**Build your own:**
+```
+Build a mentor — I want to add Cal Newport as a mentor skill.
+```
+The mentor-builder skill walks you through extracting frameworks, defining domains, and producing a SKILL.md. Contributions welcome via PR.
+
+### Design Principles
+
+1. **Frameworks, not impersonation.** Claude applies methodology, not personality.
+2. **Domain-gated council.** Only mentors with relevant expertise respond. No filler.
+3. **Source-traceable.** Every framework names the book, podcast, or essay it comes from.
+4. **No fictional quotes.** Claude never puts words in a real person's mouth.
+5. **Action-oriented.** Every mentor response ends with a specific next step or question.
+6. **Community-extensible.** Anyone can build and contribute new mentors via the mentor-builder skill.
 
 ---
 

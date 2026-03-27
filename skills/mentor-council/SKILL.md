@@ -45,6 +45,14 @@ entirely — even if that means only 2 mentors respond.
 | **Sahil Bloom** | mental-models, decision-making, life-design, curiosity | personal-growth, time-management, wealth, career-strategy |
 | **Ray Dalio** | principles, organizational-design, systems-thinking, transparency | investing, leadership, macro-economics, risk-management |
 | **Brené Brown** | vulnerability, courage, leadership, trust | relationships, emotional-resilience, shame, communication, difficult-conversations |
+| **Simon Sinek** | leadership, purpose, trust, organizational-culture | entrepreneurship, team-building, motivation, communication |
+| **Chris Voss** | negotiation, conflict-resolution, sales, communication | pricing, deals, difficult-conversations, persuasion, leadership |
+| **Patrick Lencioni** | team-building, organizational-health, leadership, trust | meetings, conflict-resolution, accountability, hiring, culture |
+| **Keith Cunningham** | business-strategy, critical-thinking, risk-management, decision-making | financial-decisions, entrepreneurship, leadership, problem-solving |
+| **Esther Perel** | relationships, workplace-dynamics, communication, desire | leadership, trust, difficult-conversations, identity, creativity |
+| **Dr. Julie Smith** | emotional-regulation, anxiety, motivation, self-worth | stress, grief, confidence, sleep, emotional-health, mental-health |
+| **Nedra Tawwab** | boundaries, relationships, self-care, people-pleasing | communication, burnout, family-dynamics, workplace-dynamics, emotional-health |
+| **Mark Manson** | values, emotional-accountability, life-philosophy, self-improvement | relationships, decision-making, motivation, meaning, happiness |
 
 **New mentors** created via the mentor-builder skill must include domain tags
 to be registered here.
