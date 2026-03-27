@@ -2,4 +2,3 @@
 node_modules/
 *.log
 .env
-HEALTH-REPORT.md

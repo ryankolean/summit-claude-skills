@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * Repo Health Check Script
- * Fetches GitHub stars and last commit dates for all tracked repositories.
- * Outputs a report and updates README badge counts.
+ * Summit Claude Skills — Repo Health Check
  *
- * Usage: GITHUB_TOKEN=ghp_xxx node scripts/health-check.js
+ * 1. Fetches current GitHub stars and last commit dates for all tracked repos
+ * 2. Generates HEALTH-REPORT.md with status indicators
+ * 3. Updates the "Last updated" date in README.md
+ *
+ * Runs weekly via GitHub Actions. Can also run manually:
+ *   GITHUB_TOKEN=ghp_xxx node scripts/health-check.js
  */
 
 const fs = require('fs');
@@ -17,7 +20,6 @@ const REPOS = [
   'obra/superpowers-lab',
   'alirezarezvani/claude-skills',
   'davila7/claude-code-templates',
-  'trailofbits/publications',  // Trail of Bits parent
   'zebbern/claude-code-guide',
   'BehiSecc/awesome-claude-skills',
   'ChrisWiles/claude-code-showcase',
@@ -25,10 +27,8 @@ const REPOS = [
   'hashicorp/agent-skills',
   'diet103/claude-code-infrastructure-showcase',
   'modelcontextprotocol/servers',
-  'microsoft/playwright-mcp',
   'mendableai/firecrawl',
   'wondelai/skills',
-  'clawfu/mcp-skills',
   'ReScienceLab/opc-skills',
   'glebis/claude-skills',
   'x1xhlol/system-prompts-and-models-of-ai-tools',
@@ -48,32 +48,21 @@ const REPOS = [
 
 const INACTIVE_THRESHOLD_DAYS = 60;
 
-async function fetchRepoData(owner, repo) {
+async function fetchRepo(owner, repo) {
   const token = process.env.GITHUB_TOKEN;
   const headers = {
     'Accept': 'application/vnd.github.v3+json',
     'User-Agent': 'summit-claude-skills-health-check',
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
   try {
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
-    if (!response.ok) {
-      console.error(`  [ERROR] ${owner}/${repo}: ${response.status} ${response.statusText}`);
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+    if (!res.ok) {
+      console.error(`  [ERROR] ${owner}/${repo}: ${res.status}`);
       return null;
     }
-    const data = await response.json();
-    return {
-      full_name: data.full_name,
-      stars: data.stargazers_count,
-      forks: data.forks_count,
-      open_issues: data.open_issues_count,
-      pushed_at: data.pushed_at,
-      archived: data.archived,
-      description: data.description,
-    };
+    return await res.json();
   } catch (err) {
     console.error(`  [ERROR] ${owner}/${repo}: ${err.message}`);
     return null;
@@ -81,78 +70,116 @@ async function fetchRepoData(owner, repo) {
 }
 
 function daysSince(dateStr) {
-  const then = new Date(dateStr);
-  const now = new Date();
-  return Math.floor((now - then) / (1000 * 60 * 60 * 24));
+  return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+}
+
+function formatStars(n) {
+  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k` : String(n);
+}
+
+function todayFormatted() {
+  const d = new Date();
+  const months = ['January','February','March','April','May','June',
+    'July','August','September','October','November','December'];
+  return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
 }
 
 async function main() {
-  console.log('=== Summit Claude Skills — Repo Health Check ===\n');
+  const rootDir = path.join(__dirname, '..');
+  const readmePath = path.join(rootDir, 'README.md');
+  const reportPath = path.join(rootDir, 'HEALTH-REPORT.md');
+
+  console.log('=== Summit Claude Skills — Repo Health Check ===');
   console.log(`Date: ${new Date().toISOString().split('T')[0]}`);
-  console.log(`Checking ${REPOS.length} repositories...\n`);
+  console.log(`Repos: ${REPOS.length}\n`);
 
   const results = [];
   const warnings = [];
 
   for (const fullName of REPOS) {
     const [owner, repo] = fullName.split('/');
-    process.stdout.write(`  Checking ${fullName}...`);
-    const data = await fetchRepoData(owner, repo);
+    process.stdout.write(`  ${fullName} ... `);
 
+    const data = await fetchRepo(owner, repo);
     if (!data) {
-      warnings.push(`${fullName}: FAILED TO FETCH — may be deleted or private`);
-      console.log(' FAILED');
+      warnings.push(`${fullName}: FETCH FAILED — may be deleted or private`);
+      console.log('FAILED');
       continue;
     }
 
-    const inactive = daysSince(data.pushed_at);
-    const status = data.archived ? 'ARCHIVED' : inactive > INACTIVE_THRESHOLD_DAYS ? 'INACTIVE' : 'ACTIVE';
+    const days = daysSince(data.pushed_at);
+    const status = data.archived ? 'ARCHIVED'
+      : days > INACTIVE_THRESHOLD_DAYS ? 'INACTIVE' : 'ACTIVE';
 
-    if (data.archived) {
-      warnings.push(`${fullName}: ARCHIVED`);
-    } else if (inactive > INACTIVE_THRESHOLD_DAYS) {
-      warnings.push(`${fullName}: No commits in ${inactive} days`);
-    }
+    if (data.archived) warnings.push(`${fullName}: ARCHIVED`);
+    else if (days > INACTIVE_THRESHOLD_DAYS) warnings.push(`${fullName}: Inactive ${days}d`);
 
-    results.push({ ...data, inactive_days: inactive, status });
-    console.log(` ${data.stars} stars, ${status} (${inactive}d ago)`);
+    results.push({
+      full_name: fullName,
+      stars: data.stargazers_count,
+      forks: data.forks_count,
+      issues: data.open_issues_count,
+      pushed_at: data.pushed_at,
+      archived: data.archived,
+      days_since_push: days,
+      status,
+    });
 
-    // Rate limit: 1 req/sec for unauthenticated, faster with token
-    await new Promise(r => setTimeout(r, process.env.GITHUB_TOKEN ? 100 : 1100));
+    console.log(`${formatStars(data.stargazers_count)} stars | ${status} (${days}d)`);
+    await new Promise(r => setTimeout(r, process.env.GITHUB_TOKEN ? 150 : 1200));
   }
 
-  // Generate report
-  const reportPath = path.join(__dirname, '..', 'HEALTH-REPORT.md');
+  // ---- Write HEALTH-REPORT.md ----
+  const active = results.filter(r => r.status === 'ACTIVE').length;
+  const inactive = results.filter(r => r.status === 'INACTIVE').length;
+  const archived = results.filter(r => r.status === 'ARCHIVED').length;
+  const totalStars = results.reduce((s, r) => s + r.stars, 0);
+
   let report = `# Repo Health Report\n\n`;
-  report += `**Generated:** ${new Date().toISOString().split('T')[0]}\n`;
-  report += `**Repos Checked:** ${results.length}/${REPOS.length}\n\n`;
+  report += `**Generated:** ${todayFormatted()}  \n`;
+  report += `**Repos checked:** ${results.length}/${REPOS.length}  \n`;
+  report += `**Total stars:** ${totalStars.toLocaleString()}  \n`;
+  report += `**Active:** ${active} | **Inactive (60d+):** ${inactive} | **Archived:** ${archived}\n\n`;
 
   if (warnings.length > 0) {
     report += `## Warnings\n\n`;
-    for (const w of warnings) {
-      report += `- ${w}\n`;
-    }
+    warnings.forEach(w => report += `- ${w}\n`);
     report += '\n';
   }
 
   report += `## All Repos\n\n`;
   report += `| Repository | Stars | Forks | Last Push | Status |\n`;
-  report += `|---|---|---|---|---|\n`;
-  for (const r of results.sort((a, b) => b.stars - a.stars)) {
-    report += `| [${r.full_name}](https://github.com/${r.full_name}) | ${r.stars.toLocaleString()} | ${r.forks.toLocaleString()} | ${r.inactive_days}d ago | ${r.status} |\n`;
+  report += `|---|---:|---:|---|---|\n`;
+  results.sort((a, b) => b.stars - a.stars);
+  for (const r of results) {
+    const emoji = r.status === 'ACTIVE' ? '🟢' : r.status === 'INACTIVE' ? '🟡' : '🔴';
+    const pushed = r.pushed_at ? r.pushed_at.split('T')[0] : '?';
+    report += `| [${r.full_name}](https://github.com/${r.full_name}) | ${r.stars.toLocaleString()} | ${r.forks.toLocaleString()} | ${pushed} | ${emoji} ${r.status} |\n`;
   }
 
   fs.writeFileSync(reportPath, report);
-  console.log(`\nReport written to ${reportPath}`);
+  console.log(`\nWrote HEALTH-REPORT.md`);
 
-  if (warnings.length > 0) {
-    console.log(`\n${warnings.length} WARNING(S):`);
-    for (const w of warnings) {
-      console.log(`  - ${w}`);
+  // ---- Update README "Last updated" date ----
+  if (fs.existsSync(readmePath)) {
+    let readme = fs.readFileSync(readmePath, 'utf-8');
+    const updated = readme.replace(
+      /\*Last updated:.*?\*/,
+      `*Last updated: ${todayFormatted()}*`
+    );
+    if (updated !== readme) {
+      fs.writeFileSync(readmePath, updated);
+      console.log(`Updated README date to ${todayFormatted()}`);
     }
   }
 
+  // ---- Summary ----
+  console.log(`\nTotal stars: ${totalStars.toLocaleString()}`);
+  if (warnings.length) {
+    console.log(`\n${warnings.length} warning(s):`);
+    warnings.forEach(w => console.log(`  - ${w}`));
+  }
   console.log('\nDone.');
 }
 
-main().catch(console.error);
+main().catch(err => { console.error(err); process.exit(1); });
