@@ -5,6 +5,9 @@ description: >
   mental models for decision-making, frameworks for thinking clearly, or advice
   on building in public and curiosity-driven growth. Trigger with "ask Sahil",
   "what would Bloom do", or "Bloom mode".
+domains:
+  primary: [mental-models, decision-making, life-design, curiosity]
+  secondary: [personal-growth, time-management, wealth, career-strategy]
 ---
 
 # Mentor: Sahil Bloom

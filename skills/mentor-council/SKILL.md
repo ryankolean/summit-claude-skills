@@ -1,19 +1,18 @@
 ---
 name: mentor-council
 description: >
-  Convene a virtual advisory council of multiple mentor frameworks to evaluate
-  a single decision or problem from different strategic perspectives. Activates
-  when the user says "convene the council", "mentor council", "board of advisors",
-  or asks for advice on a high-stakes decision that would benefit from multiple
-  lenses. Available mentors: Gary Vee, Tim Ferriss, Alex Hormozi, Naval Ravikant,
-  James Clear, Peter Attia, Sahil Bloom, Ray Dalio, Brené Brown.
+  Convene a virtual advisory council to evaluate a decision from multiple
+  strategic perspectives. Only mentors with domain-specific relevance to the
+  question are included — no filler perspectives. Activates with "convene the
+  council", "mentor council", or "board of advisors".
 ---
 
 # Mentor Council
 
 Present a single problem to multiple mentor frameworks and synthesize their
-different perspectives into a clear decision brief. Like having a board of
-advisors who each see the world differently.
+perspectives. **Only mentors with genuine domain expertise on the specific
+question are invited to the table.** A mentor with nothing relevant to say
+stays silent.
 
 ## When to Activate
 
@@ -22,113 +21,150 @@ advisors who each see the world differently.
 - "Mentor council"
 - "Board of advisors"
 - "I need multiple perspectives on this"
-- "What would everyone say about this?"
 
 **Auto-detect triggers:**
 - User faces a high-stakes decision with multiple valid paths
 - User is stuck between two competing strategies
-- The decision involves trade-offs across domains (money vs. time, growth vs. health,
-  speed vs. quality)
+- The decision spans multiple domains (money vs. time, growth vs. health)
 
-## Available Mentors
+## Mentor Domain Registry
 
-| Mentor | Lens | Best For |
+Each mentor has primary and secondary domains. **A mentor is only included
+in a council session if the user's question falls within their primary or
+secondary domains.** If a mentor has no relevant domain, they are excluded
+entirely — even if that means only 2 mentors respond.
+
+| Mentor | Primary Domains | Secondary Domains |
 |---|---|---|
-| **Gary Vee** | Execution, attention, speed | "Should I ship this?" decisions |
-| **Tim Ferriss** | Optimization, 80/20, experiments | "How do I simplify this?" decisions |
-| **Alex Hormozi** | Value, pricing, offers, scaling | Business model and revenue decisions |
-| **Naval Ravikant** | Leverage, long-term thinking | Career and wealth-building strategy |
-| **James Clear** | Habits, systems, consistency | Behavior change and routine design |
-| **Peter Attia** | Healthspan, longevity, evidence | Health and wellness decisions |
-| **Sahil Bloom** | Mental models, life balance | Life design and framework selection |
-| **Ray Dalio** | Principles, systems, root causes | Systematic and organizational decisions |
-| **Brené Brown** | Vulnerability, courage, trust | People, leadership, and emotional decisions |
+| **Gary Vee** | content-strategy, personal-branding, execution, attention | entrepreneurship, social-media, marketing |
+| **Tim Ferriss** | productivity, lifestyle-design, skill-acquisition, optimization | entrepreneurship, health, decision-making |
+| **Alex Hormozi** | pricing, offers, scaling, revenue | sales, lead-generation, business-model, entrepreneurship |
+| **Naval Ravikant** | wealth-creation, leverage, career-strategy, philosophy | investing, startups, decision-making, long-term-thinking |
+| **James Clear** | habits, behavior-change, systems, consistency | productivity, identity, self-improvement, goal-setting |
+| **Peter Attia** | health, longevity, exercise, nutrition | sleep, emotional-health, evidence-based-medicine, aging |
+| **Sahil Bloom** | mental-models, decision-making, life-design, curiosity | personal-growth, time-management, wealth, career-strategy |
+| **Ray Dalio** | principles, organizational-design, systems-thinking, transparency | investing, leadership, macro-economics, risk-management |
+| **Brené Brown** | vulnerability, courage, leadership, trust | relationships, emotional-resilience, shame, communication, difficult-conversations |
 
-## Process
+**New mentors** created via the mentor-builder skill must include domain tags
+to be registered here.
+
+## Domain Matching Process
 
 ### Step 1: Understand the Decision
-Ask one question at a time to understand the core decision:
+Ask one question at a time:
 - "What's the decision you're facing?"
 - "What are the options you're considering?"
 - "What makes this hard?"
 
-### Step 2: Select the Council
-Either the user picks specific mentors, or recommend the most relevant 3-4 based
-on the decision type:
+### Step 2: Identify Domains
+From the user's answer, extract the 2-4 domains this decision touches.
+Examples:
+- "Should I raise my consulting rate?" → pricing, offers, career-strategy
+- "I keep procrastinating on my side project" → habits, behavior-change, execution
+- "I'm burning out but my business needs me" → health, emotional-resilience, systems
+- "Should I quit my job to start a company?" → career-strategy, wealth-creation, courage, lifestyle-design
 
-- **Business/revenue decision:** Hormozi + Naval + Gary Vee
-- **Career/life direction:** Naval + Ferriss + Bloom
-- **Health/wellness:** Attia + Clear + Brown
-- **Leadership/team:** Dalio + Brown + Gary Vee
-- **Habit/behavior change:** Clear + Ferriss + Bloom
-- **High-stakes/scary decision:** Brown + Ferriss + Dalio
-- **Pricing/offer design:** Hormozi + Gary Vee + Naval
-- **Personal growth/balance:** Bloom + Brown + Clear
+### Step 3: Match Mentors to Domains
+For each identified domain, find mentors where it appears in their primary
+or secondary domains. A mentor must match **at least one domain** to be included.
 
-If unsure, ask: "Want me to pick the most relevant advisors, or do you want
-to choose who's at the table?"
+**Scoring:**
+- Primary domain match = strong inclusion (this mentor leads on this topic)
+- Secondary domain match = supporting inclusion (this mentor has relevant perspective)
+- No domain match = **excluded entirely**
 
-### Step 3: Present Each Perspective
-For each selected mentor, present their advice in this format:
+### Step 4: Confirm or Override
+Present the selected council:
+"For this decision about [topic], I'd bring in [Mentor A] (primary: {domain}),
+[Mentor B] (primary: {domain}), and [Mentor C] (supporting: {domain}).
+Anyone you want to add or remove?"
+
+The user can always manually add or remove mentors. Domain matching is a
+default, not a constraint.
+
+### Step 5: Present Each Perspective
+For each included mentor:
 
 ```
 ## Council Perspectives on: [Decision]
 
-### Through Gary Vee's Lens
-**Framework applied:** [Which specific framework]
-**Advice:** [2-3 sentences of directional guidance]
-**Key question:** "[The question this mentor would ask you]"
-**Push:** [The specific action this lens would push toward]
+### [Mentor Name] — Primary: [matched domain]
+**Framework applied:** [Specific named framework from their published work]
+**Diagnosis:** [How this framework reads the user's situation — 2-3 sentences]
+**Key question:** "[The one question this mentor would push the user to answer]"
+**Recommended action:** [Specific next step this lens would push toward]
 
-### Through Tim Ferriss's Lens
-**Framework applied:** [Which specific framework]
-**Advice:** [2-3 sentences of directional guidance]
-**Key question:** "[The question this mentor would ask you]"
-**Push:** [The specific action this lens would push toward]
-
-[Continue for each selected mentor]
+[Repeat for each included mentor]
 
 ---
 
 ## Where They Agree
-[Identify common ground across all perspectives]
+[Common ground across all included perspectives — this is a strong signal]
 
 ## Where They Disagree
-[Identify the key tension or trade-off between perspectives]
+[The genuine tension between perspectives — name the trade-off honestly]
 
 ## The Core Trade-Off
-[Name the fundamental trade-off the user must decide on]
+[One sentence: the fundamental choice the user must make]
 
-## My Synthesis
-[Having heard all perspectives, here's a recommended path that
-acknowledges the trade-offs]
+## Synthesis
+[Claude's own recommendation, informed by all perspectives, with the trade-off
+acknowledged. This is clearly labeled as Claude's analysis, not attributed
+to any mentor.]
 ```
 
-### Step 4: Help the User Decide
-After presenting all perspectives:
-- Highlight where the mentors agree (strong signal)
-- Name the core disagreement (the actual decision the user must make)
-- Ask: "Which perspective resonates most? That probably tells you something
-  about what you actually value here."
+### Step 6: Help the User Decide
+- Highlight agreement (strong signal)
+- Name the core disagreement (the real decision)
+- Ask: "Which perspective resonates most? That usually reveals what you
+  actually value here."
+
+## Edge Cases
+
+**Only 1 mentor matches:**
+Redirect to the individual mentor skill. "This is really a [domain] question —
+let me give you [Mentor]'s full perspective rather than a council format."
+
+**No mentors match:**
+Be honest. "None of the current mentor skills have strong domain coverage
+for this topic. Want me to help you think through it directly, or would
+you like to build a new mentor skill for this domain?" (Chain to mentor-builder.)
+
+**User asks for a specific mentor who doesn't match:**
+Include them but flag it. "[Mentor] doesn't have published frameworks
+specifically about [domain], so their perspective will be more general.
+Want me to include them anyway?"
+
+**Decision spans 5+ domains:**
+Limit to the 4 strongest domain matches. More than 4 perspectives creates
+noise. Ask: "This touches a lot of areas. I'd focus on [4 mentors] — the
+ones with the most direct expertise. Good?"
 
 ## Rules
 
-1. Never generate fictional quotes attributed to any real person
-2. Each mentor's advice must come from their actual published frameworks —
-   name the specific framework being applied
-3. Present genuine disagreements — don't artificially harmonize perspectives
-   that would actually conflict (e.g., Gary Vee's "ship now" vs. Ferriss's
-   "run a small test first")
-4. Limit to 3-5 mentors per council session. More than 5 creates noise, not clarity
+1. **Domain match is mandatory.** Never include a mentor just to fill seats.
+   A 2-mentor council with relevant perspectives beats a 5-mentor council
+   with filler.
+
+2. Never generate fictional quotes attributed to any real person.
+
+3. Each mentor's advice must come from their actual published frameworks —
+   name the specific framework being applied.
+
+4. Present genuine disagreements. Don't harmonize perspectives that would
+   actually conflict.
+
 5. The synthesis section is Claude's own analysis — clearly distinguish it
-   from the individual mentor perspectives
-6. If the user only needs one perspective, redirect to the individual mentor
-   skill instead of running the full council
+   from individual mentor perspectives.
+
+6. If the user explicitly requests a mentor who doesn't domain-match,
+   include them with a transparency note.
 
 ## Chaining
 
 - Any individual mentor skill can be used standalone
-- The council skill references all individual mentor skills
+- **mentor-builder → mentor-council:** New mentors are automatically registered
 - After the council decides on a direction, chain to:
   - **decompose** to break the chosen path into steps
   - **delegate** to decide what to automate vs. keep human

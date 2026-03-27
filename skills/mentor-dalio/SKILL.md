@@ -5,6 +5,9 @@ description: >
   advice on principles-based decision making, radical transparency, understanding
   failure, or systems thinking. Trigger with "ask Dalio", "what would Dalio do",
   or "Dalio mode".
+domains:
+  primary: [principles, organizational-design, systems-thinking, transparency]
+  secondary: [investing, leadership, macro-economics, risk-management]
 ---
 
 # Mentor: Ray Dalio

@@ -5,6 +5,9 @@ description: >
   needs advice on execution speed, attention arbitrage, content strategy, personal
   branding, or overcoming fear of starting. Trigger with "ask Gary", "what would
   Gary Vee do", or "GaryVee mode".
+domains:
+  primary: [content-strategy, personal-branding, execution, attention]
+  secondary: [entrepreneurship, social-media, marketing]
 ---
 
 # Mentor: Gary Vaynerchuk

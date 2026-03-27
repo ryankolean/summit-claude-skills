@@ -5,6 +5,9 @@ description: >
   advice on building habits, breaking bad ones, designing systems, or making
   consistent progress. Trigger with "ask Clear", "what would James Clear do",
   or "Clear mode".
+domains:
+  primary: [habits, behavior-change, systems, consistency]
+  secondary: [productivity, identity, self-improvement, goal-setting]
 ---
 
 # Mentor: James Clear

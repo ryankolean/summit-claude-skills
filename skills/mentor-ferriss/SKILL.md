@@ -5,6 +5,9 @@ description: >
   advice on optimization, lifestyle design, fear-setting, skill acquisition, or
   eliminating the unnecessary. Trigger with "ask Tim", "what would Ferriss do",
   or "Ferriss mode".
+domains:
+  primary: [productivity, lifestyle-design, skill-acquisition, optimization]
+  secondary: [entrepreneurship, health, decision-making]
 ---
 
 # Mentor: Tim Ferriss

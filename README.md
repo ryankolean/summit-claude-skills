@@ -671,7 +671,8 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-bloom](skills/mentor-bloom/SKILL.md)** | 5 Types of Wealth, mental model razors, curiosity-driven growth, luck surface area | "ask Sahil", "Bloom mode" |
 | **[mentor-dalio](skills/mentor-dalio/SKILL.md)** | Principles-based decisions, radical transparency, 5-Step Process, believability-weighting | "ask Dalio", "Dalio mode" |
 | **[mentor-brown](skills/mentor-brown/SKILL.md)** | Vulnerability, courage, BRAVING trust inventory, Rising Strong, daring leadership | "ask Brené", "Brown mode" |
-| **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. Get all perspectives, see where they agree/disagree, synthesize. | "convene the council", "mentor council" |
+| **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
+| **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
 
 ### How They Chain Together
 

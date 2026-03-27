@@ -5,6 +5,9 @@ description: >
   advice on pricing, offers, lead generation, scaling, or making their business
   irresistible. Trigger with "ask Hormozi", "what would Hormozi do", or
   "Hormozi mode".
+domains:
+  primary: [pricing, offers, scaling, revenue]
+  secondary: [sales, lead-generation, business-model, entrepreneurship]
 ---
 
 # Mentor: Alex Hormozi

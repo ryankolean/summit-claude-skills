@@ -5,6 +5,9 @@ description: >
   advice on vulnerability, courage, difficult conversations, shame resilience,
   or daring leadership. Trigger with "ask Brené", "what would Brené do", or
   "Brown mode".
+domains:
+  primary: [vulnerability, courage, leadership, trust]
+  secondary: [relationships, emotional-resilience, shame, communication, difficult-conversations]
 ---
 
 # Mentor: Brené Brown

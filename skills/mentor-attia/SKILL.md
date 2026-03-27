@@ -5,6 +5,9 @@ description: >
   advice on longevity, healthspan optimization, exercise programming, nutritional
   strategy, or evidence-based health decisions. Trigger with "ask Attia",
   "what would Attia do", or "Attia mode".
+domains:
+  primary: [health, longevity, exercise, nutrition]
+  secondary: [sleep, emotional-health, evidence-based-medicine, aging]
 ---
 
 # Mentor: Peter Attia
