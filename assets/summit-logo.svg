@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+  <!-- Background transparent -->
+  
+  <!-- Mountain peaks -->
+  <polygon points="120,140 160,60 200,140" fill="#2C3E50" opacity="0.9"/>
+  <polygon points="180,140 230,45 280,140" fill="#34495E" opacity="0.95"/>
+  
+  <!-- Snow caps -->
+  <polygon points="160,60 150,80 170,80" fill="#ECF0F1"/>
+  <polygon points="230,45 218,68 242,68" fill="#ECF0F1"/>
+  
+  <!-- Base line -->
+  <line x1="100" y1="140" x2="300" y2="140" stroke="#2C3E50" stroke-width="2"/>
+  
+  <!-- Company name -->
+  <text x="200" y="165" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="bold" fill="#2C3E50" letter-spacing="3">SUMMIT</text>
+  <text x="200" y="182" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="9" fill="#7F8C8D" letter-spacing="4">SOFTWARE SOLUTIONS</text>
+</svg>

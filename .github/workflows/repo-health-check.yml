@@ -1,0 +1,44 @@
+name: Repo Health Check
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday at 9:00 AM UTC
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-repos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run health check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/health-check.js
+
+      - name: Create PR if changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: weekly repo health update"
+          title: "Weekly Repo Health Update"
+          body: |
+            Automated weekly health check:
+            - Updated GitHub star counts
+            - Flagged repos with no commits in 60+ days
+            - Flagged archived or deleted repos
+
+            Review changes before merging.
+          branch: auto/health-update
+          delete-branch: true
