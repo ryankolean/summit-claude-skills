@@ -645,36 +645,64 @@ See [.github/workflows/repo-health-check.yml](.github/workflows/repo-health-chec
 
 Original skills built and maintained by Summit Software Solutions. These live in the `skills/` directory of this repository.
 
-| Skill | What It Does | Install Prompt |
+| Skill | What It Does | Trigger |
 |---|---|---|
-| **[interrogate](skills/interrogate/SKILL.md)** | Discovery and scoping skill. Asks one question at a time — like a senior consultant — until Claude fully understands your goal, constraints, audience, and hidden assumptions. Auto-activates on ambiguous requests or trigger manually with "interrogate me". | `cp -r skills/interrogate ~/.claude/skills/` |
+| **[interrogate](skills/interrogate/SKILL.md)** | Discovery and scoping. Asks one question at a time until Claude fully understands your goal, constraints, audience, and hidden assumptions. | "interrogate me", "scope this", or auto on ambiguous requests |
+| **[automate-audit](skills/automate-audit/SKILL.md)** | Interviews you about your daily/weekly routines and produces a ranked automation opportunity report with effort-vs-impact scoring. | "what should I automate?", "audit my workflow" |
+| **[decompose](skills/decompose/SKILL.md)** | Breaks any complex, messy process into discrete, ordered steps with dependency mapping and automation tags. | "break this down", "decompose this", "I don't know where to start" |
+| **[prompt-architect](skills/prompt-architect/SKILL.md)** | Translates a plain-English task description into a production-quality, reusable Claude prompt with structure, variables, and output formatting. | "write me a prompt for this", "prompt-architect" |
+| **[workflow-lock](skills/workflow-lock/SKILL.md)** | Captures a successful one-off interaction and converts it into a repeatable template with variables, trigger conditions, and quality checks. | "lock this workflow", "save this as a template" |
+| **[delegate](skills/delegate/SKILL.md)** | Decision framework scoring any task on 5 dimensions (repetitiveness, judgment, error tolerance, data sensitivity, time cost) to recommend: automate, AI-assist, or keep human. | "should I automate this?", "AI or human?" |
+| **[scribe-to-spec](skills/scribe-to-spec/SKILL.md)** | Transforms Scribe AI process documentation (step-by-step guides with screenshots) into a complete software solution design document with requirements, data model, integrations, and implementation roadmap. | "scribe to spec", or paste/upload Scribe output |
 
-<details>
-<summary><strong>Install Prompt — Interrogate Me (paste into Claude.ai)</strong></summary>
+### How They Chain Together
+
+These skills are independent but chain naturally:
 
 ```
-Before doing anything with my request, I want you to interview me first. Ask me one question at a time — like a senior consultant scoping a project — until you are confident you fully understand:
+automate-audit → Find what to automate
+       ↓
+    delegate → Decide: automate fully, AI-assist, or keep human?
+       ↓
+   decompose → Break complex processes into steps
+       ↓
+prompt-architect → Build the Claude prompt for each automatable step
+       ↓
+ workflow-lock → Lock the working result into a reusable template
+```
 
-1. What my actual goal is (not just what I asked for)
-2. The constraints and dealbreakers
-3. Who the audience is and how they'll use the output
-4. Any assumptions I haven't stated
+And for process-to-software projects:
+```
+Scribe AI capture → scribe-to-spec → Full solution design document
+                         ↓
+                    decompose → Break implementation into dev tasks
+```
 
-Rules:
-- One question per turn. Never stack multiple questions.
-- Briefly explain WHY you're asking each question.
-- Build each question on my previous answers.
-- Stop when you can confidently answer: what the output is, who it's for, what constraints apply, and what I haven't said.
-- For complex tasks, present a structured summary brief and wait for my confirmation before executing.
-- For simple tasks, restate the goal in one sentence as you begin.
+<details>
+<summary><strong>Install Prompt — All Summit Skills (paste into Claude.ai)</strong></summary>
 
-Tone: Friendly but direct. You're a consultant, not a waiter. Never apologize for asking.
+```
+I want you to operate using Summit Software Solutions' custom skill set. Apply these behaviors:
 
-Start now with my request: [PASTE YOUR REQUEST HERE]
+1. INTERROGATE: On ambiguous or complex requests, ask one clarifying question at a time (goal, constraints, audience, hidden assumptions) before executing. I can also trigger this with "interrogate me" or "scope this."
+
+2. AUTOMATE-AUDIT: When I say "audit my workflow" or "what should I automate?", interview me about my routines and produce a ranked automation opportunity report with effort-vs-impact scores.
+
+3. DECOMPOSE: When I say "break this down" or describe an overwhelming process, decompose it into discrete steps with dependency mapping and automation tags ([AUTOMATE], [AI-ASSIST], [HUMAN]).
+
+4. PROMPT-ARCHITECT: When I say "write me a prompt for this", translate my plain-English task into a production-quality, copy-pasteable Claude prompt with role, context, task, input/output specs, examples, and constraints.
+
+5. WORKFLOW-LOCK: When I say "lock this workflow" or "template this" after a successful task, capture the pattern as a reusable template with variables, trigger conditions, and quality checks.
+
+6. DELEGATE: When I say "should I automate this?" or "AI or human?", score the task on 5 dimensions (repetitiveness, judgment, error tolerance, data sensitivity, time cost) and recommend: automate fully, AI-assist, or keep human.
+
+7. SCRIBE-TO-SPEC: When I paste Scribe AI output or say "scribe to spec", transform the process documentation into a complete software solution design document with requirements, data model, integrations, screens, and implementation roadmap.
+
+For all skills: one question at a time, friendly but direct tone, and always produce actionable output.
 ```
 </details>
 
-*More custom skills coming soon. Suggest ideas via GitHub issues.*
+*More custom skills coming soon. Suggest ideas via [GitHub issues](https://github.com/ryankolean/summit-claude-skills/issues).*
 
 ---
 
