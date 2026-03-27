@@ -656,6 +656,23 @@ Original skills built and maintained by Summit Software Solutions. These live in
 | **[scribe-to-spec](skills/scribe-to-spec/SKILL.md)** | Transforms Scribe AI process documentation (step-by-step guides with screenshots) into a complete software solution design document with requirements, data model, integrations, and implementation roadmap. | "scribe to spec", or paste/upload Scribe output |
 | **[prompt-to-skill](skills/prompt-to-skill/SKILL.md)** | Converts a working Claude prompt into a permanent, installable SKILL.md with frontmatter, triggers, rules, and examples. Automatically adds it to this repo's README and pushes to GitHub. | "make this a skill", "prompt to skill", "install this permanently" |
 
+#### Mentor Skills
+
+Coaching and accountability through the published frameworks of recognized thought leaders. Each skill applies the person's actual methodology — not impersonation.
+
+| Skill | Lens | Trigger |
+|---|---|---|
+| **[mentor-garyvee](skills/mentor-garyvee/SKILL.md)** | Execution speed, attention arbitrage, personal branding, self-awareness | "ask Gary", "GaryVee mode" |
+| **[mentor-ferriss](skills/mentor-ferriss/SKILL.md)** | 80/20 optimization, fear-setting, lifestyle design, minimum effective dose | "ask Tim", "Ferriss mode" |
+| **[mentor-hormozi](skills/mentor-hormozi/SKILL.md)** | Value equations, Grand Slam Offers, pricing, lead generation, scaling | "ask Hormozi", "Hormozi mode" |
+| **[mentor-naval](skills/mentor-naval/SKILL.md)** | Specific knowledge, leverage, wealth creation, long-term compounding | "ask Naval", "Naval mode" |
+| **[mentor-clear](skills/mentor-clear/SKILL.md)** | Atomic habits, systems over goals, identity-based change, environment design | "ask Clear", "Clear mode" |
+| **[mentor-attia](skills/mentor-attia/SKILL.md)** | Medicine 3.0, Four Horsemen, Centenarian Decathlon, Zone 2, healthspan | "ask Attia", "Attia mode" |
+| **[mentor-bloom](skills/mentor-bloom/SKILL.md)** | 5 Types of Wealth, mental model razors, curiosity-driven growth, luck surface area | "ask Sahil", "Bloom mode" |
+| **[mentor-dalio](skills/mentor-dalio/SKILL.md)** | Principles-based decisions, radical transparency, 5-Step Process, believability-weighting | "ask Dalio", "Dalio mode" |
+| **[mentor-brown](skills/mentor-brown/SKILL.md)** | Vulnerability, courage, BRAVING trust inventory, Rising Strong, daring leadership | "ask Brené", "Brown mode" |
+| **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. Get all perspectives, see where they agree/disagree, synthesize. | "convene the council", "mentor council" |
+
 ### How They Chain Together
 
 These skills are independent but chain naturally:
@@ -702,6 +719,10 @@ I want you to operate using Summit Software Solutions' custom skill set. Apply t
 7. SCRIBE-TO-SPEC: When I paste Scribe AI output or say "scribe to spec", transform the process documentation into a complete software solution design document with requirements, data model, integrations, screens, and implementation roadmap.
 
 8. PROMPT-TO-SKILL: When I say "make this a skill" or "prompt to skill" after a working prompt, package it into a proper SKILL.md with frontmatter, triggers, rules, and examples. Then add it to the Summit Custom Skills table in the repo README and push to GitHub automatically. Always show me the SKILL.md for approval before deploying.
+
+9. MENTOR SKILLS: I have 9 mentor coaching lenses available. When I say "ask [name]" or "[name] mode", apply that person's published decision-making frameworks as a coaching lens (not impersonation). Available: Gary Vee (execution/attention), Tim Ferriss (80/20/lifestyle design), Alex Hormozi (value equations/pricing), Naval Ravikant (leverage/specific knowledge), James Clear (atomic habits/systems), Peter Attia (longevity/healthspan), Sahil Bloom (mental models/5 types of wealth), Ray Dalio (principles/radical transparency), Brené Brown (vulnerability/courage/trust).
+
+10. MENTOR COUNCIL: When I say "convene the council" or "mentor council", present my decision to 3-5 of the most relevant mentor lenses. Show each perspective with the specific framework applied, where they agree, where they disagree, and a synthesis.
 
 For all skills: one question at a time, friendly but direct tone, and always produce actionable output.
 ```
