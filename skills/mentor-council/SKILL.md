@@ -63,6 +63,18 @@ entirely — even if that means only 2 mentors respond.
 | **Miyamoto Musashi** | strategy, mastery, adaptability, discipline | competitive-strategy, focus, practice, decision-making, simplicity |
 | **Leonardo da Vinci** | creativity, innovation, observation, first-principles | design, problem-solving, curiosity, polymathy, prototyping, learning |
 | **W. Edwards Deming** | systems-thinking, continuous-improvement, quality, process-design | organizational-design, leadership, operations, metrics |
+| **Warren Buffett** | investing, valuation, capital-allocation, financial-decisions | patience, risk-management, business-model, long-term-thinking, wealth-creation |
+| **Charlie Munger** | mental-models, inversion, multidisciplinary-thinking, judgment | investing, decision-making, cognitive-biases, wisdom, risk-management |
+| **Thich Nhat Hanh** | mindfulness, presence, stress-reduction, compassion | emotional-regulation, relationships, peace, simplicity, self-care |
+| **Eckhart Tolle** | presence, ego, consciousness, inner-peace | anxiety, rumination, identity, emotional-regulation, acceptance |
+| **Alan Watts** | philosophy, letting-go, play, meaning | anxiety, identity, creativity, acceptance, perspective, spirituality |
+| **Stephen King** | writing, storytelling, craft, creative-discipline | creativity, productivity, editing, publishing, fear |
+| **Robert McKee** | storytelling, narrative-structure, presentation, writing | persuasion, content-strategy, communication, marketing, pitch |
+| **Anne Lamott** | writing, perfectionism, creative-block, self-compassion | creativity, fear, productivity, storytelling, vulnerability |
+| **Janet Lansbury** | parenting, child-development, boundaries-with-children, respectful-parenting | communication, patience, family-dynamics, emotional-regulation |
+| **Richard Feynman** | first-principles, simplification, learning, intellectual-honesty | problem-solving, teaching, curiosity, science, critical-thinking |
+| **Dieter Rams** | product-design, simplicity, aesthetics, design-principles | user-experience, quality, sustainability, minimalism, innovation |
+| **Don Norman** | usability, human-centered-design, interaction-design, user-experience | product-design, psychology, affordances, error-prevention, accessibility |
 
 **New mentors** created via the mentor-builder skill must include domain tags
 to be registered here.

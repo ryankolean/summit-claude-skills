@@ -689,6 +689,18 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-musashi](skills/mentor-musashi/SKILL.md)** | Book of Five Rings — Five Elements, mastery through practice, do nothing useless, rhythm | "ask Musashi", "Musashi mode" |
 | **[mentor-davinci](skills/mentor-davinci/SKILL.md)** | Curiosity, polymathy, observation, first-principles invention, prototyping, cross-disciplinary thinking | "ask Leonardo", "Da Vinci mode" |
 | **[mentor-deming](skills/mentor-deming/SKILL.md)** | 94/6 rule (blame the system), PDSA cycle, common vs special cause variation, drive out fear | "ask Deming", "Deming mode" |
+| **[mentor-buffett](skills/mentor-buffett/SKILL.md)** | Value investing — circle of competence, margin of safety, Mr. Market, economic moats, punch card | "ask Buffett", "Buffett mode" |
+| **[mentor-munger](skills/mentor-munger/SKILL.md)** | Mental models, inversion, Lollapalooza effect, incentive-caused bias, latticework of models | "ask Munger", "Munger mode" |
+| **[mentor-thichnhathanh](skills/mentor-thichnhathanh/SKILL.md)** | Mindful living — present moment, interbeing, stopping, no mud no lotus, beginning anew | "ask Thay", "mindfulness mode" |
+| **[mentor-tolle](skills/mentor-tolle/SKILL.md)** | Presence, pain body, ego identification, acceptance of what is, observer consciousness | "ask Tolle", "presence mode" |
+| **[mentor-watts](skills/mentor-watts/SKILL.md)** | Eastern philosophy — wisdom of insecurity, life as play, backwards law, mu (unask the question) | "ask Watts", "Watts mode" |
+| **[mentor-king](skills/mentor-king/SKILL.md)** | On Writing — closed door/open door, kill your darlings, daily quota, writing as telepathy | "ask King", "King mode" |
+| **[mentor-mckee](skills/mentor-mckee/SKILL.md)** | Story — controlling idea, inciting incident, progressive complications, show don't tell | "ask McKee", "McKee mode" |
+| **[mentor-lamott](skills/mentor-lamott/SKILL.md)** | Bird by Bird — shitty first drafts, one-inch picture frame, perfectionism as oppressor, KFKD | "ask Lamott", "Lamott mode" |
+| **[mentor-lansbury](skills/mentor-lansbury/SKILL.md)** | Respectful parenting — RIE, no bad kids, sportscasting, acknowledge-and-hold, let them struggle | "ask Lansbury", "Lansbury mode" |
+| **[mentor-feynman](skills/mentor-feynman/SKILL.md)** | First principles, Feynman Technique (learn by teaching), cargo cult science, simplification | "ask Feynman", "Feynman mode" |
+| **[mentor-rams](skills/mentor-rams/SKILL.md)** | 10 Principles of Good Design — less but better, functional minimalism, honest design | "ask Rams", "Rams mode" |
+| **[mentor-norman](skills/mentor-norman/SKILL.md)** | Design of Everyday Things — affordances, signifiers, mapping, feedback, conceptual models | "ask Norman", "Norman mode" |
 | **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
 | **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
 
@@ -759,7 +771,7 @@ Each mentor skill encodes the **published decision-making frameworks** of a reco
 
 This is not "act as" roleplaying. Every framework is traceable to a specific book, podcast, or essay. No fictional quotes are ever generated.
 
-### The 27 Available Mentors
+### The 39 Available Mentors
 
 **Business & Strategy**
 
@@ -812,6 +824,48 @@ This is not "act as" roleplaying. Every framework is traceable to a specific boo
 | Miyamoto Musashi | Mastery, adaptability | Five Rings/Elements, Do Nothing Useless, Rhythm | The Book of Five Rings, Dokkodo |
 | Leonardo da Vinci | Creativity, first principles | Relentless Curiosity, Observation, Cross-Disciplinary Thinking | Notebooks; Isaacson's Leonardo da Vinci |
 | W. Edwards Deming | Systems, continuous improvement | 94/6 Rule, PDSA Cycle, Common vs Special Cause, Drive Out Fear | Out of the Crisis, The New Economics |
+
+**Finance & Investing**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Warren Buffett | Value investing, patience | Circle of Competence, Margin of Safety, Mr. Market, Economic Moats | Berkshire Letters, The Essays of Warren Buffett |
+| Charlie Munger | Mental models, inversion | Latticework of Models, Inversion, Lollapalooza, Incentive-Caused Bias | Poor Charlie's Almanack |
+
+**Spirituality & Mindfulness**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Thich Nhat Hanh | Mindful living, compassion | Present Moment, Interbeing, Stopping, No Mud No Lotus, Beginning Anew | The Miracle of Mindfulness, Peace Is Every Step |
+| Eckhart Tolle | Presence, ego dissolution | Power of Now, Pain Body, Observer Consciousness, Acceptance | The Power of Now, A New Earth |
+| Alan Watts | Eastern philosophy, letting go | Wisdom of Insecurity, Life as Play, Backwards Law, Mu | The Way of Zen, The Wisdom of Insecurity |
+
+**Writing & Storytelling**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Stephen King | Writing craft, discipline | Closed Door/Open Door, Kill Your Darlings, Daily Quota, Toolbox | On Writing |
+| Robert McKee | Narrative structure | Controlling Idea, Inciting Incident, Progressive Complications, Gap | Story |
+| Anne Lamott | Creative courage, perfectionism | Shitty First Drafts, Bird by Bird, One-Inch Picture Frame, KFKD | Bird by Bird |
+
+**Parenting**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Janet Lansbury | Respectful parenting | RIE, No Bad Kids, Sportscasting, Acknowledge-and-Hold | No Bad Kids, Elevating Child Care |
+
+**Science & First Principles**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Richard Feynman | First principles, simplification | Feynman Technique, Cargo Cult Science, Pleasure of Finding Things Out | Surely You're Joking; Six Easy Pieces |
+
+**Design & Usability**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Dieter Rams | Product design, minimalism | 10 Principles of Good Design, Less But Better | Rams (2018), Braun/Vitsoe body of work |
+| Don Norman | Usability, human-centered design | Affordances, Signifiers, Mapping, Feedback, Conceptual Models | The Design of Everyday Things |
 
 ### How to Use Them
 
