@@ -62,7 +62,7 @@ Each repo is scored on a **5-point composite scale**:
 
 **Ratings:** **S** = Best-in-class (4.5-5.0) | **A** = Excellent (3.5-4.4) | **B** = Strong (2.5-3.4)
 
-![Repos Tracked](https://img.shields.io/badge/repos_tracked-50-blue) ![Auto Updated](https://img.shields.io/badge/auto--updated-weekly-green) ![Categories](https://img.shields.io/badge/categories-13-orange)
+![Repos Tracked](https://img.shields.io/badge/repos_tracked-50-blue) ![Auto Updated](https://img.shields.io/badge/auto--updated-weekly-green) ![Categories](https://img.shields.io/badge/categories-14-orange) ![CLI Skills](https://img.shields.io/badge/cli_skills-16-purple)
 
 ---
 
@@ -714,6 +714,56 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-jung](skills/mentor-jung/SKILL.md)** | Shadow work, archetypes, individuation, projection, persona, enantiodromia, active imagination | "ask Jung", "Jung mode", "shadow work" |
 | **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
 | **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
+
+#### CLI Tool Skills
+
+Wraps popular command-line tools in skills so Claude can invoke them fluently — querying, filtering, converting, automating, and managing files without boilerplate. Each skill teaches Claude the flags, idioms, and best practices for that tool.
+
+**Data & API**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-gh](skills/cli-gh/SKILL.md)** | GitHub CLI — PRs, issues, releases, Actions, repo management | [cli/cli](https://github.com/cli/cli) |
+| **[cli-jq](skills/cli-jq/SKILL.md)** | Command-line JSON processor — filter, transform, reshape | [jqlang/jq](https://github.com/jqlang/jq) |
+| **[cli-yq](skills/cli-yq/SKILL.md)** | YAML/JSON/XML/TOML processor — like jq for config files | [mikefarah/yq](https://github.com/mikefarah/yq) |
+| **[cli-httpie](skills/cli-httpie/SKILL.md)** | Human-friendly HTTP client for API testing | [httpie/cli](https://github.com/httpie/cli) |
+
+**Browser & Scraping**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-playwright](skills/cli-playwright/SKILL.md)** | Browser automation, testing, screenshots, scraping | [microsoft/playwright](https://github.com/microsoft/playwright) |
+| **[cli-apify](skills/cli-apify/SKILL.md)** | Web scraping Actors, datasets, proxy rotation | [apify/apify-cli](https://github.com/apify/apify-cli) |
+
+**Search & Files**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-ripgrep](skills/cli-ripgrep/SKILL.md)** | Blazing fast regex search respecting .gitignore | [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) |
+| **[cli-fd](skills/cli-fd/SKILL.md)** | Modern find replacement with intuitive syntax | [sharkdp/fd](https://github.com/sharkdp/fd) |
+| **[cli-fzf](skills/cli-fzf/SKILL.md)** | Interactive fuzzy finder for files, history, anything | [junegunn/fzf](https://github.com/junegunn/fzf) |
+| **[cli-bat](skills/cli-bat/SKILL.md)** | cat with syntax highlighting and git integration | [sharkdp/bat](https://github.com/sharkdp/bat) |
+
+**Media & Documents**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-ffmpeg](skills/cli-ffmpeg/SKILL.md)** | Video/audio encoding, conversion, streaming | [FFmpeg/FFmpeg](https://github.com/FFmpeg/FFmpeg) |
+| **[cli-imagemagick](skills/cli-imagemagick/SKILL.md)** | Image manipulation across 200+ formats | [ImageMagick/ImageMagick](https://github.com/ImageMagick/ImageMagick) |
+| **[cli-pandoc](skills/cli-pandoc/SKILL.md)** | Universal document converter (Markdown, HTML, PDF, DOCX) | [jgm/pandoc](https://github.com/jgm/pandoc) |
+
+**Git & Dev Workflow**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-lazygit](skills/cli-lazygit/SKILL.md)** | Terminal UI for Git with visual staging and rebasing | [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit) |
+
+**Database**
+
+| Skill | What It Does | Upstream Repo |
+|---|---|---|
+| **[cli-sqlite](skills/cli-sqlite/SKILL.md)** | Serverless SQL database engine, zero-config | [sqlite/sqlite](https://github.com/sqlite/sqlite) |
+| **[cli-duckdb](skills/cli-duckdb/SKILL.md)** | Analytical SQL engine that queries CSV/Parquet/JSON directly | [duckdb/duckdb](https://github.com/duckdb/duckdb) |
 
 ### How They Chain Together
 
