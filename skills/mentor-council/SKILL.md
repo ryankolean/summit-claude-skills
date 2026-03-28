@@ -75,6 +75,17 @@ entirely — even if that means only 2 mentors respond.
 | **Richard Feynman** | first-principles, simplification, learning, intellectual-honesty | problem-solving, teaching, curiosity, science, critical-thinking |
 | **Dieter Rams** | product-design, simplicity, aesthetics, design-principles | user-experience, quality, sustainability, minimalism, innovation |
 | **Don Norman** | usability, human-centered-design, interaction-design, user-experience | product-design, psychology, affordances, error-prevention, accessibility |
+| **Viktor Frankl** | meaning, suffering, purpose, resilience | adversity, philosophy, motivation, identity, mental-health, life-transitions |
+| **Lao Tzu** | wu-wei, simplicity, leadership, letting-go | philosophy, patience, humility, strategy, spirituality, nature, acceptance |
+| **Aristotle** | virtue-ethics, rhetoric, logic, decision-making | leadership, persuasion, communication, philosophy, balance, excellence |
+| **Seth Godin** | marketing, shipping, remarkable, permission | entrepreneurship, creativity, leadership, content-strategy, branding, fear |
+| **David Goggins** | mental-toughness, discipline, endurance, accountability | fitness, resilience, self-mastery, motivation, suffering, identity |
+| **Robert Greene** | power-dynamics, strategy, human-nature, mastery | leadership, persuasion, career-strategy, politics, self-awareness |
+| **Morgan Housel** | money-psychology, wealth, compounding, risk | financial-decisions, patience, investing, behavioral-economics, long-term-thinking |
+| **Ryan Holiday** | applied-stoicism, ego, obstacles, discipline | resilience, leadership, adversity, patience, self-mastery, stillness |
+| **Cal Newport** | deep-work, focus, digital-minimalism, slow-productivity | career-strategy, productivity, attention, time-management, craftsmanship |
+| **Nassim Taleb** | antifragility, risk, uncertainty, robustness | investing, decision-making, black-swans, strategy, probability, skin-in-the-game |
+| **Carl Jung** | shadow-work, archetypes, individuation, self-knowledge | psychology, identity, unconscious, dreams, personality, wholeness, creativity |
 
 **New mentors** created via the mentor-builder skill must include domain tags
 to be registered here.

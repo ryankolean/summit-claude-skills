@@ -701,6 +701,17 @@ Coaching and accountability through the published frameworks of recognized thoug
 | **[mentor-feynman](skills/mentor-feynman/SKILL.md)** | First principles, Feynman Technique (learn by teaching), cargo cult science, simplification | "ask Feynman", "Feynman mode" |
 | **[mentor-rams](skills/mentor-rams/SKILL.md)** | 10 Principles of Good Design — less but better, functional minimalism, honest design | "ask Rams", "Rams mode" |
 | **[mentor-norman](skills/mentor-norman/SKILL.md)** | Design of Everyday Things — affordances, signifiers, mapping, feedback, conceptual models | "ask Norman", "Norman mode" |
+| **[mentor-frankl](skills/mentor-frankl/SKILL.md)** | Man's Search for Meaning — logotherapy, the last human freedom, tragic optimism, dereflection | "ask Frankl", "Frankl mode" |
+| **[mentor-laotzu](skills/mentor-laotzu/SKILL.md)** | Tao Te Ching — wu wei, soft overcomes hard, leading from behind, the uncarved block | "ask Lao Tzu", "Tao mode" |
+| **[mentor-aristotle](skills/mentor-aristotle/SKILL.md)** | Virtue ethics — golden mean, eudaimonia, ethos/pathos/logos, phronesis, four causes | "ask Aristotle", "Aristotle mode" |
+| **[mentor-godin](skills/mentor-godin/SKILL.md)** | Purple Cow, The Dip, permission marketing, smallest viable audience, ship it, linchpin | "ask Godin", "Godin mode" |
+| **[mentor-goggins](skills/mentor-goggins/SKILL.md)** | Can't Hurt Me — 40% rule, accountability mirror, callusing the mind, cookie jar, taking souls | "ask Goggins", "Goggins mode" |
+| **[mentor-greene](skills/mentor-greene/SKILL.md)** | 48 Laws of Power, Mastery, Laws of Human Nature — power dynamics, apprenticeship, social intelligence | "ask Greene", "Greene mode" |
+| **[mentor-housel](skills/mentor-housel/SKILL.md)** | Psychology of Money — tail events, wealth is what you don't see, room for error, compounding, enough | "ask Housel", "Housel mode" |
+| **[mentor-holiday](skills/mentor-holiday/SKILL.md)** | Applied Stoicism — obstacle is the way, ego is the enemy, stillness is the key, alive time vs dead time | "ask Holiday", "Holiday mode" |
+| **[mentor-newport](skills/mentor-newport/SKILL.md)** | Deep Work, digital minimalism, slow productivity, craftsman mindset, career capital theory | "ask Newport", "Newport mode" |
+| **[mentor-taleb](skills/mentor-taleb/SKILL.md)** | Antifragile, Black Swan, barbell strategy, skin in the game, via negativa, Lindy effect | "ask Taleb", "Taleb mode" |
+| **[mentor-jung](skills/mentor-jung/SKILL.md)** | Shadow work, archetypes, individuation, projection, persona, enantiodromia, active imagination | "ask Jung", "Jung mode", "shadow work" |
 | **[mentor-council](skills/mentor-council/SKILL.md)** | Convene 3-5 mentors on a single decision. **Only domain-relevant mentors respond** — no filler perspectives. Shows agreement, disagreement, and synthesis. | "convene the council", "mentor council" |
 | **[mentor-builder](skills/mentor-builder/SKILL.md)** | Guide anyone through creating a new mentor skill from a public figure's published works. Produces a SKILL.md with frameworks, domain tags, and coaching style. Designed for sharing — contribute new mentors via PR. | "build a mentor", "create a mentor", "new mentor skill" |
 
@@ -771,7 +782,7 @@ Each mentor skill encodes the **published decision-making frameworks** of a reco
 
 This is not "act as" roleplaying. Every framework is traceable to a specific book, podcast, or essay. No fictional quotes are ever generated.
 
-### The 39 Available Mentors
+### The 50 Available Mentors
 
 **Business & Strategy**
 
@@ -866,6 +877,37 @@ This is not "act as" roleplaying. Every framework is traceable to a specific boo
 |---|---|---|---|
 | Dieter Rams | Product design, minimalism | 10 Principles of Good Design, Less But Better | Rams (2018), Braun/Vitsoe body of work |
 | Don Norman | Usability, human-centered design | Affordances, Signifiers, Mapping, Feedback, Conceptual Models | The Design of Everyday Things |
+
+**Philosophy & Depth Psychology**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Viktor Frankl | Meaning through suffering | Logotherapy, The Last Human Freedom, Tragic Optimism | Man's Search for Meaning |
+| Lao Tzu | Wu wei, simplicity, yielding | Wu Wei, The Uncarved Block, Soft Overcomes Hard | Tao Te Ching |
+| Aristotle | Virtue, rhetoric, logic | Golden Mean, Eudaimonia, Ethos/Pathos/Logos, Phronesis | Nicomachean Ethics, Rhetoric |
+| Carl Jung | Shadow, archetypes, wholeness | Shadow Work, Individuation, Archetypes, Projection, Persona | Man and His Symbols, Collected Works |
+
+**Strategy & Power**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Seth Godin | Remarkable, shipping, permission | Purple Cow, The Dip, Permission Marketing, Smallest Viable Audience | Purple Cow, The Dip, Linchpin, This Is Marketing |
+| Robert Greene | Power, human nature, mastery | 48 Laws, Path to Mastery, Laws of Human Nature | 48 Laws of Power, Mastery, Laws of Human Nature |
+| Nassim Taleb | Antifragility, risk, uncertainty | Antifragility, Black Swans, Barbell Strategy, Via Negativa, Lindy | Antifragile, The Black Swan, Skin in the Game |
+
+**Focus & Applied Stoicism**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Cal Newport | Deep focus, slow productivity | Deep Work, Digital Minimalism, Craftsman Mindset, Career Capital | Deep Work, So Good They Can't Ignore You, Slow Productivity |
+| Ryan Holiday | Applied Stoicism | Obstacle Is the Way, Ego Is the Enemy, Stillness, Alive Time | The Obstacle Is the Way, Ego Is the Enemy, Discipline Is Destiny |
+| David Goggins | Extreme mental toughness | 40% Rule, Accountability Mirror, Callusing the Mind, Cookie Jar | Can't Hurt Me, Never Finished |
+
+**Money Psychology**
+
+| Mentor | Core Lens | Key Frameworks | Source Works |
+|---|---|---|---|
+| Morgan Housel | Money behavior, patience | Tail Events, Wealth Is Invisible, Room for Error, Compounding, Enough | The Psychology of Money, Same as Ever |
 
 ### How to Use Them
 
