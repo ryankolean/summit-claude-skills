@@ -655,6 +655,7 @@ Original skills built and maintained by Summit Software Solutions. These live in
 | **[delegate](skills/delegate/SKILL.md)** | Decision framework scoring any task on 5 dimensions (repetitiveness, judgment, error tolerance, data sensitivity, time cost) to recommend: automate, AI-assist, or keep human. | "should I automate this?", "AI or human?" |
 | **[scribe-to-spec](skills/scribe-to-spec/SKILL.md)** | Transforms Scribe AI process documentation (step-by-step guides with screenshots) into a complete software solution design document with requirements, data model, integrations, and implementation roadmap. | "scribe to spec", or paste/upload Scribe output |
 | **[prompt-to-skill](skills/prompt-to-skill/SKILL.md)** | Converts a working Claude prompt into a permanent, installable SKILL.md with frontmatter, triggers, rules, and examples. Automatically adds it to this repo's README and pushes to GitHub. | "make this a skill", "prompt to skill", "install this permanently" |
+| **[codebase-review](skills/codebase-review/SKILL.md)** | Performs a senior-architect-level review of an entire codebase. Evaluates 10 dimensions (data integrity, tests, security, accessibility, performance, and more), assigns an overall letter grade, and produces a prioritized top-10 improvement plan with effort estimates. | "code review", "review the codebase", "architecture review", "audit this code" |
 
 #### Mentor Skills
 
