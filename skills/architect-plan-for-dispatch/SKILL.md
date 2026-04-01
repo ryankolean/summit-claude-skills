@@ -28,465 +28,399 @@ burn across all workers.
 - "Build me a dispatch plan"
 - "Break this down for dispatch"
 
-**Chain triggers (auto-follow after interrogate):**
-- When interrogate has completed and the user has confirmed scope
-- When the user says "now plan it" or "now break it down" after a scoping session
+**Auto-detect triggers:**
+- User has completed an interrogate session and the scoped project is complex
+  (multi-file, multi-domain, or multi-step)
+- User describes a project and mentions "dispatch", "workers", "parallel", or
+  "hand off"
+- User wants to build something large and mentions planning before executing
 
-**Do NOT activate:**
-- On small, single-file tasks that don't benefit from parallelism
-- When the user says "just do it" or "skip planning"
-- If the task is < 3 coherent subtasks
+**Do NOT activate** when:
+- The task is small enough for a single Claude session (under ~30 minutes of work)
+- The user says "just build it" or "skip planning"
+- The user is mid-execution on an already-planned task
 
-## Pre-flight Check
+## Prerequisites
 
-Before starting, verify you have the answers to all of these. If not, run
-[interrogate](../interrogate/SKILL.md) first.
+This skill assumes the interrogate skill has already run, or the user has
+provided a complete project scope including: goal, constraints, audience,
+format, and assumptions. If the scope is incomplete, trigger interrogate first
+and return here after.
 
-```
-PRE-FLIGHT CHECKLIST
-─────────────────────────────────────────
-□ What is the primary goal?
-□ What does "done" look like?
-□ What is the target repository / codebase?
-□ What tech stack is involved?
-□ Are there hard constraints (timeline, budget, tech stack)?
-□ Who reviews/approves before merge?
-□ Are there external dependencies (APIs, databases, services)?
-□ What is the deployment target?
-□ Are there security or compliance requirements?
-□ Has the user confirmed scope from interrogate?
-─────────────────────────────────────────
-```
+Required context:
+- A configured GitHub repo (default: `ryankolean` org, user specifies repo name)
+- A clear project scope (from interrogate or user-provided brief)
 
-If any box is unchecked, ask before proceeding.
+## Phase 1: Repo Analysis and Code Report
 
----
+Before designing anything, understand what exists. Pull and analyze the full
+repository.
 
-## Process
+### What to Analyze
 
-Four phases. Execute in order. Do not skip.
+1. **Structure:** Directory tree, file organization patterns, module boundaries
+2. **Dependencies:** Package manifests (package.json, requirements.txt, go.mod,
+   Cargo.toml, etc.), version constraints, dependency graph
+3. **Existing patterns:** Code conventions, architecture style, naming, error
+   handling, test patterns, state management
+4. **Configuration:** Environment setup, build tooling, CI/CD, deployment config
+5. **Documentation:** README, inline docs, API docs, architectural decision
+   records
+6. **Tech stack:** Languages, frameworks, libraries, database, infrastructure
+7. **Test coverage:** Test structure, coverage gaps, testing frameworks in use
+8. **Entry points:** Main files, route definitions, API surface, CLI commands
 
----
+### Code Report Output
 
-### Phase 1: Repo Analysis and Code Report
-
-Understand the existing codebase before designing anything.
-
-#### 1.1 Clone and Read the Repository
-
-If the user has provided a GitHub URL or local path, read it now.
-
-```bash
-# Clone if URL provided
-git clone [repo-url] /tmp/architect-target 2>/dev/null
-cd /tmp/architect-target
-
-# Understand the structure
-find . -type f -not -path '*/.git/*' -not -path '*/node_modules/*' \
-  -not -path '*/vendor/*' -not -path '*/__pycache__/*' | sort | head -100
-
-# Recent activity
-git log --oneline -20
-
-# Branch structure
-git branch -a | head -20
-
-# Open PRs / issues (if GitHub CLI available)
-gh pr list --limit 10 2>/dev/null
-gh issue list --limit 10 --state open 2>/dev/null
-```
-
-#### 1.2 Detect Tech Stack
-
-Read every relevant config file:
-
-| File | What it reveals |
-|---|---|
-| `package.json` | Node deps, scripts, test runner |
-| `tsconfig.json` | TypeScript config, strictness |
-| `pyproject.toml` / `setup.py` / `requirements.txt` | Python version, deps |
-| `go.mod` / `go.sum` | Go version, module deps |
-| `Cargo.toml` | Rust edition, crate deps |
-| `pom.xml` / `build.gradle` | Java/Kotlin version, deps |
-| `Dockerfile` / `docker-compose.yml` | Runtime, services |
-| `.github/workflows/` | CI/CD pipelines |
-| `terraform/` / `pulumi/` / `cdk/` | Infrastructure as code |
-| `Makefile` | Build targets |
-| `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` | AI agent instructions |
-| `.env.example` | Required env vars |
-
-#### 1.3 Map the Architecture
-
-Identify:
-- **Entry points** (API routes, CLI commands, event handlers, cron jobs)
-- **Domain boundaries** (auth, billing, users, notifications, etc.)
-- **Data layer** (which databases, ORMs, migration tools)
-- **External integrations** (APIs, SDKs, webhooks)
-- **Test structure** (unit, integration, e2e — coverage level)
-- **Key abstractions** (services, repositories, middleware, hooks)
-
-#### 1.4 Identify Risk Zones
-
-Flag areas of the codebase that make the implementation harder:
-- High-complexity files (> 300 lines, many responsibilities)
-- Missing tests in areas that will be touched
-- Outdated dependencies that may conflict
-- Ambiguous ownership (files with many contributors)
-- Known technical debt (TODO/FIXME/HACK comments in affected files)
-
-#### 1.5 Code Report
-
-Produce a structured summary:
+Generate a code report and commit it to the repo at:
 
 ```
-CODE REPORT
-════════════════════════════════════════════════════════
-Repository:     [name] ([primary language])
-Stack:          [language + framework + DB + infra]
-Size:           [N files / N lines of code]
-Test coverage:  [% if available, else "unknown"]
-CI/CD:          [platform + pipeline status]
-Last commit:    [date + author]
-Open PRs:       [N]
-Open issues:    [N]
-
-Architecture:
-  Entry points:    [list]
-  Domain areas:    [list]
-  Data layer:      [DB + ORM]
-  Integrations:    [list]
-
-Risk zones:
-  [file/area] — [reason]
-  [file/area] — [reason]
-
-CLAUDE.md found: [yes/no — note any special instructions]
-════════════════════════════════════════════════════════
+.claude/dispatch/reports/code-report-<SHORT_HASH>.md
 ```
 
-Present this to the user before proceeding. Ask: "Anything here that looks wrong
-before I continue to architecture?"
+Where `<SHORT_HASH>` is the first 8 characters of the current HEAD commit hash.
 
----
-
-### Phase 2: Architecture and Design
-
-Design the implementation before decomposing into tasks.
-
-#### 2.1 Design the Solution
-
-Based on the Code Report and the scoped requirements, produce a design that covers:
-
-**Data model changes** (if any):
-- New tables/collections/models
-- Schema migrations required
-- Backward compatibility concerns
-
-**API changes** (if any):
-- New endpoints or mutations
-- Changed contracts (breaking vs. non-breaking)
-- Versioning strategy
-
-**Interface contracts** (critical for parallelism):
-Define all interfaces between components that will be worked on in parallel.
-A Dispatch worker implementing Service A and another implementing Service B
-both need to agree on the interface between them BEFORE either starts.
-
-Format:
-```typescript
-// Interfaces that must be agreed on before parallel work begins
-interface UserService {
-  getUser(id: string): Promise<User>
-  createUser(data: CreateUserInput): Promise<User>
-}
-
-interface NotificationService {
-  send(userId: string, message: NotificationMessage): Promise<void>
-}
-```
-
-**File-level change map**:
-List every file that will be created, modified, or deleted:
-
-```
-CHANGE MAP
-─────────────────────────────────────────────
-CREATE  src/services/payment-service.ts
-CREATE  src/services/payment-service.test.ts
-MODIFY  src/api/routes/billing.ts
-MODIFY  src/types/index.ts
-CREATE  migrations/20240315_add_payment_table.sql
-DELETE  src/legacy/old-payment-handler.ts
-─────────────────────────────────────────────
-```
-
-**Dependency graph**:
-Identify which changes depend on which other changes. This determines execution order.
-
-#### 2.2 Validate the Design
-
-Present the design to the user:
-
-> "Here's the implementation design before I break it into tasks. Does this match
-> what you're expecting? Any changes before I continue?"
-
-Wait for confirmation. Do not proceed to task decomposition without approval.
-
----
-
-### Phase 3: Task Decomposition
-
-Break the approved design into Dispatch-ready tasks.
-
-#### 3.1 Task Sizing Rules
-
-Each task must be:
-- **Self-contained**: Can be executed by a single Dispatch worker with no follow-up questions
-- **Bounded**: Touches a specific set of files (listed in the task)
-- **Testable**: Has a clear definition of done that can be verified
-- **Safe to parallelize**: Does not conflict with other parallel tasks at the file level
-
-Size targets:
-- **Minimum**: 15 minutes of focused work
-- **Maximum**: 4 hours of focused work (if larger, split it)
-- **Sweet spot**: 30–90 minutes
-
-Flags that a task is too large:
-- "Refactor the entire X layer"
-- "Implement all the Y features"
-- Touches > 15 files
-- Has more than 3 acceptance criteria
-
-#### 3.2 Execution Groups
-
-Organize tasks into groups that respect the dependency graph:
-
-```
-GROUP A — Foundation (must complete before B or C)
-  Task A1: [name]
-  Task A2: [name]
-
-GROUP B — Core Features (can run in parallel after A)
-  Task B1: [name]
-  Task B2: [name]
-  Task B3: [name]
-
-GROUP C — Integration and Polish (can run in parallel after B)
-  Task C1: [name]
-  Task C2: [name]
-
-GROUP FINAL — Review, Testing, and Merge Prep
-  Task F1: End-to-end testing
-  Task F2: Documentation
-  Task F3: Changelog and migration guide
-```
-
-Rules:
-- All GROUP A tasks must complete before GROUP B starts
-- GROUP B tasks may run in parallel (no shared file writes)
-- GROUP C tasks may run in parallel (no shared file writes)
-- GROUP FINAL runs after all C tasks complete
-- Never put tasks in the same group if they write to the same file
-
-#### 3.3 Task Template
-
-Each task must follow this exact format:
+**Code report template:**
 
 ```markdown
-## Task [GROUP][NUMBER]: [Short Name]
+# Code Report
+**Repo:** <owner>/<repo>
+**Commit:** <full_hash>
+**Generated:** <ISO-8601 timestamp>
+**Branch:** <branch_name>
 
-**Objective:** [One sentence — what this task accomplishes]
+## Tech Stack
+- **Languages:** [list with versions]
+- **Frameworks:** [list with versions]
+- **Database:** [type and version if detectable]
+- **Build tooling:** [bundler, compiler, task runner]
+- **Test framework:** [framework and runner]
+- **CI/CD:** [platform and config location]
 
-**Context:**
-[2-4 sentences giving the Dispatch worker enough background to understand
-why this task exists and how it fits the larger project. Include relevant
-design decisions from Phase 2.]
+## Architecture Overview
+[2-5 sentences describing the overall architecture pattern, data flow, and
+module boundaries. Reference specific directories.]
 
-**Files to create:**
-- `path/to/file.ts` — [what it should contain]
+## Directory Structure
+[Abbreviated tree showing top 2-3 levels with annotations for what each
+major directory contains.]
 
-**Files to modify:**
-- `path/to/existing.ts` — [what changes to make and why]
+## Key Patterns Observed
+- **Code style:** [conventions, linting, formatting]
+- **Error handling:** [pattern used]
+- **State management:** [approach]
+- **API design:** [REST/GraphQL/RPC, versioning]
+- **Authentication:** [if present]
 
-**Files to leave untouched:**
-- `path/to/other.ts` — [this file is being worked on in Task B2]
+## Dependencies of Note
+[List only dependencies that are architecturally significant — ORMs, state
+libraries, auth packages, build tools. Skip utilities.]
 
-**Acceptance criteria:**
-- [ ] [Specific, verifiable condition]
-- [ ] [Specific, verifiable condition]
-- [ ] All new code has unit tests
-- [ ] TypeScript compiles with no errors (or language equivalent)
-- [ ] Existing tests still pass
+## Test Coverage Assessment
+- **Test structure:** [where tests live, naming convention]
+- **Coverage gaps:** [areas with no or minimal testing]
+- **Test types present:** [unit, integration, e2e, snapshot]
 
-**Token budget:** ~[N]k tokens
-**Suggested model:** [claude-opus-4-6 / claude-sonnet-4-6 / claude-haiku-4-5]
-
-**Dependencies:** [Task A1 must complete first / none]
-
-**Do not:**
-- [Specific anti-pattern or out-of-scope thing to avoid]
-- [Another]
+## Risks and Technical Debt
+[Anything that could impact the planned work — outdated dependencies, missing
+types, inconsistent patterns, known issues in README/issues.]
 ```
 
-#### 3.4 Interface Contract Tasks
+If a previous code report exists at a different commit hash, note the delta:
+what changed between that report and this one. This enables historical diffing
+across planning sessions.
 
-For every interface shared between parallel tasks, create a dedicated Group A task:
+## Phase 2: Architecture and Design
+
+With the code report complete, design the solution. This phase produces the
+high-level design decisions before breaking into tasks.
+
+### Design Deliverables
+
+For each project, produce:
+
+1. **Approach statement:** 2-3 sentences on the chosen approach and why
+   alternatives were rejected.
+
+2. **Component map:** Which parts of the system are affected. For each:
+   - What exists today (from code report)
+   - What changes
+   - Why
+
+3. **Data flow:** How data moves through the new/modified system. Include
+   inputs, transformations, storage, and outputs.
+
+4. **Interface contracts:** API signatures, function signatures, type
+   definitions, or schema changes that downstream tasks will depend on. Define
+   these FIRST so parallel workers share the same contracts.
+
+5. **Risk register:** Identify the top 3-5 risks and mitigations.
+
+### Token Efficiency Principles
+
+Every design decision should consider Dispatch token cost:
+
+- **Define shared contracts early.** Interface definitions, types, and schemas
+  go in a dedicated task that runs first. All downstream tasks reference these
+  contracts rather than re-deriving them.
+- **Minimize context per worker.** Each task should include ONLY the context
+  that worker needs — not the full project background. Reference specific files
+  and line ranges, not "the codebase."
+- **Prefer small, focused tasks.** A worker that touches 1-3 files burns fewer
+  tokens than one that needs to understand 15 files. Decompose aggressively.
+- **Front-load decisions.** Every ambiguity left in a task prompt causes the
+  worker to reason about alternatives, burning tokens. Make decisions in the
+  plan, not in the worker.
+- **Use file manifests as blinders.** When a task lists exactly which files to
+  read and write, the worker skips scanning the full repo.
+
+## Phase 3: Task Decomposition
+
+Break the design into discrete, dispatchable tasks. Each task is a unit of
+work for one Dispatch worker.
+
+### Task Structure
+
+Every task in the plan MUST include ALL of the following fields:
 
 ```markdown
-## Task A0: Define Shared Interfaces and Types
+### Task <N>: <Descriptive Name>
 
-**Objective:** Establish all TypeScript interfaces, types, and constants that
-parallel Group B tasks depend on, so workers don't make incompatible assumptions.
+**Execution group:** <group_letter> (A = runs first, B = after A completes, etc.)
+**Depends on:** <task numbers, or "none" for parallel-ready tasks>
+**Estimated tokens:** <number> (input + output estimate for the worker)
+**Recommended model:** <model_tier>
+**Risk level:** low | medium | high
 
-**Files to create:**
-- `src/types/payment.ts` — PaymentIntent, PaymentMethod, PaymentStatus types
-- `src/types/notification.ts` — NotificationMessage, NotificationChannel types
+#### Instructions
+[Precise, complete instructions. The worker should be able to execute this with
+zero follow-up questions. Include:
+- Exactly what to build/change
+- Which files to read for context (specific paths)
+- Which files to create or modify (specific paths)
+- Code patterns to follow (reference existing code)
+- Edge cases to handle
+- What NOT to do]
 
-**Files to modify:**
-- `src/types/index.ts` — export new types
+#### Acceptance Criteria
+- [ ] [Specific, testable criterion]
+- [ ] [Specific, testable criterion]
+- [ ] [Each criterion should be verifiable by reading the output]
 
-**Acceptance criteria:**
-- [ ] All interfaces from the Phase 2 design are defined
-- [ ] Types are exported correctly
-- [ ] No implementation code — types only
-- [ ] TypeScript compiles with no errors
+#### File Manifest
+| Action | Path | Notes |
+|--------|------|-------|
+| READ   | src/auth/middleware.ts | Existing auth pattern to follow |
+| CREATE | src/payments/handler.ts | New payment handler |
+| MODIFY | src/routes/index.ts | Add payment routes |
 
-**Dependencies:** none
+#### Risk Flags
+[If risk level is medium or high, explain what could go wrong and what the
+human should review before merging this task's output.]
 ```
 
----
+### Execution Groups
 
-### Phase 4: Plan Assembly and Commit
+Tasks are organized into execution groups that define parallelism:
 
-Assemble the final plan file and save it.
+- **Group A:** Foundation tasks with no dependencies. Run in parallel.
+  Examples: shared types, interface contracts, config scaffolding.
+- **Group B:** Tasks that depend on Group A outputs. Run in parallel with
+  each other once A completes.
+- **Group C+:** Subsequent dependency layers. Continue the pattern.
+- **Group FINAL:** Integration, testing, and verification tasks that run
+  after all other groups complete.
 
-#### 4.1 Plan File Format
+Within each group, all tasks are parallel-safe. Between groups, there is a
+hard dependency barrier.
 
-The plan file is a standalone markdown document that a human can hand directly
-to Dispatch. It must be fully self-contained — no references to "the conversation"
-or "what we discussed".
+### Model Tiering Defaults
+
+Recommend a model for each task based on complexity. These are defaults — the
+user can override per task or globally.
+
+| Tier | Default Model | Use When |
+|------|--------------|----------|
+| **Speed** | Haiku (or fastest available) | File scaffolding, boilerplate generation, simple config changes, type definitions, straightforward CRUD |
+| **Balanced** | Sonnet (or mid-tier available) | Feature implementation, moderate refactors, test writing, API integration, documentation |
+| **Power** | Opus (or most capable available) | Complex architecture decisions, security-critical code, multi-file refactors with subtle dependencies, performance optimization |
+
+When new models are released, re-evaluate these tiers based on published
+benchmarks and cost-per-token. The principle is: use the cheapest model that
+can reliably complete the task on the first attempt. A retry costs more than
+using a slightly more expensive model upfront.
+
+**User override format:** If the user specifies model preferences, honor them.
+Accept overrides at two levels:
+- **Global:** "Use Sonnet for everything" — applies to all tasks
+- **Per-task:** "Use Opus for task 3" — applies to that task only
+
+## Phase 4: Plan Assembly and Commit
+
+### Plan File Structure
+
+Assemble the full plan as a single markdown file and commit to:
+
+```
+.claude/dispatch/plans/<YYYY-MM-DD>-<slug>.md
+```
+
+Where `<slug>` is a kebab-case name derived from the project goal
+(e.g., `2026-04-01-auth-system-refactor.md`).
+
+**Full plan template:**
 
 ```markdown
-# Dispatch Plan: [Project Name]
+# Dispatch Plan: <Project Name>
 
-**Created:** [date]
-**Repository:** [repo URL or path]
-**Estimated total tokens:** ~[N]k across all tasks
-**Execution model:** [parallel groups / sequential]
+**Created:** <ISO-8601 timestamp>
+**Repo:** <owner>/<repo>
+**Branch:** <branch_name>
+**Base commit:** <full_hash>
+**Code report:** .claude/dispatch/reports/code-report-<short_hash>.md
+
+## Project Summary
+[2-3 sentences from the interrogate brief. What we're building and why.]
+
+## Scope
+**In scope:**
+- [Explicit list of what this plan covers]
+
+**Out of scope:**
+- [Explicit list of what this plan does NOT cover]
+
+## Design Decisions
+[From Phase 2 — approach statement, key decisions, and why alternatives
+were rejected. Keep this brief but sufficient for a human reviewer to
+understand the rationale.]
+
+## Execution Overview
+
+| Group | Tasks | Parallelism | Estimated Total Tokens |
+|-------|-------|-------------|----------------------|
+| A     | 1, 2, 3 | All parallel | ~X,XXX |
+| B     | 4, 5 | All parallel (after A) | ~X,XXX |
+| FINAL | 6 | Sequential | ~X,XXX |
+| **Total** | **6 tasks** | | **~XX,XXX** |
+
+## Model Budget
+
+| Model | Task Count | Est. Tokens | Est. Relative Cost |
+|-------|-----------|-------------|-------------------|
+| Haiku | X | X,XXX | $ |
+| Sonnet | X | X,XXX | $$ |
+| Opus | X | X,XXX | $$$ |
+
+## Tasks
+
+[All tasks from Phase 3, in execution group order]
 
 ---
 
-## Summary
+## Handoff Instructions
 
-[3-5 sentence overview of what this plan accomplishes, why, and what the
-outcome will be. Written for a human reviewer who hasn't seen the interrogation.]
+To execute this plan with Claude Dispatch:
 
----
+1. Review all tasks above. Edit any instructions, acceptance criteria, or
+   model assignments as needed.
+2. For each execution group (A, B, C, ..., FINAL), dispatch all tasks in
+   that group to Dispatch workers.
+3. Wait for the group to complete before starting the next group.
+4. After Group FINAL completes, review the integration task output and
+   run the full acceptance criteria checklist.
 
-## Code Report
+### Dispatch Commands
 
-[Paste the full Code Report from Phase 1.5]
+For each task, provide Dispatch with:
+- The task instructions (copy the Instructions section)
+- The file manifest (so the worker knows its scope)
+- The acceptance criteria (so the worker can self-verify)
+- The recommended model (or your override)
 
----
+### Risk Summary
 
-## Architecture Summary
-
-[Paste the design from Phase 2.1 — data model, API changes, interface contracts,
-change map, and dependency graph]
-
----
-
-## Execution Plan
-
-[All task groups and tasks in order, using the Task Template format from 3.3]
-
----
-
-## Validation Checklist
-
-After all tasks complete, a human should verify:
-- [ ] All acceptance criteria in every task are checked off
-- [ ] Full test suite passes
-- [ ] No new TypeScript/lint errors
-- [ ] [App-specific checks: migrations ran, env vars documented, etc.]
-- [ ] CHANGELOG updated
-- [ ] PR description written
-
----
-
-## Notes for the Reviewer
-
-[Any design tradeoffs, known risks, or decisions the architect made that
-the reviewer should be aware of]
+| Task | Risk | Mitigation |
+|------|------|-----------|
+| [task #] | [risk description] | [what to check] |
 ```
 
-#### 4.2 Save the Plan File
+### Commit Convention
 
-Save the plan to the repository:
-
-```bash
-# Save plan to repo
-mkdir -p .dispatch-plans
-PLAN_FILE=".dispatch-plans/$(date +%Y-%m-%d)-[project-slug].md"
-# Write plan to $PLAN_FILE
-```
-
-Or if the user prefers, save to their preferred location.
-
-#### 4.3 Summary to User
-
-Present a final summary:
+Commit the plan and code report with the message:
 
 ```
-ARCHITECT PLAN COMPLETE
-════════════════════════════════════════════════════════
-Project:        [name]
-Plan file:      [path]
+chore(dispatch): add plan — <project-slug>
 
-Execution groups:
-  Group A:  [N] tasks (foundation — run sequentially)
-  Group B:  [N] tasks (can run in parallel)
-  Group C:  [N] tasks (can run in parallel)
-  Final:    [N] tasks (review + merge prep)
-
-Total tasks:      [N]
-Est. total tokens: ~[N]k
-Suggested workers: [N] parallel Dispatch workers
-
-Interface contracts defined: [N]
-Files to be created:         [N]
-Files to be modified:        [N]
-Files to be deleted:         [N]
-
-Next step: Review the plan file, then hand Group A tasks to Dispatch.
-════════════════════════════════════════════════════════
+Plan: .claude/dispatch/plans/<filename>.md
+Code report: .claude/dispatch/reports/code-report-<hash>.md
 ```
 
----
+If running in Claude.ai (no git access), output both files for the user to
+commit manually or via Claude Code.
 
 ## Rules
 
-1. **Never skip the code report.** Designing without reading the codebase produces
-   plans that conflict with reality. Always read first.
+1. **Never skip the code report.** Even for greenfield projects, analyze the
+   repo to understand existing conventions, CI/CD, and tooling. A greenfield
+   project in an existing repo still has context.
 
-2. **Every task must be self-contained.** A Dispatch worker has no memory of the
-   conversation. Every task must include all context it needs to execute.
+2. **Every task must be self-contained.** A Dispatch worker receives ONLY its
+   task section. It cannot see other tasks, the design decisions, or the
+   project summary. Write instructions accordingly — include all necessary
+   context within the task itself.
 
-3. **Front-load interface contracts.** Any interface shared between parallel tasks
-   must be defined in Group A before parallel work begins. Conflicts discovered
-   after parallel execution waste tokens and cause merges.
+3. **Front-load interface contracts.** If multiple tasks share types, schemas,
+   or API contracts, create a Group A task that defines them. Never let two
+   parallel workers independently invent the same interface.
 
-4. **Be specific about file paths.** "Add a service" is not a task. "Create
-   `src/services/payment-service.ts`" is a task.
+4. **Be specific about file paths.** "Update the auth module" is not a task
+   instruction. "Modify `src/auth/middleware.ts` to add rate limiting using the
+   pattern in `src/auth/csrf.ts`" is.
 
-5. **Estimate tokens conservatively.** Over-estimate by 30%. Under-estimated
-   tasks stall when workers hit context limits.
+5. **Estimate tokens conservatively.** Round up. A task that runs 20% over
+   budget is cheaper than a retry. Include both input tokens (files the worker
+   must read) and output tokens (code the worker must write).
 
-6. **Never include secrets in plan files.** Plan files may be committed to repos.
-   Never include API keys, passwords, or credentials — even as examples.
+6. **Never include secrets, API keys, or credentials in plan files.** Reference
+   environment variable names instead.
 
-7. **When in doubt, make a smaller task.** A task that's too small wastes one
-   worker turn. A task that's too large blocks the whole group.
+7. **When in doubt, make a smaller task.** Two focused tasks that each succeed
+   on the first attempt cost less than one large task that needs a retry.
 
-8. **Honor the user's model overrides.** If the user specifies a model for certain
-   task types (e.g., "use Haiku for boilerplate"), respect that in the task template.
+8. **Include rollback guidance for high-risk tasks.** If a task modifies
+   critical infrastructure, production config, or security boundaries, the
+   task's risk flags should include how to revert.
+
+9. **Honor the user's model overrides.** If the user specifies model preferences
+   globally or per-task, apply them. Offer your tiering recommendation but
+   don't override their choice.
+
+10. **Adapt model recommendations to current offerings.** When you are aware of
+    new models (through search, user mention, or updated knowledge), update
+    the tiering recommendations. The tiers are based on capability and cost,
+    not fixed model names.
+
+## Cross-Surface Behavior
+
+**In Claude Code (has git access):**
+- Clone/pull the repo directly
+- Generate the code report from live code analysis
+- Commit both plan and code report to the repo
+- Display a summary in the terminal
+
+**In Claude.ai (no git access):**
+- User provides the repo name; skill uses GitHub API (via web search/fetch)
+  to analyze public repo structure and key files
+- For private repos, user uploads key files or provides context
+- Output both the code report and plan as downloadable markdown files
+- Provide the user with commit instructions and file paths
+
+## Chaining
+
+- **interrogate → architect-plan-for-dispatch:** Interrogate scopes the
+  project, then this skill designs and plans the execution
+- **architect-plan-for-dispatch → [Claude Dispatch]:** Human reviews the plan,
+  then provides it to Dispatch workers for execution
+- **architect-plan-for-dispatch → architect-plan-for-dispatch:** Re-run on the
+  same repo at a later commit to generate an updated code report and diff
+  against the previous plan

@@ -135,159 +135,154 @@ If the user provides a path or URL, read the project structure.
 
 #### 2.2 Identify Language and Framework
 
-Read the root directory and detect:
+Read project manifest files to detect the stack:
 
-| Signal | What to read |
+| Signal File | Language / Framework |
 |---|---|
-| Language | File extensions, shebangs, build tool config |
-| Framework | `package.json`, `requirements.txt`, `Cargo.toml`, `go.mod`, `pom.xml`, `build.gradle`, `Gemfile`, `composer.json` |
-| Runtime version | `.nvmrc`, `.python-version`, `.tool-versions`, `Dockerfile` if present |
-| Entry point | `main.*`, `index.*`, `app.*`, `cmd/`, `src/main/` |
-| Existing Docker config | `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
+| `package.json` | Node.js (check for Express, Fastify, Hono, Next.js, etc.) |
+| `package.json` + `bun.lockb` | Bun runtime |
+| `deno.json` / `deno.lock` | Deno runtime |
+| `pyproject.toml` / `requirements.txt` / `setup.py` | Python (check for Flask, FastAPI, Django) |
+| `go.mod` | Go |
+| `Cargo.toml` | Rust |
+| `pom.xml` / `build.gradle` | Java / Kotlin |
+| `mix.exs` | Elixir |
+| `Gemfile` | Ruby |
 
-Never assume. Read the files. If multiple languages are present, flag it.
+If the stack is ambiguous (polyglot repo, no clear entrypoint), ask targeted
+follow-ups:
+
+> "This looks like a polyglot repo. Which is the primary application you want
+> packaged — the [X] service or the [Y] service?"
 
 #### 2.3 Dependency Tree Analysis
 
-Produce a dependency weight report based on language:
+Scan the full dependency tree for weight and optimization opportunities.
 
 **Node.js:**
 ```bash
-# Count total dependencies (direct + transitive)
-cat package.json | jq '.dependencies + .devDependencies | keys | length'
+# Total node_modules size
+du -sh node_modules/ 2>/dev/null
 
-# Estimate node_modules size if present
-du -sh node_modules 2>/dev/null || echo "node_modules not installed"
+# Count of direct vs transitive deps
+jq '.dependencies | length' package.json 2>/dev/null
+jq '.devDependencies | length' package.json 2>/dev/null
 
-# Check for known heavy deps
-grep -E "moment|lodash|left-pad|aws-sdk|firebase" package.json
+# Heaviest packages
+du -sh node_modules/*/ 2>/dev/null | sort -rh | head -20
 ```
 
 **Python:**
 ```bash
-# Count packages
-pip list 2>/dev/null | wc -l
+# Installed package sizes
+pip list --format=columns 2>/dev/null
+pip show <heavy-suspects> 2>/dev/null
 
-# Estimate site-packages size
-python3 -c "import site; print(site.getsitepackages())" 2>/dev/null
-
-# Check for heavy deps
-grep -iE "tensorflow|torch|scipy|pandas|numpy" requirements*.txt 2>/dev/null
+# Total site-packages size
+du -sh $(python -c "import site; print(site.getsitepackages()[0])") 2>/dev/null
 ```
 
 **Go:**
 ```bash
-# Count modules
-grep "^require" -A 9999 go.mod | grep -c "/"
+# Module dependency count
+go list -m all 2>/dev/null | wc -l
 
-# Check for CGo (complicates static builds)
-grep -r "import \"C\"" . --include="*.go" | head -5
+# Binary size (if already built)
+ls -lh <binary> 2>/dev/null
+
+# Build with size flags
+go build -ldflags="-s -w" -o /tmp/test-build . 2>/dev/null && ls -lh /tmp/test-build
 ```
 
 **Rust:**
 ```bash
-# Count crate dependencies
-grep -c "^[a-zA-Z]" Cargo.lock 2>/dev/null
+# Dependency count
+cargo tree 2>/dev/null | wc -l
 
-# Check for heavy build deps
-grep -E "openssl|libz|pkg-config" Cargo.toml 2>/dev/null
+# Release binary size
+cargo build --release 2>/dev/null && ls -lh target/release/<binary>
 ```
 
-**Java/Kotlin:**
+#### 2.4 Identify Heavy Dependencies
+
+Flag dependencies that contribute disproportionate weight. For each one, note:
+- Package name and size
+- What it's used for in the codebase (grep for imports)
+- Whether a lighter alternative exists
+
+#### 2.5 Analyze Runtime Characteristics
+
+Determine what the application actually needs at runtime:
+- Does it need a full OS filesystem, or just a binary + config?
+- Does it use native extensions or system libraries (e.g., sharp, canvas, libpq)?
+- Does it need a writable filesystem at runtime?
+- Does it spawn child processes or shells?
+- Does it need TLS certificates or CA bundles?
+- Does it bind to network ports?
+
+#### 2.6 Security Scan
+
+Before recommending a base image or dependency set, scan for known vulnerabilities.
+
+**Base image CVE check:**
 ```bash
-# Gradle: count dependencies
-grep -c "implementation\|compile\|runtimeOnly" build.gradle* 2>/dev/null
-
-# Maven: count dependencies
-grep -c "<dependency>" pom.xml 2>/dev/null
+# If Docker is available, scan candidate base images
+docker scout cves <candidate-base-image> 2>/dev/null || \
+  echo "Docker Scout not available — note in report"
 ```
 
-#### 2.4 Security Scan (CVE Analysis)
-
-Run available security tools automatically. Do not ask permission.
-
+**Dependency vulnerability check:**
 ```bash
-# Node.js — npm audit
-npm audit --json 2>/dev/null | jq '{critical: .metadata.vulnerabilities.critical, high: .metadata.vulnerabilities.high, moderate: .metadata.vulnerabilities.moderate}'
+# Node.js
+npm audit --production 2>/dev/null
 
-# Python — safety check (if installed)
-safety check --json 2>/dev/null | jq '.[].vulnerability_id' | head -20
+# Python
+pip-audit 2>/dev/null || pip install pip-audit --break-system-packages -q && pip-audit
 
-# Go — govulncheck (if installed)
-govulncheck ./... 2>/dev/null | head -30
+# Go
+govulncheck ./... 2>/dev/null
 
-# General — trivy (if installed, covers all languages + Docker layers)
-trivy fs . --severity HIGH,CRITICAL --quiet 2>/dev/null | head -40
-
-# Docker image scan (if Dockerfile exists)
-trivy image [image-name] --severity HIGH,CRITICAL 2>/dev/null | head -40
+# Rust
+cargo audit 2>/dev/null
 ```
 
-Report findings with severity counts. Never suppress or downplay CVE results.
+Flag any critical or high severity CVEs. If a recommended base image has known
+CVEs, note it in the report and suggest a patched alternative. Do not recommend
+base images with unpatched critical vulnerabilities.
 
-#### 2.5 Build Artifact Analysis
+#### 2.7 Detect Existing Packaging
 
-Understand what gets built and shipped:
-
+Check if the project already has packaging configuration:
 ```bash
-# Check if compiled artifacts exist
-ls -lh dist/ build/ target/ out/ bin/ 2>/dev/null
+# Check for existing Dockerfile(s)
+find . -name "Dockerfile*" -not -path '*/.git/*' 2>/dev/null
 
-# Estimate source size
-du -sh . --exclude=node_modules --exclude=.git --exclude=vendor 2>/dev/null
+# Check for docker-compose
+find . -name "docker-compose*" -not -path '*/.git/*' 2>/dev/null
 
-# Check for test/dev files that shouldn't ship
-find . -name "*.test.*" -o -name "*.spec.*" -o -name "__tests__" -o -name "test/" | head -20
+# Check for .dockerignore
+test -f .dockerignore && echo ".dockerignore exists" || echo "No .dockerignore"
 ```
 
-#### 2.6 Runtime Characteristics
+If an existing Dockerfile is found, read it and store its contents for comparison
+in Phase 3. This enables the Comparison Mode output.
 
-Determine what the application needs at runtime:
-
-- **Static or dynamic?** Can it run without a runtime installed (compiled binary) or does it need Node, Python, JVM, etc.?
-- **System dependencies?** Does it call native libraries, system tools, or OS-specific APIs?
-- **Network services?** Does it listen on ports, make outbound calls, require service discovery?
-- **Filesystem access?** Does it read/write to disk at runtime? What paths?
-- **Secrets?** Does it read env vars, files, or a secrets manager for credentials?
-- **Multi-process?** Does it spawn workers, daemons, or require an init system?
-
-#### 2.7 Existing Docker Analysis (if Dockerfile exists)
-
-If a Dockerfile is present, analyze it:
+#### 2.8 Produce the Code Profile
 
 ```
-EXISTING DOCKER ANALYSIS
+CODE PROFILE
 ────────────────────────────────
-Base image:          [FROM line]
-Base image size:     [if known]
-Build stages:        [multi-stage or single]
-Layer count:         [number of RUN/COPY/ADD instructions]
-.dockerignore:       [present/missing]
-Non-root user:       [yes/no]
-Pinned versions:     [yes/no — in FROM, apt-get, pip install]
-Secrets baked in:    [any ENV, ARG, or COPY of .env files?]
-Known anti-patterns: [list any found]
-────────────────────────────────
-```
-
-#### 2.8 Code Analysis Report
-
-Summarize all Phase 2 findings:
-
-```
-CODE ANALYSIS REPORT
-────────────────────────────────
-Language:          [primary language + version]
-Framework:         [framework + version]
-Entry point:       [file path]
-Dep count:         [direct] direct / [transitive] transitive
-Dep weight:        [size of node_modules/site-packages/vendor]
-Heavy deps:        [list any flagged]
-CVEs:              [critical: N | high: N | moderate: N] or "scan not available"
-Build output:      [compiled binary / JS bundle / JAR / wheel / etc.]
-Source size:       [MB]
-Runtime needed:    [Node 18 / Python 3.11 / JVM / none — static binary]
-System deps:       [list any: libpq, openssl, ffmpeg, etc. — or "none"]
+Language:           [language] [version]
+Framework:          [framework] [version]
+Entrypoint:         [path to main file]
+Direct deps:        [count]
+Transitive deps:    [count]
+Dependency weight:  [total size of deps]
+Native extensions:  [list or "none"]
+Runtime needs:      [filesystem / network / child processes / etc.]
+Top 5 heaviest:     [name: size, name: size, ...]
+Known CVEs:         [critical: X, high: X, medium: X, or "clean"]
+Existing packaging: [Dockerfile found / none]
 ────────────────────────────────
 ```
 
@@ -295,113 +290,182 @@ System deps:       [list any: libpq, openssl, ffmpeg, etc. — or "none"]
 
 ### Phase 3: Recommendation + Deliverables
 
-Use the Hardware Profile and Code Analysis Report to recommend the optimal packaging
-strategy and generate all required files.
+Combine the hardware profile and code profile to recommend the optimal packaging
+strategy.
 
-#### 3.1 Strategy Decision Matrix
+#### 3.1 Ask for Optimization Weighting and Size Budget
 
-Score each packaging option against the collected data:
+Before recommending, ask:
 
-| Strategy | Choose when |
+> "I can optimize for three metrics. How would you weight them?"
+>
+> 1. **Image/artifact size** (smallest possible output)
+> 2. **Startup time** (fastest cold start)
+> 3. **Runtime memory** (lowest RAM at steady state)
+>
+> Options: Balanced (default), or tell me which to prioritize.
+>
+> "Do you have a target size budget? (e.g., 'under 100MB', 'under 50MB')
+> If not, I'll optimize as aggressively as the stack allows."
+
+If the user sets a size budget, track it throughout Phase 3. If the recommended
+strategy cannot meet the budget, flag it explicitly in the report with an
+explanation of what's preventing it and what tradeoffs would be required to hit it.
+
+#### 3.2 Select Packaging Strategy
+
+Evaluate both Docker and standalone binary options, then recommend the best fit.
+
+**Docker Image Strategy Matrix:**
+
+| Scenario | Base Image Recommendation |
 |---|---|
-| **Scratch image** | Static binary, zero system deps, minimal attack surface needed |
-| **Distroless** | Compiled language, minimal system deps, security-conscious environment |
-| **Alpine-based** | Interpreted language, musl-compatible, size is top priority |
-| **Slim variant** (`debian-slim`, `ubuntu-minimal`) | Need apt but want small image; glibc required |
-| **Full base** (`debian`, `ubuntu`) | Complex system deps, developer ergonomics needed, size not critical |
-| **Standalone binary** | Go/Rust/compiled C, no Docker on target, edge/embedded deployment |
-| **AppImage / single-file** | Desktop Linux, no Docker, user-space install needed |
-| **Hybrid (binary + minimal image)** | Need Docker registry + minimal size |
+| Node.js, no native deps | `node:{version}-alpine` or distroless |
+| Node.js, native deps (sharp, canvas, etc.) | `node:{version}-slim` with explicit lib installs |
+| Python, minimal deps | `python:{version}-alpine` or `python:{version}-slim` |
+| Python, heavy ML/data deps | `python:{version}-slim` (alpine breaks many wheels) |
+| Go | `scratch` or `gcr.io/distroless/static` (static binary) |
+| Rust | `scratch` or `gcr.io/distroless/cc` (if libc needed) |
 
-Apply these rules:
-1. If target has no Docker → standalone binary is the only option
-2. If `import "C"` or native libs → scratch is probably not viable
-3. If Python/Node → Alpine + layer caching is default; warn about musl compat issues
-4. If JVM → Distroless Java or GraalVM native image
-5. If image size > 1GB and no hard reason → flag and recommend alternatives
+**Standalone Binary Strategy Matrix:**
 
-#### 3.2 Multi-Strategy Comparison (when multiple options are viable)
+| Scenario | Approach |
+|---|---|
+| Go | `CGO_ENABLED=0 go build -ldflags="-s -w"` → static binary |
+| Rust | `cargo build --release` + `strip` → static binary |
+| Node.js | `pkg`, `bun build --compile`, or `deno compile` |
+| Python | `PyInstaller --onefile` or `Nuitka` |
 
-Present a comparison table before recommending:
+**Decision criteria:**
+- If Docker is available on target → prefer Docker (better isolation, reproducibility)
+- If target is constrained (<512MB RAM, ARM edge device) → prefer standalone binary
+- If app has many native deps → prefer Docker (dependency management)
+- If app is pure Go/Rust → prefer standalone binary (smaller, no runtime needed)
+- If startup time is critical → prefer standalone binary (no container overhead)
 
-```
-STRATEGY COMPARISON
-────────────────────────────────────────────────────────
-Strategy              Est. Size   Build Time   Complexity   Security
-─────────────────────────────────────────────────────────
-Scratch (binary)      ~10-30 MB   Med           Low          Highest
-Distroless            ~30-50 MB   Med           Low          High
-Alpine                ~50-150 MB  Fast          Low          Medium
-Debian Slim           ~150-300 MB Fast          Low          Medium
-Full Debian           ~500MB+     Fast          Low          Low
-────────────────────────────────────────────────────────
-Recommendation: [strategy] — [one-sentence reason]
-```
+#### 3.3 Generate Build Configuration
 
-#### 3.3 Generate: Dockerfile
+Based on the selected strategy, generate production-ready files:
 
-Generate a complete, production-ready Dockerfile. Rules:
-- Pin ALL versions (base image tag, apt packages, pip/npm/cargo versions)
-- Multi-stage build unless the language genuinely doesn't benefit from it
-- Non-root user always
-- `.dockerignore` companion file always
-- No secrets baked in (never `ENV SECRET=...` or `COPY .env .`)
-- Minimize layers: chain RUN commands, clean package caches in same layer
-- Add `HEALTHCHECK` if the app exposes a port
-- Add `LABEL` with maintainer and version
+**For Docker:**
+Generate a multi-stage Dockerfile following these principles:
+1. **Build stage:** Full SDK/toolchain image. Install deps, compile, test.
+2. **Production stage:** Minimal base image. Copy only the built artifact and
+   runtime dependencies.
+3. Use `.dockerignore` to exclude `node_modules/`, `.git/`, `dist/`, test files.
+4. Pin base image versions (never use `:latest`).
+5. Order layers by change frequency (deps first, source last) for cache efficiency.
+6. Run as non-root user.
+7. Set `HEALTHCHECK` if the app serves HTTP.
 
-Example structure for a Node.js app:
-```dockerfile
-# Stage 1: Build
-FROM node:20.11.0-alpine3.19 AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
-COPY . .
-RUN npm run build
+Include a `.dockerignore` file.
 
-# Stage 2: Runtime
-FROM node:20.11.0-alpine3.19
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-WORKDIR /app
-COPY --from=builder --chown=appuser:appgroup /app/dist ./dist
-COPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules
-USER appuser
-EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1
-CMD ["node", "dist/index.js"]
+**For standalone binary:**
+Generate the appropriate build script or Makefile with:
+1. Optimized compiler flags (strip symbols, LTO, size optimization)
+2. Cross-compilation commands if build and target architectures differ
+3. Post-build stripping (UPX compression if appropriate)
+
+#### 3.4 Multi-Architecture Support
+
+Check if the build and target architectures differ, or if the user needs to
+deploy to multiple architectures (e.g., amd64 + arm64).
+
+If multi-arch is needed, generate `docker buildx` commands:
+```bash
+# Create a multi-arch builder (one-time setup)
+docker buildx create --name pack-light-builder --use 2>/dev/null
+
+# Build for multiple platforms
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t <image-name>:<tag> \
+  --push \
+  .
 ```
 
-#### 3.4 Generate: .dockerignore
+If standalone binary, generate cross-compilation commands per-language:
+- **Go:** `GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build ...`
+- **Rust:** `cross build --target aarch64-unknown-linux-musl --release`
+- **Node.js (Bun):** `bun build --compile --target=bun-linux-arm64 ...`
+
+Note: Always specify target platforms explicitly. Never assume the build
+machine's architecture matches the deployment target.
+
+#### 3.5 Secret Hygiene Check
+
+Before finalizing any generated Dockerfile or build config, audit it for
+credential exposure:
+
+**Check for leaked secrets:**
+- No `ENV` directives that set API keys, tokens, passwords, or connection strings
+- No `COPY` of `.env`, `.env.local`, `.env.production`, or similar files
+- No `ARG` values containing secrets that persist in layer metadata
+- No hardcoded credentials in `RUN` commands (e.g., `curl -H "Authorization: ..."`)
+- `.dockerignore` explicitly excludes `.env*`, `*.pem`, `*.key`, `.git/`
+
+**Best practices to enforce in generated files:**
+- Secrets passed at runtime via `--env-file` or orchestrator (Compose, K8s)
+- Build-time secrets use `--mount=type=secret` (BuildKit) instead of `ARG`
+- Multi-stage builds ensure build-only credentials do not carry to production stage
+
+If any secret hygiene issues are found in an existing Dockerfile (from Phase 2.7),
+flag them as **Critical** findings in the report.
+
+#### 3.6 Runtime Healthcheck Tuning
+
+If the application serves HTTP or exposes a health endpoint, generate a
+tailored `HEALTHCHECK` instruction:
+
+1. Scan the source for health/readiness endpoints (common patterns:
+   `/health`, `/healthz`, `/ready`, `/ping`, `/api/health`)
+2. If found, generate a `HEALTHCHECK` that hits the actual endpoint:
+   ```dockerfile
+   HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+     CMD wget --no-verbose --tries=1 --spider http://localhost:<port>/<endpoint> || exit 1
+   ```
+3. If no health endpoint exists, suggest adding one and generate a minimal
+   implementation appropriate to the framework
+4. Tune `--start-period` based on the application's expected startup time
+   (informed by Phase 2 runtime analysis and the user's optimization weighting)
+
+Prefer `wget --spider` over `curl` in the Dockerfile healthcheck to avoid
+adding curl to minimal images. If the base image has neither, use a
+language-native check script.
+
+#### 3.7 Comparison Mode
+
+If an existing Dockerfile was found in Phase 2.7, produce a side-by-side
+comparison:
 
 ```
-.git
-.gitignore
-node_modules
-npm-debug.log
-.env
-.env.*
-*.test.*
-*.spec.*
-__tests__/
-test/
-tests/
-coverage/
-.nyc_output
-.DS_Store
-*.md
-docs/
-.github/
+EXISTING vs OPTIMIZED
+────────────────────────────────────────────────────
+                    Existing          Optimized
+Base image:         [image]           [image]
+Stages:             [count]           [count]
+Est. image size:    [size]            [size]
+Non-root user:      [yes/no]          [yes/no]
+.dockerignore:      [yes/no]          [yes/no]
+Layer count:        [count]           [count]
+Secret hygiene:     [pass/fail]       [pass]
+Healthcheck:        [yes/no]          [yes/no]
+Multi-arch ready:   [yes/no]          [yes/no]
+────────────────────────────────────────────────────
 ```
 
-Adapt for the detected language/framework.
+Below the comparison table, provide a bulleted list of the specific changes
+made and the rationale for each. This lets the user understand exactly what
+was improved and why, rather than just receiving a new Dockerfile with no
+context on what changed.
 
-#### 3.5 Generate: CI/CD Workflow
+#### 3.8 Generate CI/CD Pipeline
 
-Generate a GitHub Actions workflow (or ask if they use GitLab CI / CircleCI / other):
+Produce a GitHub Actions workflow that builds the optimized image or binary:
 
 ```yaml
-name: Build and Push Docker Image
+# .github/workflows/pack-light-build.yml
+name: Pack Light Build
 
 on:
   push:
@@ -409,173 +473,275 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
+      # Docker builds
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix=sha-
-            type=semver,pattern={{version}}
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Build image
+        uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          push: false
+          tags: <image-name>:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Run Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-          format: table
-          exit-code: '1'
-          severity: CRITICAL,HIGH
+      # Size gate (if budget set)
+      - name: Check image size
+        run: |
+          IMAGE_SIZE=$(docker image inspect <image-name>:${{ github.sha }} \
+            --format '{{.Size}}')
+          MAX_SIZE=<budget-in-bytes>
+          if [ "$IMAGE_SIZE" -gt "$MAX_SIZE" ]; then
+            echo "Image size ${IMAGE_SIZE} exceeds budget ${MAX_SIZE}"
+            exit 1
+          fi
 ```
 
-#### 3.6 Generate: Benchmarking Commands
+Customize the workflow based on:
+- **Docker strategy:** Include buildx, multi-platform if needed, cache layers
+- **Binary strategy:** Include appropriate toolchain setup, cross-compilation
+- **Size budget:** If set, add a size gate step that fails the build if exceeded
+- **Security:** Include a `docker scout` or `trivy` scan step if CVEs were
+  found in Phase 2.6
 
-Produce copy-pasteable commands so the user can validate size and performance:
+#### 3.9 Generate Benchmarking Commands
+
+Produce a set of commands the user can run immediately to validate the result:
 
 ```bash
-# Build the image
-docker build -t myapp:pack-light .
+# ── Image / Artifact Size ──
+docker images <image-name> --format "{{.Size}}"
+# or: ls -lh <binary>
 
-# Check final image size
-docker image inspect myapp:pack-light --format='{{.Size}}' | numfmt --to=si
+# ── Startup Time ──
+time docker run --rm <image-name> --health-check
+# or: time ./<binary> --version
 
-# Layer-by-layer size breakdown
-docker history myapp:pack-light --no-trunc --format "table {{.CreatedBy}}\t{{.Size}}"
+# ── Runtime Memory ──
+docker stats --no-stream <container-name>
+# or: /usr/bin/time -v ./<binary> (Linux)
+# or: /usr/bin/time -l ./<binary> (macOS)
 
-# Run a container and check memory at idle
-docker run -d --name myapp-test myapp:pack-light
-docker stats myapp-test --no-stream
+# ── Layer Analysis (Docker) ──
+docker history <image-name>
+# Recommend: dive <image-name> (if dive is installed)
 
-# Startup time benchmark
-time docker run --rm myapp:pack-light [your-exit-command]
-
-# Compare with previous image (if exists)
-docker image ls | grep myapp
-
-# For binaries: check static linking
-file ./myapp-binary
-ldd ./myapp-binary 2>/dev/null || echo "statically linked"
-
-# For binaries: check size
-ls -lh ./myapp-binary
+# ── Before vs After Comparison ──
+echo "Compare these numbers against your current build."
 ```
 
-#### 3.7 Secret Hygiene Check
+#### 3.10 Produce the Final Report
 
-Scan the repository for secrets before shipping:
+Write the deliverable in this structure:
 
-```bash
-# Check for .env files accidentally committed
-git log --all --full-history -- "*.env" | head -5
+```markdown
+# Pack Light Report: [Application Name]
 
-# Check for hardcoded secrets patterns in source
-grep -rE "(password|secret|api_key|token|private_key)\s*=\s*['\"][^'\"]{8,}" \
-  --include="*.js" --include="*.py" --include="*.go" --include="*.ts" \
-  --exclude-dir=node_modules --exclude-dir=.git . | head -20
+**Date:** [today's date]
+**Analyst:** Claude (Pack Light)
+**Application:** [name] ([language] / [framework])
+**Optimization weighting:** [user's stated priorities]
+**Size budget:** [target or "none set"]
 
-# Check current Dockerfile for baked-in secrets
-grep -iE "^ENV.*(SECRET|KEY|TOKEN|PASSWORD|PASS)" Dockerfile 2>/dev/null
+---
 
-# Check if .env is in .dockerignore
-grep "\.env" .dockerignore 2>/dev/null || echo "WARNING: .env not in .dockerignore"
+## Hardware Profile
+
+[from Phase 1]
+
+## Code Profile
+
+[from Phase 2, including CVE summary]
+
+---
+
+## Security Findings
+
+[CVE summary from Phase 2.6. Flag any critical/high findings.]
+[Secret hygiene issues from Phase 3.5, if any.]
+
+---
+
+## Recommendation: [Docker Multi-Stage / Standalone Binary / Both]
+
+> One paragraph explaining why this strategy is optimal given the hardware
+> profile, code profile, and optimization weighting.
+
+### Estimated Footprint
+
+| Metric | Current (est.) | Optimized (est.) | Reduction | Budget |
+|---|---|---|---|---|
+| Image / artifact size | [X] | [Y] | [Z%] | [pass/fail/n/a] |
+| Startup time | [X] | [Y] | [Z%] | — |
+| Runtime memory | [X] | [Y] | [Z%] | — |
+
+---
+
+## Comparison with Existing Packaging (if applicable)
+
+[from Phase 3.7 — only include if existing Dockerfile was found]
+
+---
+
+## Generated Files
+
+### Dockerfile (or build script)
+
+[complete, copy-pasteable file]
+
+### .dockerignore (if Docker)
+
+[complete file]
+
+### .github/workflows/pack-light-build.yml
+
+[from Phase 3.8]
+
+---
+
+## Benchmarking Commands
+
+[from Phase 3.9]
+
+---
+
+## Dependency Optimization Opportunities (Optional)
+
+> This section identifies code-level changes that could further reduce
+> the footprint. These are suggestions, not requirements.
+
+| Current Package | Size | Lighter Alternative | Estimated Savings | Migration Effort |
+|---|---|---|---|---|
+| [package] | [size] | [alternative] | [savings] | [low/medium/high] |
+
+[For each suggestion, provide a one-sentence rationale.]
+
+---
+
+## Next Steps
+
+1. [First concrete action]
+2. [Second concrete action]
+3. [Third concrete action]
 ```
-
-Report any findings. Never proceed to generate files that would bake secrets into images.
-
-#### 3.8 Final Recommendation Summary
-
-Present a structured summary before delivering files:
-
-```
-PACK LIGHT RECOMMENDATION
-════════════════════════════════════════════════════════
-Application:      [name] ([language] [version])
-Target hardware:  [arch] / [RAM] / [disk]
-Strategy:         [chosen strategy]
-
-Before:           [existing image size or "no Dockerfile"]
-After (est.):     [estimated optimized image size]
-Reduction:        [% reduction or "N/A — new"]
-
-Files generated:
-  ✓ Dockerfile
-  ✓ .dockerignore
-  ✓ .github/workflows/docker-build.yml
-  ✓ Benchmarking commands
-
-CVE status:       [clean / N critical / N high — action required]
-Secret hygiene:   [clean / issues found — see above]
-
-Next steps:
-  1. [Copy Dockerfile to project root]
-  2. [Run benchmark commands to validate]
-  3. [Address CVEs if any found]
-════════════════════════════════════════════════════════
-```
-
-Then deliver all generated files in full, ready to copy-paste.
 
 ---
 
 ## Rules
 
-1. **Always run hardware recon first.** Never skip Phase 1 — hardware constraints
-   determine the viable strategies.
+1. **Always run hardware recon first.** Never skip to code analysis. The hardware
+   profile directly influences which packaging strategies are viable.
 
-2. **Never guess the language or framework.** Read the files. If ambiguous,
-   ask. A wrong assumption produces a Dockerfile that doesn't work.
+2. **Never guess the language or framework.** Read manifest files. If ambiguous,
+   ask. Getting the stack wrong invalidates the entire recommendation.
 
-3. **Pin versions in all generated files.** `FROM node:20.11.0-alpine3.19` not
-   `FROM node:alpine`. Unpinned images are a deployment liability.
+3. **Default to macOS assumptions** when running in a Claude environment where
+   system commands return Linux specs but the user hasn't specified their target.
+   Ask to confirm.
 
-4. **Generate complete, copy-pasteable files.** No placeholders, no `[TODO]`,
-   no `# fill this in`. If you don't have enough info for a field, ask before
-   generating.
+4. **Pin versions in all generated files.** Never use `:latest`, `*`, or unpinned
+   dependencies in Dockerfiles or build configs.
 
-5. **Always include benchmarking commands.** The user should be able to validate
-   the recommendation immediately. Include size and memory commands.
+5. **The Dependency Optimization section is always optional.** Present it, but
+   frame it as "further opportunities" — not as required changes. The user asked
+   for packaging optimization, not a code rewrite.
 
-6. **Never generate files that bake secrets into image layers.** If the existing
-   code does this, flag it and refuse to replicate the pattern.
+6. **Every estimate must be labeled as an estimate.** Do not state projected
+   image sizes or memory usage as facts. Use "est." or "~" consistently.
 
-7. **Always generate a CI/CD workflow.** A Dockerfile without a pipeline is
-   half-deployed. Default to GitHub Actions; ask if they use something else.
+7. **Generate complete, copy-pasteable files.** The Dockerfile and build configs
+   must work as-is. No `[fill in your ...]` placeholders. Use actual values from
+   the code analysis.
 
-8. **CVE findings must be disclosed.** Never suppress or minimize security
-   findings. If critical CVEs exist, the recommendation must address them even
-   if it changes the packaging strategy.
+8. **Always include benchmarking commands.** The user should be able to validate
+   every claim in the report by running the provided commands.
+
+9. **If Docker is not available on the target, do not recommend Docker.** This
+   seems obvious, but it's a common failure mode. Check Phase 1 results before
+   Phase 3 recommendations.
+
+10. **Respect the user's optimization weighting.** If they said "prioritize
+    startup time," don't recommend a strategy that optimizes for size at the
+    expense of cold start performance.
+
+11. **Never generate files that bake secrets into image layers.** No `ENV` with
+    credentials, no `COPY .env`, no `ARG` with tokens. Secrets go in at runtime.
+    If an existing Dockerfile violates this, flag it as Critical.
+
+12. **If a size budget is set, enforce it.** The report must explicitly state
+    whether the recommendation meets or exceeds the budget. If it exceeds it,
+    explain what's preventing it and what tradeoffs would close the gap.
+
+13. **Always generate a CI/CD workflow.** Every recommendation includes a
+    GitHub Actions workflow. The workflow must include cache optimization and
+    a size gate step if a budget was set.
+
+14. **Comparison mode is automatic, not optional.** If an existing Dockerfile
+    was detected in Phase 2.7, always produce the side-by-side comparison table
+    in the report. Do not skip it.
+
+15. **CVE findings do not block recommendations, but must be disclosed.** If
+    the security scan finds critical CVEs, note them in the Security Findings
+    section and recommend patched alternatives. Do not refuse to produce a
+    recommendation because of CVEs — the user needs the information to act.
+
+---
+
+## Examples
+
+### Good Example
+
+**Input:** User provides a Node.js Express API with 47 direct dependencies,
+running on a 2GB RAM VPS. Existing Dockerfile uses `node:22` with no
+multi-stage build.
+
+**Output:** Multi-stage Dockerfile using `node:22-alpine` build stage →
+`gcr.io/distroless/nodejs22-debian12` production stage. `.dockerignore`
+excludes test files, docs, and `.git`. Report shows estimated image size
+reduction from ~950MB (default `node:22`) to ~130MB. Comparison table shows
+the existing Dockerfile runs as root, has no healthcheck, and copies `.env`
+into the image (flagged as Critical secret hygiene issue). Security scan finds
+2 medium CVEs in dependencies, noted in findings. GitHub Actions workflow
+includes buildx with GHA cache and a 200MB size gate. Healthcheck hits
+`/api/health` detected in the source. Benchmarking commands include `docker
+history`, `docker stats`, and a startup time test. Dependency section notes
+that `moment` (4.2MB) could be replaced with `dayjs` (6KB) since only
+`format()` and `diff()` are used.
+
+### Bad Example (what to avoid)
+
+**Input:** Same Node.js Express API.
+
+**Bad output:** "Use Alpine and multi-stage builds. Here's a generic Dockerfile
+template with `[YOUR_APP_NAME]` placeholders. You should probably also look into
+reducing your dependencies."
+
+This fails because:
+- Dockerfile has placeholders instead of real values from the code analysis
+- No hardware profile was collected
+- No dependency tree was actually scanned
+- No benchmarking commands
+- No estimated footprint comparison
+- No security scan or secret hygiene check
+- No CI/CD workflow generated
+- No comparison with the existing Dockerfile
+- Vague advice instead of specific, actionable recommendations
+
+---
+
+## Chaining
+
+- **codebase-review → pack-light:** After a codebase review identifies
+  performance or deployment issues, pack-light can optimize the packaging.
+- **pack-light → workflow-lock:** If the user packages the same type of
+  application repeatedly, lock the pack-light output into a reusable template.
+- **decompose → pack-light:** For monorepos or multi-service architectures,
+  decompose can break the system into individual services, then pack-light
+  optimizes each one.
