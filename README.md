@@ -658,6 +658,7 @@ Original skills built and maintained by Summit Software Solutions. These live in
 | **[codebase-review](skills/codebase-review/SKILL.md)** | Performs a senior-architect-level review of an entire codebase. Evaluates 10 dimensions (data integrity, tests, security, accessibility, performance, and more), assigns an overall letter grade, and produces a prioritized top-10 improvement plan with effort estimates. | "code review", "review the codebase", "architecture review", "audit this code" |
 | **[pack-light](skills/pack-light/SKILL.md)** | Analyze an application's source code and host hardware to recommend the smallest possible packaging strategy. Collects hardware specs, performs full dependency tree and CVE analysis, and produces Dockerfiles, CI/CD pipelines, benchmarking commands, and secret hygiene checks. | "pack light", "optimize this app", "shrink this", "smallest footprint", "analyze the application" |
 | **[architect-plan-for-dispatch](skills/architect-plan-for-dispatch/SKILL.md)** | Full-discovery planning skill that analyzes a GitHub repo and produces a structured, dependency-aware execution plan for Claude Dispatch. Chains after interrogate. Covers greenfield builds, refactors, migrations, infrastructure, and any complex multi-task project. | "architect this", "plan for dispatch", "design this for dispatch", "build me a dispatch plan" |
+| **[devils-advocate](skills/devils-advocate/SKILL.md)** | Stress-tests any idea, strategy, or position by attacking it from multiple angles until it's hardened with refined clarity. Default mode is rigorous sparring partner; escalates to full adversarial on request. Maintains a running hardening scorecard with a 0-100 hardness score. | "devil's advocate", "stress test this", "poke holes", "challenge this", "harden this", "red team this" |
 
 #### Mentor Skills
 
@@ -1009,5 +1010,5 @@ Directory of links and prompts. No copied code. Each linked repo has its own lic
   <br/>
   <em>Every Solution. One Partner.</em>
   <br/><br/>
-  <em>Last updated: March 27, 2026</em>
+  <em>Last updated: April 9, 2026</em>
 </p>
