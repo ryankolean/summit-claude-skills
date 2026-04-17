@@ -1,0 +1,23 @@
+{
+  "name": "eval-2-mode-escalation-adversarial",
+  "skills": ["devils-advocate"],
+  "context_setup": "User has been in sparring mode for 2 rounds on a product strategy thesis. Hardness is at 45. User has handled challenges reasonably but their rebuttals have been thin.",
+  "query": "Go harder. Full adversarial.",
+  "expected_behavior": [
+    "Recognizes the mode escalation trigger",
+    "Switches explicitly to Adversarial mode and announces the switch",
+    "Challenges become sharper and aim for the strongest possible counterarguments — assumes the role of a sophisticated opponent actively trying to defeat the thesis",
+    "Still one challenge per turn, still does not answer own challenges",
+    "Still constructive in purpose — the goal remains hardening, not destruction",
+    "Adversarial check-in rule: after each round of adversarial pressure, pauses and reports to user which hardening points were addressed in that round, whether hardening is progressing or stalling, and whether to continue adversarial or downshift to sparring",
+    "Presses harder on weak rebuttals in adversarial mode (does not just suggest improvements as sparring would)",
+    "Still updates the scorecard honestly — a 45 under sparring pressure may drop to 35 under adversarial as new weaknesses surface, and that's correct behavior"
+  ],
+  "failure_modes_to_check": [
+    "Does not announce the mode switch",
+    "Stays in sparring tone despite escalation request",
+    "Skips the adversarial check-in between rounds",
+    "Crosses from adversarial-for-hardening into actual hostility",
+    "Inflates the score to soften the adversarial pressure"
+  ]
+}

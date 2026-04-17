@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-partial-scribe-input",
+  "skills": ["scribe-to-spec"],
+  "query": "scribe to spec",
+  "context_setup": "User pastes a rough Scribe export that's missing screenshots (images not parsed), has duplicated steps, and jumps between two different workflows (invoice approval AND expense reimbursement mixed together).",
+  "expected_behavior": [
+    "Activates scribe-to-spec",
+    "Phase 1 (Ingest): recognizes the messy input and flags it explicitly: 'The Scribe shows two interleaved workflows (invoice approval and expense reimbursement). I'll need to separate them before designing. Also, steps 4, 7, and 11 look duplicated — confirm before I deduplicate.'",
+    "Asks the user to confirm the separation and deduplication before proceeding, rather than guessing",
+    "Does NOT silently merge the two workflows into one spec or produce a confusing hybrid",
+    "Once user confirms: produces TWO separate design documents (one per workflow) or explicitly asks which one to design first",
+    "Phase 2 and 3 proceed per workflow",
+    "If the user only wants one workflow designed, scribe-to-spec offers to save the other for later"
+  ],
+  "failure_modes_to_check": [
+    "Merges the two workflows into one spec",
+    "Designs around the duplicated steps without flagging the duplication",
+    "Proceeds without asking the user to resolve the ambiguity",
+    "Silently drops steps that looked duplicated when they might be distinct"
+  ]
+}

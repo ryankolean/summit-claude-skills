@@ -1,0 +1,17 @@
+{
+  "name": "eval-3-redirect-for-trivial-task",
+  "skills": ["architect-plan-for-dispatch"],
+  "query": "Architect a Dispatch plan for fixing a typo in my README.",
+  "expected_behavior": [
+    "Activates architect-plan-for-dispatch but immediately recognizes the mismatch",
+    "Does NOT run the full 4-phase pipeline for a single trivial edit",
+    "Surfaces the mismatch to the user: 'Dispatch planning is for multi-task work that benefits from decomposition. A typo fix is a single edit — you'd get faster results with a direct edit command, or if you want to preserve the workflow, use prompt-to-skill or a slash command.'",
+    "Offers alternatives: direct edit, Claude Code ad-hoc, or — if the user really wants systematized — redirect to workflow-lock for capturing a 'fix typos in README' pattern",
+    "If user insists on Dispatch anyway: proceeds with a minimal single-task plan without further pushback"
+  ],
+  "failure_modes_to_check": [
+    "Runs full Phase 1-4 pipeline on a trivial task",
+    "Refuses entirely instead of offering alternatives",
+    "Produces a complicated multi-task plan for what should be one edit"
+  ]
+}

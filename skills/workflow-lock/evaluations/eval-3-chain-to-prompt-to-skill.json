@@ -1,0 +1,22 @@
+{
+  "name": "eval-3-chain-to-prompt-to-skill",
+  "skills": ["workflow-lock", "prompt-to-skill"],
+  "context_setup": "Previous turns: user walked through a repeatable weekly status update generation process. It worked. Phase 3 of workflow-lock has just produced the structured workflow definition.",
+  "query": "Yes install it permanently.",
+  "expected_behavior": [
+    "Recognizes this as the Phase 4 (Next Steps) acceptance",
+    "Does NOT re-run workflow-lock — the workflow is already locked",
+    "Hands off to prompt-to-skill with the locked workflow definition as input",
+    "Passes enough context to prompt-to-skill: the workflow name, trigger conditions, inputs/outputs, steps, rules — so prompt-to-skill does not need to re-interrogate",
+    "prompt-to-skill recognizes the chain and skips redundant discovery questions",
+    "prompt-to-skill builds the SKILL.md, updates the README, and deploys via the container fallback (format-patch + git am)",
+    "Final output confirms: workflow locked AND installed as permanent skill",
+    "Surfaces a test invocation the user can run after restart"
+  ],
+  "failure_modes_to_check": [
+    "Re-runs workflow-lock from scratch instead of chaining",
+    "prompt-to-skill re-interrogates the user for info workflow-lock already captured",
+    "Loses fidelity in the handoff (drops the rules or trigger conditions)",
+    "Installs as a skill but forgets the README update"
+  ]
+}

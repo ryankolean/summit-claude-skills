@@ -1,0 +1,22 @@
+{
+  "name": "eval-1-reusable-prompt-from-description",
+  "skills": ["prompt-architect"],
+  "query": "I keep asking Claude to summarize my client meeting notes but the format is different every time. Write me a prompt I can reuse.",
+  "expected_behavior": [
+    "Activates prompt-architect (auto-detect: user says 'Claude keeps getting this wrong')",
+    "Phase 1: Asks 4-5 focused questions, one per turn — what the prompt does (input/output), what good output looks like (or asks for an example), what bad output looks like, one-time vs reusable, what variables change each time",
+    "Phase 2: Builds the prompt with appropriate structural elements (role, context, task, output format, examples, constraints) — does NOT use every element if the task doesn't need it",
+    "Generated prompt has clear placeholder variables for the parts that change each time (e.g., {{meeting_notes}}, {{client_name}})",
+    "Generated prompt includes at least one good/bad output example so Claude has format anchors",
+    "Output format section is specific (e.g., 'Markdown with these exact headers: Decisions / Action Items (with owner) / Blockers') not vague",
+    "Surfaces the prompt as a code block the user can copy",
+    "Asks if the user wants to test it on a sample input or save it permanently (chain to prompt-to-skill)"
+  ],
+  "failure_modes_to_check": [
+    "Skips Phase 1 discovery and produces a generic 'summarize meeting notes' prompt",
+    "Generated prompt has no variables, so it can only be used for one specific input",
+    "Output format is vague ('produce a clean summary') instead of specific structural requirements",
+    "Stacks all 5 discovery questions in one turn",
+    "Does not offer the chain to prompt-to-skill for permanent installation"
+  ]
+}

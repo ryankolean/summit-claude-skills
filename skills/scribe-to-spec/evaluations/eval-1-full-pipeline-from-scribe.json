@@ -1,0 +1,22 @@
+{
+  "name": "eval-1-full-pipeline-from-scribe",
+  "skills": ["scribe-to-spec"],
+  "query": "Turn this Scribe into a spec.",
+  "context_setup": "User attaches a Scribe AI markdown export showing a 14-step process for manually onboarding a new dental candidate: check email for resume, copy into spreadsheet, search NPI registry, copy credentials, paste into CRM, send templated email, schedule screening call, log in spreadsheet, update pipeline board. Includes screenshots (described textually) and click annotations.",
+  "expected_behavior": [
+    "Activates scribe-to-spec (user said 'Scribe into a spec')",
+    "Phase 1 (Ingest): parses the Scribe output, extracts the 14 steps, normalizes terminology, identifies the tools touched (email, spreadsheet, NPI registry, CRM, pipeline board)",
+    "Phase 2 (Analyze): identifies the process's pain points — manual copy/paste between 4+ systems, re-keying of data, no single source of truth, high error rate on credential entry",
+    "Phase 3 (Ask Clarifying Questions): asks ONE question per turn about things the Scribe cannot answer — e.g., 'What triggers the start of this process — an inbound resume, a specific form submission, or a scheduled scan?' and 'Which of these systems have APIs available (CRM, pipeline board)?'",
+    "Phase 4 (Generate): produces a solution design document with: Problem Statement (the manual process is X hours/week and error-prone), Proposed Architecture (a single intake tool that auto-pulls NPI data and pushes to CRM + pipeline), Phase 1 MVP scope (intake form + NPI lookup + manual push to CRM), Phase 2 Integration (CRM API, pipeline board API), Phase 3 Polish (email automation, reporting)",
+    "Design preserves the 'how it works today' context from the Scribe — does not hallucinate steps that weren't in the original",
+    "Produces output as a standalone design document (markdown), not as a conversational response"
+  ],
+  "failure_modes_to_check": [
+    "Skips Phase 3 clarifying questions and designs with assumed answers",
+    "Design spec loses fidelity to the original Scribe (invents or drops steps)",
+    "Does not phase the solution (MVP / Integration / Polish) and produces one mega-project",
+    "Asks a stack of clarifying questions in one turn",
+    "Produces the output inline in chat instead of as a design document"
+  ]
+}

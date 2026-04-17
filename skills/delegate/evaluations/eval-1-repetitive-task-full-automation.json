@@ -1,0 +1,19 @@
+{
+  "name": "eval-1-repetitive-task-full-automation",
+  "skills": ["delegate"],
+  "query": "Should I automate pulling the daily CSV export from Stripe and loading it into our analytics DB? Delegate this.",
+  "expected_behavior": [
+    "Activates delegate",
+    "Evaluates the task against the four criteria: repetitiveness (daily = high), judgment required (low — same transformation each time), error tolerance (medium — errors detectable through row count checks), data sensitivity (medium — financial data but not regulated)",
+    "Produces a recommendation: Full Automation with monitoring, because high repetitiveness + low judgment + detectable errors = automation candidate",
+    "Surfaces the specific automation design: scheduled job, idempotency key, row-count validation against previous day, alert on anomaly",
+    "Flags the sensitivity concern (financial data should go through a vetted pipeline, not ad-hoc scripts) without blocking",
+    "Does not recommend keeping it manual — that would waste daily time",
+    "Does not recommend AI-assist — the transformation is deterministic, AI is unnecessary overhead"
+  ],
+  "failure_modes_to_check": [
+    "Gives a generic 'it depends' answer without applying the four criteria",
+    "Recommends AI-assist for deterministic transformations",
+    "Ignores the monitoring/validation requirement for automated financial pipelines"
+  ]
+}

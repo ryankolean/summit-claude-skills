@@ -1,0 +1,22 @@
+{
+  "name": "eval-1-install-from-working-prompt",
+  "skills": ["prompt-to-skill"],
+  "query": "This prompt has been working great for me. Make it a skill: 'You are an experienced PR reviewer. Given a pull request description, audit it against three required sections: WHY (the motivation), WHAT (the actual changes), and TESTING (verification approach). For each section, mark PRESENT, WEAK, or MISSING with specific feedback. Output as a markdown table.'",
+  "expected_behavior": [
+    "Activates prompt-to-skill",
+    "Phase 1: Extracts the skill DNA from the prompt — suggests a kebab-case name (e.g., 'pr-description-auditor'), asks for confirmation, identifies the purpose for the description field, asks about activation triggers (what the user would naturally say to invoke it)",
+    "Phase 2: Builds a complete SKILL.md with proper frontmatter (name, description with what + when), When to Activate section (manual triggers + auto-detect), the core prompt restructured into clear sections (When invoked / Process / Output format), input/output specifications, and rules",
+    "Description in third person per Anthropic guidance ('Audits pull request descriptions...' not 'Audit pull request descriptions...')",
+    "SKILL.md body stays under 500 lines",
+    "Phase 3: Updates the Summit Custom Skills table in the README — adds a new row, bumps the count",
+    "Phase 4: Pushes to GitHub on a feature branch using the container deploy fallback (git format-patch + git am) since claude.ai cannot push directly",
+    "Surfaces a test invocation suggestion the user can run after restart"
+  ],
+  "failure_modes_to_check": [
+    "Generates SKILL.md without asking for confirmation on the suggested name",
+    "Description is in imperative voice ('Audit pull request descriptions') instead of third person",
+    "Forgets to update the README table",
+    "Tries to git push directly without falling back to format-patch when in container",
+    "Skips the test invocation suggestion"
+  ]
+}

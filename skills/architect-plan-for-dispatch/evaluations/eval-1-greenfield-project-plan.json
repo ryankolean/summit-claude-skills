@@ -1,0 +1,22 @@
+{
+  "name": "eval-1-greenfield-project-plan",
+  "skills": ["architect-plan-for-dispatch"],
+  "query": "Architect a Dispatch plan for a new greenfield project: a self-hosted bookmarks app with full-text search, tag-based organization, and a minimal React frontend. Stack is Node/Express + Postgres + React.",
+  "expected_behavior": [
+    "Activates architect-plan-for-dispatch",
+    "Phase 1 (Repo Analysis): acknowledges that this is greenfield so there's no repo to analyze yet — produces the Code Report framed around the target architecture instead of an existing codebase",
+    "Phase 2 (Architecture and Design): lays out the component structure (backend API, database schema with full-text search, tag model, React frontend with routing), data flow, and key architectural decisions",
+    "Phase 3 (Task Decomposition): breaks the work into discrete Dispatch-ready tasks, each with clear inputs/outputs, assigned model tier (Haiku for scaffold, Sonnet for integrations, Opus for complex logic), and dependencies",
+    "Phase 4 (Plan Assembly): produces a structured markdown execution file suitable for Claude Dispatch, with CLAUDE.md referenced at the top of each task",
+    "Every task has a clear deliverable file path and completion criterion",
+    "Plan chains properly: tasks are ordered so dependencies are respected (schema before seeds, auth before routes that need it)",
+    "Surfaces the model budget — total estimated tokens by tier"
+  ],
+  "failure_modes_to_check": [
+    "Tries to analyze a non-existent repo in Phase 1 and gets stuck",
+    "Produces one big task instead of decomposed Dispatch-ready sub-tasks",
+    "Skips model tier assignment per task (everything defaults to Sonnet)",
+    "Plan has circular or missing dependencies",
+    "Output is a design doc instead of a Dispatch execution file"
+  ]
+}

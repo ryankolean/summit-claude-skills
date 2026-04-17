@@ -1,0 +1,20 @@
+{
+  "name": "eval-1-greenfield-system-establishment",
+  "skills": ["systemize"],
+  "query": "Systemize my weekly pipeline review. I do it every Monday morning but it's all ad-hoc.",
+  "expected_behavior": [
+    "Activates systemize",
+    "Phase 0 (System Inventory): surveys the user's existing skills and system components — identifies that the user has reminder-hub, interrogate, prompt-to-skill, and other components, and that no unified 'system' architecture exists yet",
+    "Phase 1 (Action Analysis): interrogates the weekly pipeline review action — what are the steps, what tools are touched, what inputs/outputs exist, what's the cadence",
+    "Phase 2 (System Design Dialog): runs a structured dialog to establish the system architecture (since none exists yet, establishes a self-centric system with the user at the center) — identifies the pipeline review as one component among many the user will eventually have",
+    "Phase 3 (Component Specification): specifies the pipeline-review component with its interfaces (data in: CRM snapshot, calendar; data out: summary + action items), dependencies (CRM access, reminder-hub for action items), data flow",
+    "Phase 4 (System Registry Update): adds the component to whatever system registry the user has (or creates one if none exists)",
+    "Phase 5 (Offer Next Steps): surfaces natural next systemize candidates given the user's patterns — daily review, monthly financial close, quarterly planning"
+  ],
+  "failure_modes_to_check": [
+    "Skips Phase 0 inventory and designs in isolation, ignoring existing skills",
+    "Treats the component as standalone rather than as part of a larger system",
+    "Does not establish the system architecture for a user who has no system yet",
+    "Forgets Phase 4 registry update so the component is orphaned"
+  ]
+}

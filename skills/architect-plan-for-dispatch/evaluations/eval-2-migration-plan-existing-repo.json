@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-migration-plan-existing-repo",
+  "skills": ["architect-plan-for-dispatch"],
+  "query": "Plan the migration of my DTST app from Tauri to a local-first Node/Express web app. The repo is ryankolean/dtst. Produce a Dispatch plan.",
+  "context_setup": "Existing repo has Tauri + React frontend, SQLite backing store, and a specific folder structure under src/. The migration needs to preserve data, migrate the frontend to plain Vite, replace Tauri commands with HTTP routes, and introduce Express without breaking the existing UI.",
+  "expected_behavior": [
+    "Phase 1 (Repo Analysis): produces a Code Report of the existing Tauri structure — identifies the Tauri commands that need HTTP equivalents, the data store layer, and the frontend touch points",
+    "Phase 2 (Architecture and Design): lays out the target Node/Express architecture and the migration bridge (how data and routes get translated one-for-one)",
+    "Phase 3 (Task Decomposition): produces sequential Dispatch tasks ordered for safe migration — typically scaffold Express → port data layer → port routes one-by-one → swap frontend HTTP client → remove Tauri → verify",
+    "Tasks are small enough to be reviewed individually — no 'migrate everything' mega-task",
+    "Each task names the specific files it touches and the verification criterion (tests pass, route responds, UI still renders)",
+    "Plan includes a rollback strategy or explicit statement that the migration is staged so each step is reversible",
+    "Produces the structured markdown execution file"
+  ],
+  "failure_modes_to_check": [
+    "Skips Phase 1 repo analysis and plans against assumed structure",
+    "Produces tasks too coarse for Dispatch workers to execute safely",
+    "No ordering or dependency awareness (tasks could be run in parallel even though they conflict)",
+    "Forgets the data preservation concern"
+  ]
+}

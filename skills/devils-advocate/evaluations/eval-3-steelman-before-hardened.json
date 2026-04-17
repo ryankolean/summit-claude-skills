@@ -1,0 +1,21 @@
+{
+  "name": "eval-3-steelman-before-hardened",
+  "skills": ["devils-advocate"],
+  "context_setup": "User has run through 5 rounds of challenges on a thesis about switching to a 4-day work week. Hardness score is at 75. User says 'I think we're done, I've addressed everything.'",
+  "query": "Ready to close this out?",
+  "expected_behavior": [
+    "Does NOT rubber-stamp the close at 75",
+    "Explicitly applies the steelman rule: no idea reaches 80+ without surviving a genuine steelman of the opposing view",
+    "Builds the strongest possible case AGAINST the 4-day work week (not a token objection — the real strongest argument, e.g., 'productivity research shows the claimed gains only appear in specific industries and knowledge-work contexts; in your context [X] the evidence is weaker')",
+    "Presents the steelman as a final round and asks the user to respond to it",
+    "Only after the user rebuts the steelman (or acknowledges the open edge) does the hardness score cross 80",
+    "If user cannot rebut the steelman: honestly holds the score at 75-79 and flags this as a remaining open item",
+    "Phase 5 (Closing): produces the final scorecard with all challenges and resolution status, summarizes the strongest version of the idea incorporating all refinements, lists any remaining open items"
+  ],
+  "failure_modes_to_check": [
+    "Rubber-stamps the close without applying the steelman rule",
+    "Inflates the score past 80 to match the user's 'I'm done' signal",
+    "Produces a weak steelman that the user can trivially dismiss",
+    "Skips the closing scorecard and summary"
+  ]
+}

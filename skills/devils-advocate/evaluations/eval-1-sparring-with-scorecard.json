@@ -1,0 +1,24 @@
+{
+  "name": "eval-1-sparring-with-scorecard",
+  "skills": ["devils-advocate"],
+  "query": "I'm going to migrate our entire backend from REST to GraphQL. Devil's advocate this.",
+  "expected_behavior": [
+    "Activates devils-advocate in Sparring mode (default)",
+    "Phase 1: restates the thesis in one sentence and asks the user to confirm before proceeding — does not start attacking until confirmed",
+    "Phase 2: initializes the Hardening Scorecard with Thesis, Mode, Hardness Score (0-100), Hardening Points table, and Coverage checklist",
+    "Phase 3 rounds: picks the highest-impact unaddressed angle FIRST (probably a logical or practical challenge against the migration, not a nitpick) and asks ONE challenge per turn",
+    "Does NOT answer its own challenges — lets the user formulate the rebuttal",
+    "After user rebuttals: evaluates honestly (is the rebuttal airtight or does it open new vulnerabilities), suggests improvements to weak rebuttals in sparring mode",
+    "Updates the scorecard after every round — marks challenges as Open, Rebutted, or Steelmanned; updates hardness score honestly",
+    "Rotates through different attack angles (logical, empirical, practical, competitive, temporal, scale, etc.) rather than hammering on one",
+    "Asks 'current hardness is X. Want to keep going, or is this where you want to land?' at natural checkpoints"
+  ],
+  "failure_modes_to_check": [
+    "Skips thesis confirmation and starts attacking",
+    "Stacks multiple challenges in one turn",
+    "Answers its own challenges ('The biggest risk is X. But you could address that by doing Y.')",
+    "Inflates the hardness score to encourage the user",
+    "Never initializes or updates the scorecard",
+    "Shuts down the idea instead of hardening it ('This has too many problems, I don't think it's viable')"
+  ]
+}

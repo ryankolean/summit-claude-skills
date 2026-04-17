@@ -1,0 +1,20 @@
+{
+  "name": "eval-2-reject-one-off-capture",
+  "skills": ["workflow-lock"],
+  "context_setup": "Previous turns: user asked Claude to write a specific apology email to a specific vendor for a specific late payment. Claude wrote it, user sent it. This is a one-off situation unlikely to repeat.",
+  "query": "Save this as a template.",
+  "expected_behavior": [
+    "Activates workflow-lock",
+    "Phase 1: reviews what happened — recognizes that this was a one-off specific apology, not a repeatable workflow pattern",
+    "Surfaces the concern: 'This was a specific apology for a specific situation. Workflows work best for repeatable patterns (same structure, different inputs). Before I lock this, help me understand: will you be writing similar late-payment apologies regularly? Or is this a one-time thing where you just want the email saved for reference?'",
+    "Offers two paths: (a) if it's a repeatable pattern (late-payment-apology workflow), templatize it with parameters for vendor, amount, reason; (b) if it's a one-off, just save the email text as a note in brain-dump or a plain file — workflow-lock is overkill",
+    "If user confirms it's one-off: redirects to brain-dump or offers to save as a plain file",
+    "If user says it's a pattern: proceeds with Phase 2 templatizing",
+    "Does NOT lock a one-off as a permanent template without challenging"
+  ],
+  "failure_modes_to_check": [
+    "Locks the one-off as a permanent workflow without challenge",
+    "Refuses entirely instead of offering alternatives",
+    "Does not distinguish between 'this is a reusable pattern' and 'this is one specific instance I want saved'"
+  ]
+}

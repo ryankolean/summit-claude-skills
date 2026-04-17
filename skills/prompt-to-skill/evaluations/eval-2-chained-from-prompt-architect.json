@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-chained-from-prompt-architect",
+  "skills": ["prompt-to-skill"],
+  "context_setup": "Previous turns: user invoked prompt-architect, ran through Phase 1 discovery, got a generated prompt for auditing PR descriptions, tested it on a sample PR and confirmed it works. The generated prompt is already in chat context with all variables and structure.",
+  "query": "This is exactly what I wanted. Install it.",
+  "expected_behavior": [
+    "Recognizes this as the chain trigger from prompt-architect ('this is exactly what I wanted')",
+    "Activates prompt-to-skill",
+    "Skips redundant Phase 1 questions — name, description, triggers, prompt logic, and output format are already established from the prompt-architect session",
+    "ONLY asks the questions that prompt-architect did not already answer (probably just: confirm the kebab-case name and ask about auto-detect triggers if not specified)",
+    "Builds the SKILL.md using the prompt-architect output as the source of truth, restructured into proper SKILL.md format",
+    "Updates README and pushes via container deploy fallback",
+    "Does NOT re-interrogate the user about things they already established two turns ago",
+    "Surfaces the new SKILL.md before pushing so the user can sanity-check"
+  ],
+  "failure_modes_to_check": [
+    "Re-runs full Phase 1 discovery even though prompt-architect already covered it",
+    "Loses fidelity from the prompt-architect output (drops examples, variables, or structure)",
+    "Pushes without showing the user the proposed SKILL.md first"
+  ]
+}
