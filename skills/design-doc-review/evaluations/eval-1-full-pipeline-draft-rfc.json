@@ -1,0 +1,26 @@
+{
+  "name": "eval-1-full-pipeline-draft-rfc",
+  "skills": ["design-doc-review"],
+  "query": "Review this design doc and harden it.",
+  "context_setup": "User attaches a draft-stage RFC for a new payment processing service: includes Problem Statement, High-Level Architecture, and partial API contracts. Missing: Goals/Non-Goals, Error Handling Strategy, Observability, Migration Plan, Alternatives Considered.",
+  "expected_behavior": [
+    "Activates design-doc-review",
+    "Phase 1: Identifies document type as RFC, maturity as Draft, produces system summary in own words, asks user to confirm understanding before proceeding",
+    "Phase 2: Runs the 16-point structural audit, marks present sections as STRONG or WEAK with notes, marks the missing sections as MISSING, produces structural score (e.g., 11/16)",
+    "Phase 3: Reviews against six dimensions (Correctness, Completeness, Consistency, Feasibility, Operational Readiness, Security Posture), produces severity-ordered findings with Location/Issue/Impact/Evidence",
+    "Phase 4: Cross-references sections for contradictions; if document is clean, says so explicitly rather than inventing contradictions",
+    "Phase 5: Drafts the missing sections (Goals/Non-Goals, Error Handling, Observability, Migration Plan, Alternatives) with concrete content, marks each with AUTOHEALED markers, flags any decisions that require author input",
+    "Phase 6: Runs the five kill questions, produces SURVIVES/PARTIALLY/FAILS verdict with evidence",
+    "Phase 7: Produces three deliverables — Scorecard inline, Hardened Document as a markdown file, Changelog as appendix",
+    "Maintains process transparency: each phase has a plain-English lead-in explaining what's happening and why",
+    "Never skips a phase even if a phase finds nothing"
+  ],
+  "failure_modes_to_check": [
+    "Skips Phase 1 calibration and dives straight into review",
+    "Phase 3 findings are vague ('error handling could be stronger') instead of specific",
+    "Phase 5 autoheals are generic ('add appropriate error handling') instead of drafted content",
+    "Inflates severity (calls medium issues critical)",
+    "Skips Phase 4 because the document looks clean, instead of explicitly reporting it's clean",
+    "Combines deliverables into one block instead of producing scorecard + hardened doc + changelog separately"
+  ]
+}
