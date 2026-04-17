@@ -1,0 +1,18 @@
+{
+  "name": "eval-3-refuse-one-off-prompt",
+  "skills": ["prompt-to-skill"],
+  "query": "Make this a skill: 'Translate the following French paragraph to English.'",
+  "expected_behavior": [
+    "Activates prompt-to-skill",
+    "Recognizes that this is a generic one-shot prompt with no reusable structure beyond what Claude does natively — translation does not need a skill",
+    "Surfaces the concern to the user before generating: 'This looks like a one-shot translation prompt. Claude already handles ad-hoc translation natively without a skill. Skills are best for repeatable workflows with consistent structure (specific output format, multiple steps, domain rules). Are you sure you want a skill for this, or were you looking for something more specific (e.g., translating with a particular tone, format, or domain context)?'",
+    "Offers two paths: (a) proceed anyway if the user has a real reason, or (b) help build something more substantive (e.g., 'translate French legal documents preserving structure', 'translate with cultural context notes')",
+    "If user insists on installing as-is: proceeds with the standard Phase 1-4 pipeline without further pushback",
+    "If user accepts the redirect: helps scope a more specific translation skill or suggests the work doesn't need a skill at all"
+  ],
+  "failure_modes_to_check": [
+    "Installs a one-line generic prompt as a permanent skill without challenge",
+    "Refuses entirely instead of offering both paths",
+    "Lectures the user instead of presenting a clean redirect with options"
+  ]
+}

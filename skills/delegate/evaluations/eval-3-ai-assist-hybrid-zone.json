@@ -1,0 +1,20 @@
+{
+  "name": "eval-3-ai-assist-hybrid-zone",
+  "skills": ["delegate"],
+  "query": "I spend about 4 hours a week summarizing candidate interviews for Krysta's recruiting work. Should I delegate this?",
+  "expected_behavior": [
+    "Activates delegate",
+    "Evaluates against four criteria: repetitiveness (weekly, recurring = high), judgment required (medium — pattern recognition over transcripts, but candidate-specific context matters), error tolerance (medium — a bad summary misleads the hiring decision but is recoverable), data sensitivity (medium — candidate PII)",
+    "Produces recommendation: AI-Assist — the sweet spot. Full automation risks missing candidate-specific nuance; keeping fully human wastes 4 hrs/week.",
+    "Surfaces a specific AI-assist design: structured prompt that summarizes against a fixed rubric (skills demonstrated, communication style, concerns raised, next-step recommendation), produces a draft the user edits before handoff to Krysta",
+    "Recommends chaining to prompt-architect to build the structured prompt, then prompt-to-skill to make it permanent",
+    "Flags the PII handling concern (don't store transcripts in arbitrary chat logs)",
+    "Estimates time savings: 4 hrs/week → ~1 hr/week editing drafts"
+  ],
+  "failure_modes_to_check": [
+    "Recommends full automation and misses the candidate-specific judgment concern",
+    "Recommends keep-human and wastes the obvious time savings",
+    "Does not surface the chain to prompt-architect + prompt-to-skill",
+    "Ignores PII handling"
+  ]
+}

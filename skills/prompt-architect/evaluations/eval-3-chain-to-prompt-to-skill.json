@@ -1,0 +1,18 @@
+{
+  "name": "eval-3-chain-to-prompt-to-skill",
+  "skills": ["prompt-architect", "prompt-to-skill"],
+  "query": "Build me a prompt for reviewing my Pull Request descriptions. I want to make sure they cover the why, the what, and the testing notes. I'll be using this every day.",
+  "expected_behavior": [
+    "Activates prompt-architect first",
+    "Phase 1 questions confirm: input is a PR description, output is structured feedback against three required sections (why / what / testing), reusable daily, variable is the PR description text itself",
+    "Phase 2 produces a structured prompt with role (senior reviewer), task (audit against three required sections), output format (per-section status with specific suggestions), and at least one good/bad example",
+    "After producing the prompt, OFFERS the chain to prompt-to-skill: 'You said you'll use this daily — want me to install it as a permanent skill so it activates automatically when you mention PR descriptions?'",
+    "If user accepts: hands off to prompt-to-skill with the generated prompt as input, and prompt-to-skill takes over to convert it into a SKILL.md and push to the repo",
+    "Does NOT auto-trigger prompt-to-skill without asking — the user might want to test the prompt first"
+  ],
+  "failure_modes_to_check": [
+    "Generates the prompt but fails to surface the prompt-to-skill chain even though the user said 'every day'",
+    "Auto-triggers prompt-to-skill without confirming the user wants to install permanently",
+    "Forgets to pass the generated prompt as input when chaining (forces the user to re-paste it into prompt-to-skill)"
+  ]
+}

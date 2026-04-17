@@ -1,7 +1,7 @@
 ---
 name: cli-ffmpeg
 description: >
-  Teach Claude how to effectively use FFmpeg for video/audio conversion,
+  Covers effective use of FFmpeg for video/audio conversion,
   trimming, filtering, streaming, and multimedia processing. Activates when
   the user wants to convert media files, trim video, create GIFs, extract
   audio, add subtitles, encode for web, or do any audio/video manipulation.

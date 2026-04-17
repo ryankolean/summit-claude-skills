@@ -1,0 +1,24 @@
+{
+  "name": "eval-1-architect-from-description",
+  "skills": ["agent-architect"],
+  "query": "I need a subagent that reviews Postgres migrations before they are applied. It should auto-delegate when I'm working with migration files and dry-run the migration to check for safety issues.",
+  "expected_behavior": [
+    "Activates agent-architect in Architect mode (not Lock or Push)",
+    "Runs the pre-flight check and confirms a custom subagent is the right tool (not CLAUDE.md, not slash command, not built-in Explore/Plan)",
+    "Asks at most 3 scoping questions, one per turn, skipping questions already answered by the user's request",
+    "Generated frontmatter includes name (kebab-case), description with MUST BE USED or PROACTIVELY directive, tools list at least-privilege (Read, Glob, Grep, Bash for dry-run), model (sonnet or inherit)",
+    "Generated body includes all required sections: When invoked, Process (numbered steps), Output format (specific deliverable structure), Boundaries (Do NOT items), Report/Response (Status, Summary, Findings, Obstacles, Next steps)",
+    "Runs Step 6 self-validation against the anti-pattern catalog before writing the file",
+    "Asks for deployment scope (project vs. user) before writing",
+    "After writing, surfaces the reload reminder (run /agents) and a suggested test invocation",
+    "Does not include time-sensitive caveats or vendor-specific marketing in the generated file"
+  ],
+  "failure_modes_to_check": [
+    "Generates without scoping interview (skips Step 3)",
+    "Includes tools beyond least-privilege",
+    "Description is vague ('helps with migrations') instead of directive",
+    "Body assumes chat history (stateful assumption anti-pattern)",
+    "Skips Step 6 self-validation",
+    "Writes file without confirming scope"
+  ]
+}

@@ -1,7 +1,7 @@
 ---
 name: workflow-lock
 description: >
-  Capture a successful one-off Claude interaction and convert it into a repeatable,
+  Captures a successful one-off Claude interaction and convert it into a repeatable,
   templatized workflow with variables and trigger conditions. Activates when the
   user says "lock this workflow", "save this as a template", "I want to reuse this",
   or after a successful task where the user indicates they'll need to do it again.

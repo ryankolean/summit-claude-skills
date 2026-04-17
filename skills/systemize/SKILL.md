@@ -1,7 +1,7 @@
 ---
 name: systemize
 description: >
-  Convert a singular action, task, or one-off workflow into a modular system
+  Converts a singular action, task, or one-off workflow into a modular system
   component that integrates with existing skills and systems. Analyzes the full
   inventory of available skills and system components, then runs a structured
   design dialog to define the component's interfaces, dependencies, data flow,

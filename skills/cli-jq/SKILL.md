@@ -1,7 +1,7 @@
 ---
 name: cli-jq
 description: >
-  Teach Claude how to effectively use jq for processing, filtering, and
+  Covers effective use of jq for processing, filtering, and
   transforming JSON data. Activates when the user asks about jq, parsing JSON
   in the terminal, reshaping API responses, or transforming structured data
   with filters, pipes, select, map, or reduce.

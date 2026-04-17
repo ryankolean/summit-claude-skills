@@ -1,0 +1,21 @@
+{
+  "name": "eval-1-lock-working-workflow",
+  "skills": ["workflow-lock"],
+  "context_setup": "Previous turns: user walked Claude through a specific process for generating a client-ready proposal from a Notion scoping doc — read the doc, extract the problem/approach/timeline sections, apply the Summit branding template, produce a PDF with cover page + scope + pricing. It worked well across two different client examples.",
+  "query": "Lock this workflow so I can reuse it.",
+  "expected_behavior": [
+    "Activates workflow-lock",
+    "Phase 1 (Identify What Worked): reviews the chat history and extracts the pattern — input (Notion scoping doc URL or text), sequence (extract sections, apply template, generate PDF), output (client-ready PDF)",
+    "Phase 2 (Templatize): identifies what changes each time (client name, specific problem/approach/timeline content, pricing) and parameterizes those — produces a template with placeholders like {{client_name}}, {{scoping_doc}}, {{pricing_tier}}",
+    "Identifies the trigger conditions: when the user says 'generate a proposal' or references a Notion scoping doc and client preparation context",
+    "Phase 3 (Output the Locked Workflow): produces a structured workflow definition with name, trigger, inputs, steps, outputs, and any rules (e.g., 'always use Summit template v2, never put pricing on cover page')",
+    "Phase 4 (Offer Next Steps): offers to chain to prompt-to-skill to make it permanent — 'Want me to install this as a permanent skill so it activates automatically when you mention a proposal?'",
+    "Does NOT auto-chain to prompt-to-skill without asking"
+  ],
+  "failure_modes_to_check": [
+    "Saves the exact ad-hoc session without parameterizing — produces a workflow that only works for the one client already used",
+    "Forgets the trigger conditions, so the workflow has no activation path",
+    "Skips the offer to install permanently via prompt-to-skill",
+    "Auto-chains to prompt-to-skill without confirming"
+  ]
+}

@@ -1,7 +1,7 @@
 ---
 name: cli-fzf
 description: >
-  Teach Claude how to effectively use fzf (fuzzy finder) for interactive
+  Covers effective use of fzf (fuzzy finder) for interactive
   filtering of files, command history, processes, git branches, and any
   line-oriented data. Activates when the user asks about fzf, interactive
   selection from lists, fuzzy searching, or filtering command output interactively.

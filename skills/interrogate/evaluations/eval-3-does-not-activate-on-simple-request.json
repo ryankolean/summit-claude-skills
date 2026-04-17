@@ -1,0 +1,17 @@
+{
+  "name": "eval-3-does-not-activate-on-simple-request",
+  "skills": ["interrogate"],
+  "query": "Convert this CSV to JSON.",
+  "context_setup": "User attaches a small, clean CSV file with obvious column headers.",
+  "expected_behavior": [
+    "Does NOT activate interrogate — the request is simple, specific, and unambiguous",
+    "Just performs the conversion and returns the JSON",
+    "Does not ask 'what format do you want?' or 'should I use snake_case or camelCase?' or 'do you want it as an array of objects or an object of arrays?' — picks reasonable defaults and proceeds",
+    "If the CSV had genuinely ambiguous structure (no headers, mixed types, multi-row records), THEN interrogate could legitimately activate to clarify"
+  ],
+  "failure_modes_to_check": [
+    "Activates interrogate on a simple, well-scoped task",
+    "Asks 3+ clarifying questions before doing trivial work",
+    "Treats every request as ambiguous by default"
+  ]
+}

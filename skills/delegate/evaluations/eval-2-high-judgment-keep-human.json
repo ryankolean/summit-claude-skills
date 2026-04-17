@@ -1,0 +1,19 @@
+{
+  "name": "eval-2-high-judgment-keep-human",
+  "skills": ["delegate"],
+  "query": "Should I automate writing performance reviews for my direct reports? I write 8 of them twice a year.",
+  "expected_behavior": [
+    "Activates delegate",
+    "Evaluates against the four criteria: repetitiveness (16/year = medium), judgment required (very high — personalized, high-stakes, requires context the automation cannot have), error tolerance (very low — mistakes damage relationships and careers), data sensitivity (high — HR-confidential)",
+    "Produces recommendation: Keep Human with AI-assist for specific sub-tasks",
+    "Specifically flags which sub-tasks CAN be AI-assisted: drafting boilerplate sections, ensuring consistent tone across reviews, spell-checking, surfacing patterns in feedback — none of which involve the human judgment core",
+    "Specifically flags what MUST stay human: evaluating performance, choosing examples, rating, determining growth areas, the final review itself",
+    "Does not recommend full automation — high judgment + low error tolerance + high sensitivity is the textbook 'keep human' zone",
+    "Surfaces the risk of full automation clearly: legal exposure, employee trust, loss of managerial signal"
+  ],
+  "failure_modes_to_check": [
+    "Recommends full automation because it's repetitive",
+    "Recommends keep-human without identifying any AI-assist opportunities (misses the hybrid path)",
+    "Ignores the sensitivity/legal dimension"
+  ]
+}

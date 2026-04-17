@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-integrate-into-existing-system",
+  "skills": ["systemize"],
+  "context_setup": "User already has an established self-centric system with components for reminder-hub, daily review, brain-dump, and prompt-to-skill. System registry exists.",
+  "query": "Systemize a 'candidate pipeline scoring' component. It should feed my weekly pipeline review and pull from my brain-dump captures.",
+  "expected_behavior": [
+    "Activates systemize",
+    "Phase 0 (System Inventory): reads the existing system registry, recognizes reminder-hub, brain-dump, daily review, prompt-to-skill as established components",
+    "Phase 1 (Action Analysis): interrogates the candidate-pipeline-scoring action — inputs (brain-dump captures, CRM data), processing (scoring logic), outputs (scored list that feeds pipeline review)",
+    "Phase 2 (System Design Dialog): does NOT re-establish system architecture (it already exists) — instead integrates the new component into the existing architecture",
+    "Phase 3 (Component Specification): explicitly defines the integration points: brain-dump → scoring (data flow in), scoring → pipeline review (data flow out), and any shared state or dependencies with daily review",
+    "Phase 4 (Registry Update): adds candidate-pipeline-scoring to the registry with explicit edges to the upstream and downstream components",
+    "Phase 5 (Next Steps): surfaces the natural next systemize candidates that would close remaining gaps in the system (e.g., 'your pipeline-review component still has no automated CRM sync — want to systemize that next?')"
+  ],
+  "failure_modes_to_check": [
+    "Re-establishes system architecture instead of integrating into the existing one",
+    "Designs the component as standalone without mapping the integration points to existing components",
+    "Skips registry update",
+    "Proposes duplicate functionality that overlaps with existing components (e.g., a second reminder system instead of using reminder-hub)"
+  ]
+}

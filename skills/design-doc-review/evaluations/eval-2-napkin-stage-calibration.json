@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-napkin-stage-calibration",
+  "skills": ["design-doc-review"],
+  "query": "Can you review this rough idea I had for a notification system? It's still pretty napkin-stage.",
+  "context_setup": "User attaches 2 paragraphs describing a notification fan-out idea: 'we want to send notifications to multiple channels (email, SMS, push) from a single API call, with retry on failure'. No diagrams, no API specifics, no data model.",
+  "expected_behavior": [
+    "Phase 1: Identifies maturity as Napkin and explicitly calibrates the rest of the pipeline accordingly (per the calibration table in reference/calibration-and-rules.md)",
+    "Phase 2: Runs the 16-point checklist heavily — most sections will be MISSING; that's expected output for napkin-stage",
+    "Phase 3: Light touch — does not deep-dive on details that don't exist yet; focuses on the architectural shape that IS described",
+    "Phase 4: SKIPS or runs as a quick check (calibration says skip for napkin-stage); explicitly tells user it's skipping and why",
+    "Phase 5: Heavy autoheal — drafts the missing sections (API design, data model, error handling, observability) as starting points the author can refine",
+    "Phase 6: Quick sanity check, not full adversarial — calibration appropriate to maturity",
+    "Phase 7: Final output reflects that the hardened document is now Draft-stage (not Review-Ready), and explicitly says so"
+  ],
+  "failure_modes_to_check": [
+    "Treats napkin-stage with the same depth as a review-ready RFC",
+    "Phase 3 produces 30 nitpick findings on a 2-paragraph doc",
+    "Skips calibration and runs full pipeline at maximum depth",
+    "Phase 5 autoheals are too detailed for the maturity level (e.g., specifying exact Redis keys when no caching layer was mentioned)"
+  ]
+}

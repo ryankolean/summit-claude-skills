@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-knowing-when-to-stop",
+  "skills": ["interrogate"],
+  "query": "Build me a React dashboard for my sales team. Interrogate me.",
+  "context_setup": "User answers: 8 account executives, daily use to prioritize outreach, must integrate with Salesforce, dark mode preferred, no specific deadline, lives at /sales-dash route. After 3-4 questions Claude has: clear goal (prioritize outreach), audience (8 AEs, daily), constraints (Salesforce integration, dark mode), format (React dashboard), and at least one surfaced assumption (probably: 'I'm assuming you want this responsive for mobile too — confirm or correct').",
+  "expected_behavior": [
+    "Activates interrogate (manual trigger)",
+    "Asks 3-5 focused questions, one per turn, each building on previous answers",
+    "Stops asking once it can confidently answer all four: what the output is, who it's for, the constraints that would make it fail, and at least one surfaced assumption the user didn't state",
+    "Does NOT keep asking once those four are covered",
+    "For complex tasks (this is one): presents a structured brief before executing — Goal / Audience / Constraints / Format / Assumptions",
+    "Waits for confirmation before starting the actual build",
+    "If user says 'go ahead' or 'that's everything' at any point, stops immediately and proceeds even if more questions remained"
+  ],
+  "failure_modes_to_check": [
+    "Asks 8+ questions because there are still edges to explore (over-interrogation)",
+    "Skips the structured brief and dives into building",
+    "Does not surface any assumptions in the brief (Layer 4 gap)",
+    "Continues asking after user signals 'enough'"
+  ]
+}

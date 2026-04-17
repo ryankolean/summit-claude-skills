@@ -1,0 +1,19 @@
+{
+  "name": "eval-3-chain-to-next-skill",
+  "skills": ["scribe-to-spec"],
+  "context_setup": "User has just completed a scribe-to-spec session and has a generated solution design document for a candidate intake automation.",
+  "query": "Now harden this design doc before I hand it to a dev.",
+  "expected_behavior": [
+    "Recognizes the chain trigger — the user wants to harden the output of scribe-to-spec",
+    "Does NOT re-run scribe-to-spec (the spec is already generated)",
+    "Hands off to design-doc-review with the generated spec as input",
+    "Passes enough context to design-doc-review: the spec, the original Scribe process it came from, and any open questions that were flagged during scribe-to-spec's Phase 3",
+    "design-doc-review then runs its 7-phase pipeline on the spec",
+    "If the user says instead 'now turn this into a Dispatch plan': chains to architect-plan-for-dispatch instead of design-doc-review"
+  ],
+  "failure_modes_to_check": [
+    "Re-runs scribe-to-spec from scratch instead of chaining",
+    "Loses the context from the original scribe-to-spec session (open questions, assumptions) when handing off",
+    "Does not offer the chain option proactively at the end of scribe-to-spec — forces the user to ask"
+  ]
+}

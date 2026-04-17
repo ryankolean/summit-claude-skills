@@ -1,7 +1,7 @@
 ---
 name: prompt-architect
 description: >
-  Translate a plain-English task description into a production-quality Claude prompt
+  Translates a plain-English task description into a production-quality Claude prompt
   with structure, examples, and output formatting. Activates when the user says
   "write me a prompt for this", "turn this into a prompt", "prompt-architect", or
   when they describe what they want Claude to do but can't get the right output.

@@ -1,0 +1,19 @@
+{
+  "name": "eval-3-handoff-to-dispatch",
+  "skills": ["design-doc-review", "architect-plan-for-dispatch"],
+  "query": "Review this design doc, harden it, then turn it into a Dispatch plan I can hand to workers.",
+  "context_setup": "User attaches a Review-Ready design doc for a dental candidate sourcing tool: structured RFC with most 16 sections present, some weak.",
+  "expected_behavior": [
+    "Activates design-doc-review FIRST (not architect-plan-for-dispatch)",
+    "Runs all 7 phases at appropriate Review-Ready depth",
+    "After Phase 7, surfaces three closing options to the user: ship it, iterate, or hand off to architect-plan-for-dispatch",
+    "If user picks hand-off: chains to architect-plan-for-dispatch with the hardened document and the action items list as input",
+    "Does NOT skip design-doc-review and jump straight to architect-plan-for-dispatch even though the user mentioned both",
+    "Does NOT bundle the two skills' outputs into one combined response — surfaces the hardened document first, asks for confirmation, then runs the dispatch planning as a second pass"
+  ],
+  "failure_modes_to_check": [
+    "Skips design-doc-review and goes straight to architect-plan-for-dispatch because the user mentioned 'Dispatch plan'",
+    "Runs the two skills in parallel without confirmation between them",
+    "Compresses the 7-phase review into a brief summary because the user wants to move on to dispatch quickly"
+  ]
+}

@@ -1,7 +1,7 @@
 ---
 name: cli-playwright
 description: >
-  Teach Claude how to effectively use Playwright for browser automation and
+  Covers effective use of Playwright for browser automation and
   testing. Covers CLI commands (codegen, test, show-report, screenshot, pdf),
   the core API (goto, click, fill, locator, waitForSelector, evaluate), and
   advanced patterns like visual regression, trace viewer, mobile emulation,

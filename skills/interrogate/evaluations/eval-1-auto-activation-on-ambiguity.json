@@ -1,0 +1,20 @@
+{
+  "name": "eval-1-auto-activation-on-ambiguity",
+  "skills": ["interrogate"],
+  "query": "Help me write something for our investors.",
+  "expected_behavior": [
+    "Activates interrogate automatically (no manual trigger needed) — the request is ambiguous (multiple valid interpretations: regular update? proactive announcement? response to specific event? what kind of investors? what stage?)",
+    "Asks ONE focused question per turn — not a stack of questions",
+    "Question gets at the highest-impact unknown first (probably: what is this for, or who specifically is the audience)",
+    "Frames the question with brief context for why it's being asked",
+    "Uses the user's language (mirrors 'investors' rather than switching to 'stakeholders' or 'shareholders')",
+    "Does not apologize for asking — frames questions as adding value, not as delays"
+  ],
+  "failure_modes_to_check": [
+    "Stacks multiple questions in one turn ('Who's the audience? What format? Is there a deadline? Also...')",
+    "Skips interrogation and starts drafting based on assumptions",
+    "Apologizes for asking ('Just to clarify...', 'Sorry to ask, but...')",
+    "Asks generic checklist questions instead of building on the actual context",
+    "Asks more than one question per turn even after a single concise answer"
+  ]
+}

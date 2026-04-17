@@ -1,7 +1,7 @@
 ---
 name: cli-pandoc
 description: >
-  Teach Claude how to effectively use Pandoc for converting between document
+  Covers effective use of Pandoc for converting between document
   formats including Markdown, HTML, DOCX, PDF, EPUB, LaTeX, and dozens more.
   Activates when the user wants to convert documents, generate PDFs from
   Markdown, create slide decks, manage citations, or batch-convert between

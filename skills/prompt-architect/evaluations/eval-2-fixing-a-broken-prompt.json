@@ -1,0 +1,21 @@
+{
+  "name": "eval-2-fixing-a-broken-prompt",
+  "skills": ["prompt-architect"],
+  "query": "This prompt isn't working. Claude keeps writing in the wrong tone and missing the citation format I want. Fix it: 'Write a summary of this article'",
+  "context_setup": "User pastes a one-line prompt and complains about tone drift and missing citations.",
+  "expected_behavior": [
+    "Activates prompt-architect (auto-detect: 'this prompt isn't working')",
+    "Diagnoses what's missing in the broken prompt: no role assignment, no tone guidance, no citation format spec, no good/bad examples",
+    "Asks targeted questions only about the gaps — NOT a full Phase 1 interrogation since some context is already given (the task is summarization, the failure modes are tone and citation format)",
+    "Specifically asks: what tone is correct, what citation format is required, can the user provide an example of correctly-summarized output",
+    "Rebuilds the prompt with the missing elements: role assignment, explicit tone guidance, citation format specification with example, and at least one good/bad output pair",
+    "Surfaces a before/after showing what was changed and why, so the user learns the pattern for next time",
+    "Does NOT just append more instructions to the broken prompt — restructures it"
+  ],
+  "failure_modes_to_check": [
+    "Runs the full 5-question Phase 1 even though the user has clearly identified the failure modes",
+    "Adds 'use a professional tone and proper citations' to the existing prompt without specifying WHAT professional means or WHICH citation format",
+    "Skips the before/after explanation",
+    "Does not ask for an example of correct output when the user complains about format issues"
+  ]
+}

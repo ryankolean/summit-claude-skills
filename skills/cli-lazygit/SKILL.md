@@ -1,7 +1,7 @@
 ---
 name: cli-lazygit
 description: >
-  Teach Claude how to effectively use lazygit for terminal UI git operations
+  Covers effective use of lazygit for terminal UI git operations
   including staging, committing, pushing, branching, interactive rebase, merge
   conflict resolution, cherry-pick, bisect, and worktrees. Activates when the
   user asks about lazygit, TUI git workflows, or interactive git operations.

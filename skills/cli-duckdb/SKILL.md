@@ -1,7 +1,7 @@
 ---
 name: cli-duckdb
 description: >
-  Teach Claude how to effectively use DuckDB for in-process analytical SQL
+  Covers effective use of DuckDB for in-process analytical SQL
   queries directly on CSV, Parquet, JSON, and remote S3/HTTP files without
   importing data. Activates when the user asks about DuckDB, querying files
   with SQL, analytical data processing, or OLAP on local files.

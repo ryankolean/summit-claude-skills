@@ -1,0 +1,19 @@
+{
+  "name": "eval-3-redirect-when-not-system-worthy",
+  "skills": ["systemize"],
+  "query": "Systemize 'convert CSV to JSON' so I can do it reliably.",
+  "expected_behavior": [
+    "Activates systemize",
+    "Phase 0 (System Inventory) + Phase 1 (Action Analysis): recognizes that CSV-to-JSON conversion is a deterministic one-shot transformation, not a system component",
+    "Surfaces the mismatch to the user: 'systemize is for connecting actions into a larger system architecture with interfaces, dependencies, and data flow between components. CSV-to-JSON is a deterministic one-shot — it doesn't need to integrate with other components. Options: (a) it's trivial enough to just do ad-hoc, (b) if you want it repeatable with a consistent format, that's a slash command or a prompt-to-skill job, (c) if you want it integrated INTO a system (e.g., CSV-to-JSON as a step in a larger data ingest pipeline), then systemize fits — which is the real goal?'",
+    "Offers three paths cleanly and lets the user pick",
+    "If user says 'it's part of a larger data ingest workflow': proceeds with systemize, scoped to the larger workflow",
+    "If user says 'I just want it reliable': redirects to prompt-to-skill or slash command",
+    "If user says 'do it now': redirects to ad-hoc conversion"
+  ],
+  "failure_modes_to_check": [
+    "Builds a systemize component for a standalone transformation",
+    "Refuses entirely instead of offering redirect paths",
+    "Does not surface the 'is this part of a larger system?' question to disambiguate"
+  ]
+}
