@@ -1,7 +1,7 @@
 ---
 name: cli-ripgrep
 description: >
-  Teach Claude how to effectively use ripgrep (rg) for fast regex search across
+  Covers effective use of ripgrep (rg) for fast regex search across
   codebases. Covers rg PATTERN, -i, -w, -l, -c, -n, --type, -g, -A/-B/-C,
   -U multiline, --json, type-add, .ripgreprc, replacement, and PCRE2. Activates
   when the user asks about ripgrep, rg, fast code search, or searching file

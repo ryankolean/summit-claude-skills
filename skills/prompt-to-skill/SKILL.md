@@ -1,7 +1,7 @@
 ---
 name: prompt-to-skill
 description: >
-  Convert a working Claude prompt into a permanent, installable SKILL.md file with
+  Converts a working Claude prompt into a permanent, installable SKILL.md file with
   proper frontmatter, activation triggers, execution rules, and examples. Then
   automatically add it to the Summit Custom Skills table in the repo README and
   push to GitHub. Chains naturally after prompt-architect. Activates when the user

@@ -1,7 +1,7 @@
 ---
 name: cli-bat
 description: >
-  Teach Claude how to effectively use bat, the syntax-highlighting cat
+  Covers effective use of bat, the syntax-highlighting cat
   replacement, for viewing files, previewing diffs, using as a MANPAGER,
   integrating with fzf previews, and customizing themes. Activates when the
   user asks about bat, syntax-highlighted file viewing, or replacing cat/less.

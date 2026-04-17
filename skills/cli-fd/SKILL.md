@@ -1,7 +1,7 @@
 ---
 name: cli-fd
 description: >
-  Teach Claude how to effectively use fd as a modern, fast replacement for
+  Covers effective use of fd as a modern, fast replacement for
   `find`. Covers fd PATTERN, -e ext, -t type, -H hidden, -I no-ignore, -x exec,
   -X batch exec, -E exclude, --changed-within, -d depth, --size, bulk operations,
   exec placeholders, and combining with ripgrep, bat, and fzf. Activates when the

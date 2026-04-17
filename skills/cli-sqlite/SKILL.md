@@ -1,7 +1,7 @@
 ---
 name: cli-sqlite
 description: >
-  Teach Claude how to effectively use SQLite for serverless SQL databases
+  Covers effective use of SQLite for serverless SQL databases
   including CLI dot-commands, schema management, CSV import/export, JSON
   functions, FTS5 full-text search, WAL mode, multi-database attach, and
   data analysis workflows. Activates when the user asks about SQLite, sqlite3,

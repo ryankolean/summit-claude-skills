@@ -1,7 +1,7 @@
 ---
 name: cli-yq
 description: >
-  Teach Claude how to effectively use yq for reading, writing, and transforming
+  Covers effective use of yq for reading, writing, and transforming
   YAML, JSON, XML, TOML, and CSV files. Activates when the user asks about yq,
   editing YAML configs, patching Kubernetes manifests, merging compose files,
   or converting between structured data formats.

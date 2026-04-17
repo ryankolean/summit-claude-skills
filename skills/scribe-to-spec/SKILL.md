@@ -1,7 +1,7 @@
 ---
 name: scribe-to-spec
 description: >
-  Transform Scribe AI (scribe.com) process documentation — step-by-step guides
+  Transforms Scribe AI (scribe.com) process documentation — step-by-step guides
   with screenshots and click annotations — into a complete custom software solution
   design document. Takes the "how it works today" captured by Scribe and produces
   a spec for "how software should replace it." Activates when the user provides

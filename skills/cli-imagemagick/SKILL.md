@@ -1,7 +1,7 @@
 ---
 name: cli-imagemagick
 description: >
-  Teach Claude how to effectively use ImageMagick for image conversion,
+  Covers effective use of ImageMagick for image conversion,
   resizing, cropping, compositing, batch processing, and creating favicons,
   thumbnails, watermarks, and animated GIFs. Activates when the user wants
   to manipulate images, convert formats, batch-resize photos, or create

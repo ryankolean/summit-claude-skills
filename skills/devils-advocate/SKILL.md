@@ -1,7 +1,7 @@
 ---
 name: devils-advocate
 description: >
-  Stress-test any idea, strategy, or position by attacking it from multiple angles
+  Stress-tests any idea, strategy, or position by attacking it from multiple angles
   until it's hardened with refined clarity. Default mode is rigorous sparring partner;
   escalates to full adversarial on request. Maintains a running hardening scorecard.
   Activates when the user says "devil's advocate", "stress test this", "attack this

@@ -1,7 +1,7 @@
 ---
 name: cli-apify
 description: >
-  Teach Claude how to effectively use the Apify CLI for web scraping and
+  Covers effective use of the Apify CLI for web scraping and
   automation using Actors, datasets, key-value stores, and Crawlee. Covers
   apify init/run/push/login/call/pull, Actor concepts, pagination, proxy
   rotation, scheduling, webhooks, and CSV/JSON export. Activates when the user

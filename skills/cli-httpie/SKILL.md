@@ -1,7 +1,7 @@
 ---
 name: cli-httpie
 description: >
-  Teach Claude how to effectively use HTTPie (http/https commands) for making
+  Covers effective use of HTTPie (http/https commands) for making
   HTTP requests from the terminal. Activates when the user asks about HTTPie,
   testing REST APIs from the command line, sending JSON bodies, managing auth
   tokens, or debugging HTTP requests interactively.

@@ -1,7 +1,7 @@
 ---
 name: interrogate
 description: >
-  Ask clarifying questions before executing any task. Activates automatically on
+  Asks clarifying questions before executing any task. Activates automatically on
   ambiguous or complex requests, or manually when the user says "interrogate me",
   "ask me questions first", or "scope this". One question at a time, like a senior
   consultant scoping a project, until Claude is confident it fully understands the

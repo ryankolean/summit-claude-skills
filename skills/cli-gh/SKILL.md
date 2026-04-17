@@ -1,7 +1,7 @@
 ---
 name: cli-gh
 description: >
-  Teach Claude how to effectively use the GitHub CLI (gh) for managing pull
+  Covers effective use of the GitHub CLI (gh) for managing pull
   requests, issues, releases, Actions workflows, repositories, and raw API
   calls. Activates when the user asks about gh, GitHub CLI, automating GitHub
   workflows, or interacting with GitHub from the terminal.
