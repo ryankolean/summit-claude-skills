@@ -1,0 +1,19 @@
+{
+  "name": "eval-3-pre-flight-redirect",
+  "skills": ["agent-architect"],
+  "query": "I want to make a subagent that always reminds me of my coding conventions whenever I write code.",
+  "expected_behavior": [
+    "Activates agent-architect",
+    "Runs the pre-flight decision check",
+    "Identifies that 'a repeatable instruction the parent should always follow' is better served by a CLAUDE.md entry, not a custom subagent",
+    "Surfaces the redirect to the user before generating: explains that CLAUDE.md is the better fit because the parent agent will read it on every session, while a subagent only runs when explicitly invoked or auto-delegated",
+    "Asks whether the user wants to (a) proceed with the subagent anyway, or (b) accept the redirect and switch to drafting CLAUDE.md content",
+    "If user accepts redirect: stops the subagent generation cleanly and offers to help draft the CLAUDE.md content",
+    "If user insists on subagent: proceeds with the standard Architect mode workflow without further pushback"
+  ],
+  "failure_modes_to_check": [
+    "Skips the pre-flight check and proceeds straight to Architect mode",
+    "Refuses the user's request entirely instead of offering both paths",
+    "Gives the redirect but does not let the user override and proceed with the subagent if they want"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "eval-2-lock-from-chat-pattern",
+  "skills": ["agent-architect"],
+  "context_setup": "The previous turns demonstrated the user reviewing 3 React components for accessibility issues with consistent format: ARIA roles, keyboard navigation, color contrast, focus management. The user used Read tool to inspect each component file and produced findings as bulleted lists with file:line references.",
+  "query": "Lock this as a subagent",
+  "expected_behavior": [
+    "Activates agent-architect in Lock mode (not Architect, not Push)",
+    "Identifies the demonstrated pattern from chat history (a11y review of React components)",
+    "Generated system prompt is written for cold start — no references to 'as we discussed', 'the components we looked at', or other chat-history dependencies",
+    "Infers tools from what was actually used (Read, Glob, Grep) — does not speculate or add tools that were not used",
+    "Infers description with PROACTIVELY directive matching the trigger context (creating or editing UI components)",
+    "Runs Step 6 self-validation against anti-patterns",
+    "Shows the proposed file and asks once whether to adjust before writing",
+    "Asks for deployment scope (project vs. user) before writing",
+    "After writing, surfaces reload reminder and test invocation"
+  ],
+  "failure_modes_to_check": [
+    "System prompt body references chat history (stateful assumption anti-pattern)",
+    "Adds tools that were not actually used in the demonstrated pattern",
+    "Skips the confirmation step and writes directly",
+    "Generates without scope confirmation"
+  ]
+}
