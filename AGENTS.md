@@ -28,6 +28,7 @@ Run ad hoc from the repo root.
 - `CONTRIBUTING.md` — submission rules for third-party entries
 - `skills/{skill-name}/SKILL.md` — one directory per Summit-authored skill
 - `install-prompts/ALL-PROMPTS.md` — canonical install-prompt block mirrored in README
+- `templates/` — reusable starter files (personal CLAUDE.md template, etc.) — not skills; copy-and-fill
 - `assets/` — logos and static images
 - `scripts/` — maintenance shell scripts
 
