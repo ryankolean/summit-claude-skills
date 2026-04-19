@@ -9,7 +9,7 @@ Living capture-and-organize system. Turns scattered inputs (saved tweets, screen
 
 ## Operating modes
 
-The skill runs in one of five modes. Identify the mode from the user's intent before executing.
+The skill runs in one of six modes. Identify the mode from the user's intent before executing.
 
 | Mode | Trigger | Output |
 |---|---|---|
@@ -17,6 +17,7 @@ The skill runs in one of five modes. Identify the mode from the user's intent be
 | **triage** | "Process my inbox", "triage mindspace", "clear the inbox" | All inbox items moved to `library/` or `archive/` with classification |
 | **review** | "Mindspace review", "what's stale", "what haven't I actioned" | Surface stale items, prompt revisit/archive/escalate |
 | **search** | "What did I capture about X", "find ideas on Y" | Filtered list from `index.json` + grep across `library/` |
+| **research** | "research backfill", "research today", "research card X", "research refresh X" | Append `## Research` block to one or more cards; commit + push |
 | **self-learn** | End of every session OR user says "promote learnings" | Append to `_meta/learnings.md`; if high-value pattern, prompt SKILL.md update |
 
 ## Bootstrap (first-time setup)
@@ -79,6 +80,22 @@ If the repo doesn't exist yet, run the `gh-repo-create` skill with these paramet
 4. Return ranked results: title, project/type, captured date, one-line summary, file path.
 5. If user wants to act on a result, jump into capture-style classification on that existing card to update/reschedule.
 
+## Research mode — execution rules
+
+1. Determine scope from invocation:
+   - "backfill" → all cards in `_meta/index.json` without a `<!-- research: -->` block
+   - "today" / "tomorrow's tasks" → cards where `suggested_schedule` matches the requested day
+   - "refresh <id>" → that one card; override staleness check
+   - "card <id>" → that one card; respect staleness
+2. For each card in scope, check the body for an existing `<!-- research: ISO_TIMESTAMP -->` marker:
+   - Absent → process
+   - Present and timestamp ≥ 4 days ago → process (replace block atomically)
+   - Present and timestamp < 4 days ago → skip silently (unless invocation is `refresh`)
+3. Dispatch one research subagent per card in parallel batches of 5. See `references/research-protocol.md` for the per-card algorithm and `templates/research-block.md` for the output format.
+4. After each subagent returns its block, locate the card markdown file. If the file already has a `<!-- research:` block, replace from `<!-- research:` through `<!-- /research -->` (DOTALL match). Otherwise append a blank line then the new block at end of file.
+5. Run `./viewer/build.sh` once at the end to regenerate `viewer/index.html`.
+6. Commit: `research: enrich N cards`. Stage all touched cards plus `viewer/index.html`. Push.
+
 ## Self-learn protocol
 
 **After every session that wrote, moved, or archived files**, before responding "done," do this:
@@ -132,9 +149,11 @@ If the repo doesn't exist yet, run the `gh-repo-create` skill with these paramet
 - `references/taxonomy.md` — current project + idea-type definitions
 - `references/capture-flow.md` — detailed step-by-step for each input type
 - `references/integrations.md` — reminder-hub format, iOS Shortcut spec, voice mode
+- `references/research-protocol.md` — per-card research algorithm: phases, budgets, failure modes, worked example
 - `references/self-learning-protocol.md` — full pattern detection rules and SKILL.md edit conventions
 - `templates/idea-card.md` — frontmatter + body template
 - `templates/learnings-entry.md` — learnings.md append template
+- `templates/research-block.md` — research output template appended to card bodies
 
 ## Hard constraints
 
@@ -143,3 +162,4 @@ If the repo doesn't exist yet, run the `gh-repo-create` skill with these paramet
 - Never delete from `library/` — only move to `archive/`.
 - Never commit to mindspace without writing to `_meta/index.json` in the same commit.
 - Always run `viewer/build.sh` (if present) before the final session commit, so the baked HTML snapshot stays in lockstep with the data.
+- Never run research on a card whose existing `<!-- research: -->` block is < 4 days old, except when invoked explicitly as `research refresh <id>`.
