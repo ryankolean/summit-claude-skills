@@ -24,7 +24,7 @@ If the task is purely a render of an existing edit, skip stages 1–4 and jump t
 | video-use skill | `https://github.com/browser-use/video-use` | Claude Code skill (`SKILL.md` + `skills/manim-video/`) that teaches Claude to drive HyperFrames + Manim. |
 | Student kit | `https://github.com/nateherkai/hyperframes-student-kit` | Reference workbench: brand system, audio sync, render pipeline, sample compositions. |
 
-Prereqs: Node 20+, FFmpeg, headless Chrome/Chromium, ~5 GB free disk, 16 GB RAM recommended. Run `npx hyperframes doctor` after install.
+Prereqs: Node 20+, FFmpeg **with libass** (brew default lacks it — use `brew tap homebrew-ffmpeg/ffmpeg && brew install homebrew-ffmpeg/ffmpeg/ffmpeg`), whisper-cpp, headless Chrome/Chromium, ~5 GB free disk, 16 GB RAM recommended. Run `npx hyperframes doctor` after install. Verify libass: `ffmpeg -filters | grep subtitles`.
 
 ## CLI tools used
 
