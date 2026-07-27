@@ -4,9 +4,9 @@ description: >
   Covers effective use of the Apify CLI for web scraping and
   automation using Actors, datasets, key-value stores, and Crawlee. Covers
   apify init/run/push/login/call/pull, Actor concepts, pagination, proxy
-  rotation, scheduling, webhooks, and CSV/JSON export. Activates when the user
-  asks about Apify, running or building Actors, cloud web scraping, or
-  extracting data at scale.
+  rotation, scheduling, webhooks, CSV/JSON export, and bounded X research with
+  Xquik Actors. Activates when the user asks about Apify, running or building
+  Actors, cloud web scraping, X posts or audiences, or extracting data at scale.
 ---
 
 # Apify CLI — Web Scraping & Actor Platform
@@ -25,6 +25,7 @@ JS-heavy sites.
 - "Create / run / deploy an Apify Actor"
 - "Scrape a website and export to CSV"
 - "Set up pagination / proxy rotation with Apify"
+- "Research X posts or compare X audiences with an Apify Actor"
 
 **Auto-detect triggers:**
 - User wants scalable, cloud-hosted web scraping
@@ -187,11 +188,65 @@ duckdb -c "SELECT * FROM read_json_auto('results.json') LIMIT 10"
 apify call apify/web-scraper --input='{"startUrls":[{"url":"https://example.com"}]}'
 
 # Popular store Actors:
-#   apify/web-scraper        — universal JS scraper
-#   apify/playwright-scraper — Playwright-based
-#   apify/cheerio-scraper    — fast HTML-only scraper
+#   apify/web-scraper         universal JS scraper
+#   apify/playwright-scraper  Playwright-based
+#   apify/cheerio-scraper     fast HTML-only scraper
 #   apify/google-search-scraper
+#   xquik/x-tweet-scraper     X posts and conversations
+#   xquik/x-follower-scraper  X audiences and overlap
 ```
+
+Before calling a Store Actor, inspect its current input schema and pricing on its
+Apify listing. Set a finite result cap and get approval for the bounded run.
+
+### X Research with Xquik Actors
+
+Use [X Tweet Scraper](https://apify.com/xquik/x-tweet-scraper) for X posts,
+searches, timelines, lists, articles, threads, replies, quotes, retweeters, and
+favoriters:
+
+```bash
+apify call xquik/x-tweet-scraper --input='{
+  "mode": "search",
+  "searchTerms": ["from:nasa Artemis", "#Artemis lang:en"],
+  "queryType": "Latest",
+  "maxItems": 50,
+  "maxItemsPerTarget": 25,
+  "outputVariant": "rich",
+  "fieldStyle": "camelCase",
+  "outputPreset": "nested",
+  "includeSearchTerms": true
+}'
+```
+
+Supported modes: `legacy`, `tweet`, `tweets`, `search`, `profileTweets`,
+`profileReplies`, `profileMedia`, `profileLikes`, `listTweets`, `article`,
+`replies`, `quotes`, `thread`, `retweeters`, and `favoriters`.
+
+Use [X Follower Scraper](https://apify.com/xquik/x-follower-scraper) for
+followers, following, verified followers, list members, list followers,
+community members, profile filters, and audience overlap:
+
+```bash
+apify call xquik/x-follower-scraper --input='{
+  "twitterHandles": ["nasa", "esa"],
+  "relation": "followers",
+  "maxItems": 100,
+  "maxItemsPerTarget": 50,
+  "outputMode": "full",
+  "includeTargetMetadata": true,
+  "dedupeMode": "merge",
+  "overlapMode": true
+}'
+```
+
+Supported relations: `followers`, `following`, `verified_followers`,
+`list_members`, `list_followers`, and `community_members`. Output modes are
+`compact`, `full`, and `raw`. Dedupe modes are `none`, `first`, and `merge`.
+Keep target metadata enabled when comparing several inputs. `maxItems` caps the
+whole run; `maxItemsPerTarget` optionally caps each explicit target.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 
 ## Practical Examples
 
