@@ -3,7 +3,14 @@
 # Reads JSONL on stdin, writes ~/.cache/ig-saves/pending/<shortcode>.md
 set -euo pipefail
 
-WATCH="$HOME/.claude/skills/watch-video/scripts/watch.sh"
+# resolve watch-video: a sibling checkout first, then the installed skill
+SELF_DIR="$(cd "$(dirname "$0")" && pwd)"
+WATCH=""
+for cand in "$SELF_DIR/../../watch-video/scripts/watch.sh" \
+            "$HOME/.claude/skills/watch-video/scripts/watch.sh"; do
+  if [ -x "$cand" ]; then WATCH="$cand"; break; fi
+done
+[ -n "$WATCH" ] || WATCH="$HOME/.claude/skills/watch-video/scripts/watch.sh"
 PENDING="$HOME/.cache/ig-saves/pending"
 LIMIT=20
 SLEEP=4
