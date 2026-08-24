@@ -45,6 +45,19 @@ Staged files land in `~/.cache/ig-saves/pending/<shortcode>.md` — frontmatter 
 caption and transcript. State lives in `~/.cache/ig-saves/state.json`; a save already
 staged is skipped, and one already processed is never re-emitted.
 
+The export itself carries the caption, author, hashtags, brand partner and collection
+membership, so the only network call per save is the transcript fetch. Records also
+survive captions containing newlines, quotes and emoji: `enrich.sh` hands each record
+to `stage_card.py` as a file rather than shell-expanding it.
+
+Real exports use a newer layout than most published parsers describe — a flat list of
+records with `label_values`, where the author lives in a nested `Owner` block. The
+parser handles that and the legacy `saved_saved_media` shape. Two decoding traps it
+already handles: most captions are UTF-8 reinterpreted as latin-1 (repaired only when
+the tell-tale markers appear), and `U+2028`/`U+2029`/`U+0085` are escaped on output
+because Python's `splitlines()` treats them as line breaks and would split a JSONL
+record in half.
+
 | Flag | Purpose |
 |---|---|
 | `--limit N` | Max posts per run (default 20). Rerun to continue |
