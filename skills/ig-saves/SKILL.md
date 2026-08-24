@@ -45,19 +45,6 @@ Staged files land in `~/.cache/ig-saves/pending/<shortcode>.md` — frontmatter 
 caption and transcript. State lives in `~/.cache/ig-saves/state.json`; a save already
 staged is skipped, and one already processed is never re-emitted.
 
-The export itself carries the caption, author, hashtags, brand partner and collection
-membership, so the only network call per save is the transcript fetch. Records also
-survive captions containing newlines, quotes and emoji: `enrich.sh` hands each record
-to `stage_card.py` as a file rather than shell-expanding it.
-
-Real exports use a newer layout than most published parsers describe — a flat list of
-records with `label_values`, where the author lives in a nested `Owner` block. The
-parser handles that and the legacy `saved_saved_media` shape. Two decoding traps it
-already handles: most captions are UTF-8 reinterpreted as latin-1 (repaired only when
-the tell-tale markers appear), and `U+2028`/`U+2029`/`U+0085` are escaped on output
-because Python's `splitlines()` treats them as line breaks and would split a JSONL
-record in half.
-
 | Flag | Purpose |
 |---|---|
 | `--limit N` | Max posts per run (default 20). Rerun to continue |
@@ -67,6 +54,93 @@ record in half.
 
 Posts that are private, deleted, or rate-limited are staged with
 `status: unavailable` rather than silently dropped. Report them; don't retry in a loop.
+
+## Classification — the two axes
+
+Every save gets both. `idea_type` says what it is (mindspace's existing enum);
+`disposition` says what happens to it. Disposition is the axis that decides where a
+card lands and when it is done.
+
+| disposition | idea_type | Destination | Done when |
+|---|---|---|---|
+| `queue` | `build` | mindspace `inbox/` | Card carries a concrete first step |
+| `evaluate` | `try` | mindspace card, tool named in the title | Tool installed and kept, or rejected with a reason |
+| `adopt` | `read` | A CLAUDE.md rule or a skill — **not** a card | Rule text merged, or explicitly declined |
+| `reconstruct` | `research` | mindspace card with a research task | Claim independently verified or disproved |
+| `reference` | `explore` | mindspace card **with frames** | Retrievable when building something similar |
+| `intel` | `research` | mindspace card scoped to summit / rare-find | Insight recorded against a specific offer |
+| `personal` | any | mindspace `project: personal` + `subcategory` | Filed under its topic |
+| `expired` | — | `archive/YYYY-MM/`, no card | Marked processed, never resurfaces |
+
+### Precedence ladder
+
+Many saves match several shapes, so order decides. **First match wins:**
+
+1. `personal` — non-work topic, whatever collection Instagram put it in. Instagram
+   collections are assigned loosely; a hand-massage reel filed under "Interesting
+   knowledge" is still personal. Judge the content, never the collection name.
+2. `expired` — names a superseded tool or model, or `saved_at` is older than 18
+   months and the content is a tool list. Evergreen technique never expires on age
+   alone.
+3. `adopt` — the transcript is self-contained and it changes how you work.
+4. `evaluate` — names a specific installable tool, repo, or MCP server.
+5. `queue` — describes a concrete buildable artifact.
+6. `intel` — pricing, offers, positioning, business model.
+7. `reference` — the value is visual.
+8. `reconstruct` — gated, and the payload is genuinely absent from the transcript.
+
+### Never trade a DM for the answer
+
+Roughly a quarter of work-flavored saves are lead magnets: "comment X and I'll send
+it." Do **not** DM for these, and do not create a chase list.
+
+`reconstruct` means: capture the *claim* the reel makes, then run it through our own
+research and evaluation. The reel is a prompt for investigation, not a source. The
+card records what was claimed, what we verified independently, and the verdict. If a
+technique is worth having, we can derive it — and we end up understanding it rather
+than owning someone's PDF.
+
+`reconstruct` sits last on the ladder on purpose. A gated reel that explains its
+technique fully in the transcript is `adopt` or `evaluate`; the gate is irrelevant
+when the substance is already there. Only reels where the payload truly never
+arrives fall through.
+
+### Personal subcategories
+
+`personal` saves carry a `subcategory` drawn from the topic, not from the Instagram
+collection name (those are inconsistent — "food", "Food", and "Food N Stuff" are the
+same thing). Normalize to: `food`, `drinks`, `home`, `garden`, `travel`, `health`,
+`relationships`, `gifts`, `pets`, `games`, `kids`, `style`, `finance`, `career`,
+`misc`.
+
+`finance` and `career` cover personal money and personal job-search material —
+debt mechanics, asset protection, job-market reality. They are personal even when
+Instagram filed them under a business collection, and they are not `intel`: `intel`
+is only for material that informs a Summit or Rare Find offer.
+
+### Thin transcripts
+
+About a quarter of reels carry their meaning on screen rather than in speech. Two
+distinct failure shapes, both measured on a real batch (35 of 124):
+
+- **Thin** — transcript under 30 words. The caption usually carries the meaning.
+- **Music-only** — whisper faithfully transcribes the backing track, so the card
+  reads as song lyrics. Detect it: three or more of `yeah|oh oh|la la|baby|woah`
+  in a transcript under 120 words. The transcript is worse than useless here
+  because it looks like content while saying nothing about the reel.
+
+Never classify a music-only reel from its transcript. Re-run it with
+`--mode balanced` and read the frames, or leave it unclassified. Anything heading
+for `reference` needs the frames pass regardless — that disposition is defined by
+visual value, so a transcript-only `reference` card is empty by construction.
+
+### Dedupe on content, not just shortcode
+
+The same reel gets reposted by different accounts, so `state.json` (keyed on
+shortcode) will not catch it. Before creating cards, fingerprint the first ~25 words
+of each transcript and collapse matches — one card, with the other URLs listed as
+alternate sources. Measured rate on the first batch: 1 duplicate pair in 124, which
+scales to a meaningful number across ~1,100 saves.
 
 ## Phase 2 — Triage into mindspace
 
