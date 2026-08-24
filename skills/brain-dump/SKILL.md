@@ -56,7 +56,7 @@ If the repo doesn't exist yet, run the `gh-repo-create` skill with these paramet
    - Priority **Medium** or **Low** → present the proposed event to the user, ask "Schedule this? (y/n/edit)" before creating.
    - Priority **Low** with no clear action → no calendar event, just store in library.
 
-7. **Update `_meta/index.json`** with the new entry. Update `_meta/patterns.json` with any new tags (increment frequency counter; if new tag, add with frequency 1).
+7. **Update `_meta/index.json`** with the new entry — append in place, preserving the file's existing formatting. Do NOT round-trip the whole file through a JSON serializer: `json.dumps(indent=2)` explodes every inline `tags` array onto separate lines and turns a one-entry addition into a ~200-line diff. Match the existing style: 2-space indent, one object per entry, `tags` inline on a single line. Update `_meta/patterns.json` with any new tags (increment frequency counter; if new tag, add with frequency 1).
 
 ## Triage mode — execution rules
 
@@ -161,5 +161,6 @@ If the repo doesn't exist yet, run the `gh-repo-create` skill with these paramet
 - Never modify SKILL.md without explicit user approval (the self-learn promotion always asks first).
 - Never delete from `library/` — only move to `archive/`.
 - Never commit to mindspace without writing to `_meta/index.json` in the same commit.
+- Never reformat `_meta/index.json` or `_meta/patterns.json` while editing them. A capture adds one entry, and the diff should show one entry.
 - Always run `viewer/build.sh` (if present) before the final session commit, so the baked HTML snapshot stays in lockstep with the data.
 - Never run research on a card whose existing `<!-- research: -->` block is < 4 days old, except when invoked explicitly as `research refresh <id>`.
