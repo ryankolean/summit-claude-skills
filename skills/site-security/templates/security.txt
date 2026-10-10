@@ -1,0 +1,5 @@
+# Place at /.well-known/security.txt (RFC 9116). Update Expires at least yearly.
+Contact: mailto:security@summitsoftwaresolutions.dev
+Expires: 2027-10-10T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://REPLACE_DOMAIN/.well-known/security.txt

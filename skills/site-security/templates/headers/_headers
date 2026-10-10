@@ -1,0 +1,16 @@
+# Cloudflare Pages and Netlify: place in the publish directory (e.g. public/_headers).
+# Start CSP in Report-Only, review violations for a week, then rename the header to
+# Content-Security-Policy (add upgrade-insecure-requests when you enforce). Add hosts your site really uses (analytics, fonts, embeds).
+# Stripe Checkout/Elements: follow https://docs.stripe.com/security/guide for the exact
+# script-src / frame-src / connect-src entries.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/*.map
+  X-Robots-Tag: noindex

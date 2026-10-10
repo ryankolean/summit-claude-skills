@@ -1,0 +1,84 @@
+# Site security: runs on every PR (gate), on main, and weekly (monitor).
+# Copy to .github/workflows/security.yml and set the env values below.
+# Uses only GitHub-owned actions; scanners come from Homebrew core so CI matches local runs.
+# Pin each action to a full commit SHA before committing (zizmor will flag tags):
+#   gh api repos/actions/checkout/commits/v4 --jq .sha
+name: security
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 9 * * 1"   # Mondays 09:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SITE_SECURITY_REF: "REPLACE_WITH_SUMMIT_CLAUDE_SKILLS_COMMIT_SHA"
+      PROFILE: brochure            # brochure | app
+      BUILD_DIR: dist              # dist | out | build | . (no-build sites)
+      SITE_URL: ""                 # production URL, used by the weekly monitor run
+    steps:
+      - uses: actions/checkout@v4  # pin to SHA
+        with:
+          fetch-depth: 0           # full history; PR gates scan only base..HEAD, audits scan everything
+          persist-credentials: false
+
+      - name: Install scanners
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install osv-scanner zizmor semgrep trufflehog testssl
+          brew install betterleaks || brew install gitleaks
+          pipx install checkdmarc
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch site-security
+        run: |
+          git clone --quiet https://github.com/ryankolean/summit-claude-skills "$RUNNER_TEMP/scs"
+          git -C "$RUNNER_TEMP/scs" checkout --quiet "$SITE_SECURITY_REF"
+
+      - uses: actions/setup-node@v4  # pin to SHA; remove for no-build sites
+        if: hashFiles('package.json') != ''
+        with:
+          node-version: 22
+
+      - name: Build
+        if: hashFiles('package.json') != ''
+        run: |
+          npm ci --ignore-scripts
+          npm run build --if-present
+
+      - name: Scan
+        run: |
+          MODE=gate
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then MODE=monitor; fi
+          set -- --repo "$GITHUB_WORKSPACE" --mode "$MODE" --profile "$PROFILE" --out "$RUNNER_TEMP/sec"
+          if [ -d "$BUILD_DIR" ]; then set -- "$@" --built "$BUILD_DIR"; fi
+          if [ -n "$SITE_URL" ] && [ "$MODE" = "monitor" ]; then set -- "$@" --url "$SITE_URL"; fi
+          bash "$RUNNER_TEMP/scs/skills/site-security/scripts/scan.sh" "$@"
+
+      - name: Job summary
+        if: always()
+        run: cat "$RUNNER_TEMP/sec/summary.md" >> "$GITHUB_STEP_SUMMARY" || true
+
+      # Upload only the redacted report files: raw/ and logs/ hold full tool output and
+      # artifacts on public repos can be downloaded by any signed-in user.
+      - uses: actions/upload-artifact@v4  # pin to SHA
+        if: always()
+        with:
+          name: security-report
+          path: |
+            ${{ runner.temp }}/sec/summary.md
+            ${{ runner.temp }}/sec/findings.json
+            ${{ runner.temp }}/sec/gate.json
+          retention-days: 30

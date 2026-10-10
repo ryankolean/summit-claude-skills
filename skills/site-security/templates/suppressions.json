@@ -1,0 +1,10 @@
+{
+  "suppress": [
+    {
+      "check": "csp-weak",
+      "location": "https://example.com",
+      "reason": "Explain why this is accepted and link the ticket that removes it",
+      "expires": "2026-12-31"
+    }
+  ]
+}
