@@ -11,7 +11,7 @@ ASPECTS = {
     "2:3": 2 / 3,
     "21:9": 21 / 9,
 }
-MULTIPLE = {"sdxl": 64, "flux": 16}
+MULTIPLE = {"sdxl": 64, "flux": 16, "flux2": 16}
 DEFAULT_AREA = 1024 * 1024
 
 

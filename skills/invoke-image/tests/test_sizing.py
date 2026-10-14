@@ -20,6 +20,8 @@ from invoke_image import sizing
         ("9:16", "flux", (768, 1360)),
         ("3:2", "flux", (1248, 832)),
         ("21:9", "flux", (1568, 672)),
+        ("16:9", "flux2", (1360, 768)),
+        ("1:1", "flux2", (1024, 1024)),
     ],
 )
 def test_dimensions(aspect, family, expected):
