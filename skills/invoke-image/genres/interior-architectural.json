@@ -1,0 +1,13 @@
+{
+  "name": "interior-architectural",
+  "model": "flux2-klein",
+  "allowed_models": [
+    "flux2-klein",
+    "juggernaut-xl",
+    "sdxl-base"
+  ],
+  "positive": "{subject}, architectural interior photography, wide angle 24mm lens, straight verticals, balanced natural and ambient light, clean composition, {brand}",
+  "negative": "fisheye distortion, tilted verticals, cluttered, people in focus, illustration, cartoon, text, watermark, logo, blurry, lowres",
+  "steps": 4,
+  "cfg": 1.0
+}

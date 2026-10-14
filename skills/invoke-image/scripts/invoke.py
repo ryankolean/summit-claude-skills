@@ -226,6 +226,24 @@ def cmd_benchmark(args):
     return 0
 
 
+def cmd_sync_presets(args):
+    skill = Path(args.skill_dir)
+    registry = load_registry(skill)
+    client, _ = connect(registry, args.accept_version)
+    existing = {preset["name"]: preset for preset in client.list_presets()}
+    for path in sorted((skill / "genres").glob("*.json")):
+        genre = styles.load_genre(skill / "genres", path.stem)
+        name = f"invoke-image {genre.name}"
+        positive = styles.preset_positive(genre)
+        if name in existing:
+            client.update_preset(existing[name]["id"], name, positive, genre.negative)
+            print(f"updated: {name}")
+        else:
+            client.create_preset(name, positive, genre.negative)
+            print(f"created: {name}")
+    return 0
+
+
 def cmd_upscale(args):
     skill = Path(args.skill_dir)
     registry = load_registry(skill)
@@ -304,6 +322,10 @@ def build_parser():
     bench.add_argument("--model")
     bench.add_argument("--accept-version", action="store_true")
     bench.set_defaults(func=cmd_benchmark)
+
+    sync = sub.add_parser("sync-presets")
+    sync.add_argument("--accept-version", action="store_true")
+    sync.set_defaults(func=cmd_sync_presets)
 
     up = sub.add_parser("upscale")
     up.add_argument("--image", required=True)

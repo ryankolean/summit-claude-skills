@@ -1,0 +1,12 @@
+{
+  "name": "isometric-3d",
+  "model": "sdxl-base",
+  "allowed_models": [
+    "sdxl-base",
+    "flux2-klein"
+  ],
+  "positive": "{subject}, isometric 3d illustration, soft studio lighting, clean matte materials, 30 degree isometric angle, simple pastel background, {brand}",
+  "negative": "photo, perspective distortion, fisheye, cluttered, noisy textures, text, watermark, blurry, lowres",
+  "steps": 30,
+  "cfg": 6.0
+}
