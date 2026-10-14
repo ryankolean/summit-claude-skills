@@ -7,6 +7,7 @@
 import argparse
 import json
 import random
+import subprocess
 import sys
 import uuid
 from pathlib import Path
@@ -135,6 +136,15 @@ SELFTEST_SUBJECT = "a red apple on a white table, studio light"
 CACHE_DIR = Path.home() / ".cache" / "invoke-image"
 
 
+BLANK_STDDEV = 0.03
+
+
+def is_blank(path):
+    result = subprocess.run(["magick", str(path), "-colorspace", "Gray", "-format", "%[fx:standard_deviation]", "info:"],
+                            capture_output=True, text=True, check=True)
+    return float(result.stdout) < BLANK_STDDEV
+
+
 def adhoc_genre(name, model, steps, cfg):
     return styles.Genre(name=name, model=model, allowed_models=[model], positive="{subject}",
                         negative="blurry, watermark", steps=steps, cfg=cfg)
@@ -171,7 +181,7 @@ def cmd_selftest(args):
         [result] = list(runner.generate(client, job, template, [1234], version))
         path = Path(result["path"])
         side = json.loads(path.with_suffix(".json").read_text())
-        ok = (path.stat().st_size > 1000
+        ok = (path.stat().st_size > 1000 and not is_blank(path)
               and side["invoke_image_name"] in client.board_image_names(client.board_id(board)))
         failures += not ok
         print(json.dumps({"family": entry["family"], "ok": ok, **result}), flush=True)

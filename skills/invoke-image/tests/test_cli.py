@@ -120,3 +120,13 @@ def test_gate_verdict():
     assert invoke.gate_verdict(120.0) == "ok"
     assert invoke.gate_verdict(301.0).startswith("SLOW")
     assert invoke.gate_verdict(None).startswith("SLOW")
+
+
+def test_is_blank_detects_flat_image(tmp_path):
+    import subprocess
+    flat = tmp_path / "flat.png"
+    busy = tmp_path / "busy.png"
+    subprocess.run(["magick", "-size", "64x64", "xc:#3a3a3a", str(flat)], check=True)
+    subprocess.run(["magick", "-size", "64x64", "plasma:red-blue", str(busy)], check=True)
+    assert invoke.is_blank(flat)
+    assert not invoke.is_blank(busy)
