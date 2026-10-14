@@ -1,0 +1,8 @@
+# Project .npmrc: install-time supply-chain hardening (npm 11.10+ for min-release-age).
+# ignore-scripts blocks preinstall/postinstall payloads (Shai-Hulud, axios 2026).
+# Packages that need a build step (esbuild, sharp) may need an explicit rebuild:
+#   npm rebuild esbuild sharp
+ignore-scripts=true
+min-release-age=3
+audit=true
+fund=false

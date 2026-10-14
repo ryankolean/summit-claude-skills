@@ -1,0 +1,25 @@
+{
+  "_comment": "Gate policy for site-security. A site repo can override with .security/policy.json. Severities: critical, high, medium, low, info.",
+  "profiles": {
+    "brochure": {
+      "_comment": "Static or mostly static marketing sites (Astro, Vite, plain HTML). OWASP ASVS Level 1 baseline.",
+      "block_severities": ["critical", "high"],
+      "required_tools": [
+        "summit-checks",
+        ["betterleaks", "gitleaks", "trufflehog"],
+        ["osv-scanner", "npm-audit"]
+      ]
+    },
+    "app": {
+      "_comment": "Sites with auth, a database, payments or personal data (Next.js + Supabase, Stripe). OWASP ASVS Level 2 baseline.",
+      "block_severities": ["critical", "high"],
+      "required_tools": [
+        "summit-checks",
+        ["betterleaks", "gitleaks", "trufflehog"],
+        ["osv-scanner", "npm-audit"],
+        "semgrep",
+        "zizmor"
+      ]
+    }
+  }
+}
