@@ -145,6 +145,11 @@ def is_blank(path):
     return float(result.stdout) < BLANK_STDDEV
 
 
+def fresh_seed():
+    # InvokeAI caches identical node outputs; a repeated seed returns instantly and fakes the timing.
+    return random.randrange(2**31)
+
+
 def adhoc_genre(name, model, steps, cfg):
     return styles.Genre(name=name, model=model, allowed_models=[model], positive="{subject}",
                         negative="blurry, watermark", steps=steps, cfg=cfg)
@@ -178,7 +183,7 @@ def cmd_selftest(args):
         width, height = sizing.dimensions("1:1", entry["family"], area=512 * 512)
         job = _job(name, entry, genre, width, height, runner.draft_steps(genre.steps), board, out_dir, True)
         template = graph.load_template(skill / "graphs", runner.template_name(job))
-        [result] = list(runner.generate(client, job, template, [1234], version))
+        [result] = list(runner.generate(client, job, template, [fresh_seed()], version))
         path = Path(result["path"])
         side = json.loads(path.with_suffix(".json").read_text())
         ok = (path.stat().st_size > 1000 and not is_blank(path)
@@ -203,12 +208,12 @@ def cmd_benchmark(args):
         warm_w, warm_h = sizing.dimensions("1:1", entry["family"], area=512 * 512)
         list(runner.generate(client, _job(name, probe, genre, warm_w, warm_h,
                                           runner.draft_steps(genre.steps), "invoke-image-benchmark",
-                                          out_dir, True), template, [1], version))
+                                          out_dir, True), template, [fresh_seed()], version))
         width, height = sizing.dimensions("1:1", entry["family"])
         try:
             [result] = list(runner.generate(client, _job(name, probe, genre, width, height, genre.steps,
                                                          "invoke-image-benchmark", out_dir, False),
-                                            template, [1234], version))
+                                            template, [fresh_seed()], version))
             seconds = result["seconds"]
         except InvokeError as exc:
             print(f"{name}: {exc}", file=sys.stderr)

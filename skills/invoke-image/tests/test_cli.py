@@ -130,3 +130,22 @@ def test_is_blank_detects_flat_image(tmp_path):
     subprocess.run(["magick", "-size", "64x64", "plasma:red-blue", str(busy)], check=True)
     assert invoke.is_blank(flat)
     assert not invoke.is_blank(busy)
+
+
+def test_benchmark_uses_fresh_seeds(tmp_path, monkeypatch, capsys):
+    import shutil
+    skill = tmp_path / "skill"
+    shutil.copytree(FIXTURE, skill)
+    seeds = []
+
+    def fake_generate(client, job, template, run_seeds, version):
+        seeds.append((job.draft, list(run_seeds)))
+        yield {"path": "x", "seed": run_seeds[0], "seconds": 1.0, "model": job.model_name, "retry": None}
+
+    monkeypatch.setattr(invoke, "connect", lambda registry, accept: (None, "9.9.9"))
+    monkeypatch.setattr(invoke.runner, "generate", fake_generate)
+    monkeypatch.setattr(invoke, "CACHE_DIR", tmp_path / "cache")
+    for _ in range(2):
+        assert invoke.main(["--skill-dir", str(skill), "benchmark", "--model", "test-sdxl"]) == 0
+    timed = [s[0] for draft, s in seeds if not draft]
+    assert len(timed) == 2 and timed[0] != timed[1]
