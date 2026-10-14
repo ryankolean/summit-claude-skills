@@ -149,3 +149,11 @@ def test_benchmark_uses_fresh_seeds(tmp_path, monkeypatch, capsys):
         assert invoke.main(["--skill-dir", str(skill), "benchmark", "--model", "test-sdxl"]) == 0
     timed = [s[0] for draft, s in seeds if not draft]
     assert len(timed) == 2 and timed[0] != timed[1]
+
+
+def test_model_override_uses_registry_steps_and_cfg(repo, capsys):
+    code, out, _ = run(capsys, "gen", "--genre", "test-photo", "--subject", "pie", "--model", "test-nc",
+                       "--seed", "1", "--dry-run")
+    nodes = json.loads(out)["graph"]["nodes"]
+    assert code == 0
+    assert nodes["denoise"]["steps"] == 20 and nodes["denoise"]["cfg_scale"] == 4.0

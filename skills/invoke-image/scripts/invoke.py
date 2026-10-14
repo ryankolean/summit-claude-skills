@@ -79,10 +79,12 @@ def cmd_gen(args):
     styles.check_license([(model_name, entry)] + [(key, lora) for key, lora, _ in loras], brand)
     prompt = styles.merge(genre, args.subject, brand)
     width, height = sizing.dimensions(args.aspect, entry["family"])
+    # Genre steps/cfg are tuned for the genre's default model; an override uses that model's own defaults.
+    steps, cfg = (genre.steps, genre.cfg) if model_name == genre.model else (entry["benchmark_steps"], entry["benchmark_cfg"])
     job = runner.Job(
         genre=genre, prompt=prompt, subject=args.subject, model_name=model_name, model_entry=entry,
         width=width, height=height,
-        steps=runner.draft_steps(genre.steps) if args.draft else genre.steps, cfg=genre.cfg,
+        steps=runner.draft_steps(steps) if args.draft else steps, cfg=cfg,
         board=brand.client if brand else "invoke-image",
         out_dir=Path.cwd() if args.dry_run else output.resolve_output_dir(brand, Path.cwd()),
         draft=args.draft, loras=loras, brand_client=brand.client if brand else None,
