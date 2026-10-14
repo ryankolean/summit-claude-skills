@@ -1,0 +1,13 @@
+{
+  "name": "photographic",
+  "model": "flux2-klein",
+  "allowed_models": [
+    "flux2-klein",
+    "juggernaut-xl",
+    "sdxl-base"
+  ],
+  "positive": "{subject}, professional photograph, natural light, 35mm lens, shallow depth of field, true-to-life color, {brand}",
+  "negative": "illustration, painting, cartoon, 3d render, oversaturated, plastic skin, deformed hands, extra fingers, text, watermark, logo, blurry, lowres",
+  "steps": 4,
+  "cfg": 1.0
+}

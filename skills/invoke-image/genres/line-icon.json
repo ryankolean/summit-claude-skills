@@ -1,0 +1,13 @@
+{
+  "name": "line-icon",
+  "model": "sdxl-base",
+  "allowed_models": [
+    "sdxl-base",
+    "flux2-klein"
+  ],
+  "positive": "{subject}, simple line icon, single consistent stroke weight, monoline, minimal, centered, dark lines on a white background, {brand}",
+  "negative": "photo, 3d, shading, gradient, solid fill, texture, multiple icons, text, letters, watermark, blurry",
+  "steps": 30,
+  "cfg": 6.5,
+  "vectorize": true
+}

@@ -1,0 +1,13 @@
+{
+  "name": "flat-vector",
+  "model": "sdxl-base",
+  "allowed_models": [
+    "sdxl-base",
+    "flux2-klein"
+  ],
+  "positive": "{subject}, flat vector illustration, clean geometric shapes, solid fills, limited color palette, no gradients, crisp edges, plain background, {brand}",
+  "negative": "photo, photorealistic, 3d render, gradient, texture, noise, shading, text, watermark, signature, blurry",
+  "steps": 30,
+  "cfg": 6.0,
+  "vectorize": true
+}

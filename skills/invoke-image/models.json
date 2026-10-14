@@ -1,0 +1,54 @@
+{
+  "invokeai_version": "6.14.2",
+  "server": {
+    "start": [
+      "~/invokeai/.venv/bin/invokeai-web",
+      "--root",
+      "~/invokeai"
+    ]
+  },
+  "models": {
+    "juggernaut-xl": {
+      "invoke_key": "8e371f26-ec33-4883-bfc6-581e5d7f875b",
+      "family": "sdxl",
+      "template": "sdxl",
+      "source": "RunDiffusion/Juggernaut-XL-v9",
+      "license": "CreativeML OpenRAIL-M",
+      "commercial_ok": true,
+      "benchmark_steps": 30,
+      "benchmark_cfg": 5.0,
+      "seconds_1024": 369.8
+    },
+    "sdxl-base": {
+      "invoke_key": "3eb82314-3aed-4679-8249-5e7600227c0c",
+      "family": "sdxl",
+      "template": "sdxl",
+      "source": "stabilityai/stable-diffusion-xl-base-1.0",
+      "license": "CreativeML OpenRAIL++-M",
+      "commercial_ok": true,
+      "benchmark_steps": 30,
+      "benchmark_cfg": 6.0,
+      "seconds_1024": 192.8
+    },
+    "flux2-klein": {
+      "invoke_key": "ba7025f5-5183-4110-8b87-250b41642851",
+      "family": "flux2",
+      "template": "flux2",
+      "source": "unsloth/FLUX.2-klein-4B-GGUF flux-2-klein-4b-Q4_K_M.gguf",
+      "license": "Apache-2.0",
+      "commercial_ok": true,
+      "benchmark_steps": 4,
+      "benchmark_cfg": 1.0,
+      "seconds_1024": 171.1
+    }
+  },
+  "loras": {},
+  "upscaler": {
+    "invoke_key": "e669a9df-6815-4b73-bb5c-0a500a828e27",
+    "source": "xinntao/Real-ESRGAN v0.2.1 RealESRGAN_x2plus.pth",
+    "license": "BSD-3-Clause",
+    "commercial_ok": true,
+    "factor": 2,
+    "seconds_1024": null
+  }
+}

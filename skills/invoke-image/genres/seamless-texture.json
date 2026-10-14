@@ -1,0 +1,12 @@
+{
+  "name": "seamless-texture",
+  "model": "sdxl-base",
+  "allowed_models": [
+    "sdxl-base"
+  ],
+  "positive": "{subject}, seamless tileable texture, evenly distributed pattern, flat lighting, top-down view, no focal point, {brand}",
+  "negative": "vignette, border, frame, focal object, perspective, cast shadows, text, watermark, blurry",
+  "steps": 30,
+  "cfg": 6.0,
+  "template_suffix": "-seamless"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "editorial-food",
+  "model": "flux2-klein",
+  "allowed_models": [
+    "flux2-klein",
+    "juggernaut-xl",
+    "sdxl-base"
+  ],
+  "positive": "{subject}, editorial food photography, appetizing, soft window light, 50mm lens, shallow depth of field, styled table setting, magazine quality, {brand}",
+  "negative": "illustration, cartoon, 3d render, plastic-looking food, unappetizing, oversaturated, deformed cutlery, text, watermark, logo, blurry, lowres",
+  "steps": 4,
+  "cfg": 1.0
+}

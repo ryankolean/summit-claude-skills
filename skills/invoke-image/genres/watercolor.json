@@ -1,0 +1,12 @@
+{
+  "name": "watercolor",
+  "model": "sdxl-base",
+  "allowed_models": [
+    "sdxl-base",
+    "flux2-klein"
+  ],
+  "positive": "{subject}, loose watercolor illustration, visible paper texture, soft bleeding edges, transparent washes, hand-painted, {brand}",
+  "negative": "photo, photorealistic, 3d render, digital airbrush, hard outlines, text, watermark, signature, blurry, lowres",
+  "steps": 30,
+  "cfg": 6.0
+}

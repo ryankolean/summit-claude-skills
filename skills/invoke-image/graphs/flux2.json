@@ -1,0 +1,236 @@
+{
+  "edges": [
+    {
+      "destination": {
+        "field": "qwen3_encoder",
+        "node_id": "flux2_klein_text_encoder:RUCZSwmVfs"
+      },
+      "source": {
+        "field": "qwen3_encoder",
+        "node_id": "flux2_klein_model_loader:BtLPoHT3JM"
+      }
+    },
+    {
+      "destination": {
+        "field": "max_seq_len",
+        "node_id": "flux2_klein_text_encoder:RUCZSwmVfs"
+      },
+      "source": {
+        "field": "max_seq_len",
+        "node_id": "flux2_klein_model_loader:BtLPoHT3JM"
+      }
+    },
+    {
+      "destination": {
+        "field": "transformer",
+        "node_id": "flux2_denoise:vZlIcEiLej"
+      },
+      "source": {
+        "field": "transformer",
+        "node_id": "flux2_klein_model_loader:BtLPoHT3JM"
+      }
+    },
+    {
+      "destination": {
+        "field": "vae",
+        "node_id": "flux2_denoise:vZlIcEiLej"
+      },
+      "source": {
+        "field": "vae",
+        "node_id": "flux2_klein_model_loader:BtLPoHT3JM"
+      }
+    },
+    {
+      "destination": {
+        "field": "vae",
+        "node_id": "canvas_output:LyjcKKQ8gK"
+      },
+      "source": {
+        "field": "vae",
+        "node_id": "flux2_klein_model_loader:BtLPoHT3JM"
+      }
+    },
+    {
+      "destination": {
+        "field": "prompt",
+        "node_id": "flux2_klein_text_encoder:RUCZSwmVfs"
+      },
+      "source": {
+        "field": "value",
+        "node_id": "positive_prompt:TdWtXCjYIv"
+      }
+    },
+    {
+      "destination": {
+        "field": "item",
+        "node_id": "pos_cond_collect:gRiSy2JwCE"
+      },
+      "source": {
+        "field": "conditioning",
+        "node_id": "flux2_klein_text_encoder:RUCZSwmVfs"
+      }
+    },
+    {
+      "destination": {
+        "field": "positive_text_conditioning",
+        "node_id": "flux2_denoise:vZlIcEiLej"
+      },
+      "source": {
+        "field": "collection",
+        "node_id": "pos_cond_collect:gRiSy2JwCE"
+      }
+    },
+    {
+      "destination": {
+        "field": "seed",
+        "node_id": "flux2_denoise:vZlIcEiLej"
+      },
+      "source": {
+        "field": "value",
+        "node_id": "seed:NKNk5Tg2v4"
+      }
+    },
+    {
+      "destination": {
+        "field": "latents",
+        "node_id": "canvas_output:LyjcKKQ8gK"
+      },
+      "source": {
+        "field": "latents",
+        "node_id": "flux2_denoise:vZlIcEiLej"
+      }
+    },
+    {
+      "destination": {
+        "field": "seed",
+        "node_id": "core_metadata:hyXBAMsuwR"
+      },
+      "source": {
+        "field": "value",
+        "node_id": "seed:NKNk5Tg2v4"
+      }
+    },
+    {
+      "destination": {
+        "field": "positive_prompt",
+        "node_id": "core_metadata:hyXBAMsuwR"
+      },
+      "source": {
+        "field": "value",
+        "node_id": "positive_prompt:TdWtXCjYIv"
+      }
+    },
+    {
+      "destination": {
+        "field": "metadata",
+        "node_id": "canvas_output:LyjcKKQ8gK"
+      },
+      "source": {
+        "field": "metadata",
+        "node_id": "core_metadata:hyXBAMsuwR"
+      }
+    }
+  ],
+  "id": "flux_graph:LTZ1etaGpE",
+  "nodes": {
+    "canvas_output:LyjcKKQ8gK": {
+      "board": "{{board}}",
+      "id": "canvas_output:LyjcKKQ8gK",
+      "is_intermediate": false,
+      "type": "flux2_vae_decode",
+      "use_cache": false
+    },
+    "core_metadata:hyXBAMsuwR": {
+      "generation_mode": "flux2_txt2img",
+      "height": "{{height}}",
+      "id": "core_metadata:hyXBAMsuwR",
+      "is_intermediate": true,
+      "model": "{{model}}",
+      "qwen3_encoder": {
+        "base": "any",
+        "hash": "blake3:af5840e6770dc99f678e69867949c8b9264835915eb82a990e940fa6e4fa6c81",
+        "key": "25355f12-50a1-4ccc-aa3f-39713fc5b38d",
+        "name": "FLUX.2 Klein Qwen3 4B Encoder",
+        "type": "qwen3_encoder"
+      },
+      "scheduler": "euler",
+      "steps": "{{steps}}",
+      "type": "core_metadata",
+      "use_cache": true,
+      "vae": {
+        "base": "flux2",
+        "hash": "blake3:531855de70db993d0f6181f82cde27d15411d58b7ffa3b2fdce2b9434c0173c2",
+        "key": "997cd9b0-c4bd-40e1-9941-1d9df4d96158",
+        "name": "FLUX.2 VAE",
+        "type": "vae"
+      },
+      "width": "{{width}}"
+    },
+    "flux2_denoise:vZlIcEiLej": {
+      "add_noise": true,
+      "cfg_scale": 1.0,
+      "denoising_end": 1.0,
+      "denoising_start": 0.0,
+      "guidance": 4.0,
+      "height": "{{height}}",
+      "id": "flux2_denoise:vZlIcEiLej",
+      "is_intermediate": true,
+      "num_steps": "{{steps}}",
+      "scheduler": "euler",
+      "seed": 0,
+      "type": "flux2_denoise",
+      "use_cache": true,
+      "width": "{{width}}"
+    },
+    "flux2_klein_model_loader:BtLPoHT3JM": {
+      "id": "flux2_klein_model_loader:BtLPoHT3JM",
+      "is_intermediate": true,
+      "max_seq_len": 512,
+      "model": "{{model}}",
+      "qwen3_encoder_model": {
+        "base": "any",
+        "hash": "blake3:af5840e6770dc99f678e69867949c8b9264835915eb82a990e940fa6e4fa6c81",
+        "key": "25355f12-50a1-4ccc-aa3f-39713fc5b38d",
+        "name": "FLUX.2 Klein Qwen3 4B Encoder",
+        "type": "qwen3_encoder"
+      },
+      "type": "flux2_klein_model_loader",
+      "use_cache": true,
+      "vae_model": {
+        "base": "flux2",
+        "hash": "blake3:531855de70db993d0f6181f82cde27d15411d58b7ffa3b2fdce2b9434c0173c2",
+        "key": "997cd9b0-c4bd-40e1-9941-1d9df4d96158",
+        "name": "FLUX.2 VAE",
+        "type": "vae"
+      }
+    },
+    "flux2_klein_text_encoder:RUCZSwmVfs": {
+      "id": "flux2_klein_text_encoder:RUCZSwmVfs",
+      "is_intermediate": true,
+      "max_seq_len": 512,
+      "type": "flux2_klein_text_encoder",
+      "use_cache": true
+    },
+    "pos_cond_collect:gRiSy2JwCE": {
+      "collection": [],
+      "id": "pos_cond_collect:gRiSy2JwCE",
+      "is_intermediate": true,
+      "type": "collect",
+      "use_cache": true
+    },
+    "positive_prompt:TdWtXCjYIv": {
+      "id": "positive_prompt:TdWtXCjYIv",
+      "is_intermediate": true,
+      "type": "string",
+      "use_cache": true,
+      "value": "{{positive}}"
+    },
+    "seed:NKNk5Tg2v4": {
+      "id": "seed:NKNk5Tg2v4",
+      "is_intermediate": true,
+      "type": "integer",
+      "use_cache": true,
+      "value": "{{seed}}"
+    }
+  }
+}

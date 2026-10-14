@@ -1,0 +1,10 @@
+{
+  "invokeai_version": "9.9.9",
+  "server": {"start": ["/usr/bin/false"]},
+  "models": {
+    "test-sdxl": {"invoke_key": "k-sdxl", "family": "sdxl", "template": "sdxl", "source": "test", "license": "openrail++", "commercial_ok": true, "benchmark_steps": 30, "benchmark_cfg": 5.0, "seconds_1024": 10},
+    "test-nc": {"invoke_key": "k-nc", "family": "sdxl", "template": "sdxl", "source": "test", "license": "cc-by-nc-4.0", "commercial_ok": false, "benchmark_steps": 20, "benchmark_cfg": 4.0, "seconds_1024": null}
+  },
+  "loras": {},
+  "upscaler": {"invoke_key": "k-up", "source": "test", "license": "BSD-3-Clause", "commercial_ok": true, "factor": 2, "seconds_1024": null}
+}
