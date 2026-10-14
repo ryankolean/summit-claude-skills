@@ -1,0 +1,8 @@
+{
+  "edges": [],
+  "id": "invoke-image-upscale",
+  "nodes": {
+    "upscale": {"id": "upscale", "type": "spandrel_image_to_image", "is_intermediate": false, "use_cache": false,
+                "image": "{{image}}", "image_to_image_model": "{{model}}", "tile_size": 512, "board": "{{board}}"}
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "edges": [
+    {"source": {"node_id": "model", "field": "clip"}, "destination": {"node_id": "pos", "field": "clip"}},
+    {"source": {"node_id": "model", "field": "clip2"}, "destination": {"node_id": "pos", "field": "clip2"}},
+    {"source": {"node_id": "model", "field": "clip"}, "destination": {"node_id": "neg", "field": "clip"}},
+    {"source": {"node_id": "model", "field": "clip2"}, "destination": {"node_id": "neg", "field": "clip2"}},
+    {"source": {"node_id": "model", "field": "unet"}, "destination": {"node_id": "seamless", "field": "unet"}},
+    {"source": {"node_id": "vae", "field": "vae"}, "destination": {"node_id": "seamless", "field": "vae"}},
+    {"source": {"node_id": "seamless", "field": "unet"}, "destination": {"node_id": "denoise", "field": "unet"}},
+    {"source": {"node_id": "pos", "field": "conditioning"}, "destination": {"node_id": "denoise", "field": "positive_conditioning"}},
+    {"source": {"node_id": "neg", "field": "conditioning"}, "destination": {"node_id": "denoise", "field": "negative_conditioning"}},
+    {"source": {"node_id": "noise", "field": "noise"}, "destination": {"node_id": "denoise", "field": "noise"}},
+    {"source": {"node_id": "denoise", "field": "latents"}, "destination": {"node_id": "l2i", "field": "latents"}},
+    {"source": {"node_id": "seamless", "field": "vae"}, "destination": {"node_id": "l2i", "field": "vae"}}
+  ],
+  "id": "invoke-image-sdxl-seamless",
+  "nodes": {
+    "model": {"id": "model", "type": "sdxl_model_loader", "is_intermediate": true, "use_cache": true, "model": "{{model}}"},
+    "vae": {"id": "vae", "type": "vae_loader", "is_intermediate": true, "use_cache": true,
+            "vae_model": {"key": "504139b7-a5c7-49f0-908a-d4049e46cc65", "hash": "blake3:9705ab1c31fa96b308734214fb7571a958621c7a9247eed82b7d277145f8d9fa", "name": "sdxl-vae-fp16-fix", "base": "sdxl", "type": "vae"}},
+    "seamless": {"id": "seamless", "type": "seamless", "is_intermediate": true, "use_cache": true,
+                 "seamless_x": true, "seamless_y": true},
+    "pos": {"id": "pos", "type": "sdxl_compel_prompt", "is_intermediate": true, "use_cache": true,
+            "prompt": "{{positive}}", "style": "{{positive}}",
+            "original_width": "{{width}}", "original_height": "{{height}}", "crop_top": 0, "crop_left": 0,
+            "target_width": "{{width}}", "target_height": "{{height}}"},
+    "neg": {"id": "neg", "type": "sdxl_compel_prompt", "is_intermediate": true, "use_cache": true,
+            "prompt": "{{negative}}", "style": "{{negative}}",
+            "original_width": "{{width}}", "original_height": "{{height}}", "crop_top": 0, "crop_left": 0,
+            "target_width": "{{width}}", "target_height": "{{height}}"},
+    "noise": {"id": "noise", "type": "noise", "is_intermediate": true, "use_cache": true,
+              "seed": "{{seed}}", "width": "{{width}}", "height": "{{height}}", "use_cpu": true},
+    "denoise": {"id": "denoise", "type": "denoise_latents", "is_intermediate": true, "use_cache": true,
+                "steps": "{{steps}}", "cfg_scale": "{{cfg}}", "denoising_start": 0.0, "denoising_end": 1.0,
+                "scheduler": "dpmpp_2m_sde_k"},
+    "l2i": {"id": "l2i", "type": "l2i", "is_intermediate": false, "use_cache": false,
+            "board": "{{board}}", "tiled": false, "fp32": false}
+  }
+}
