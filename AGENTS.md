@@ -19,6 +19,7 @@ No build or test pipeline. Useful scripts:
 
 - `scripts/check-broken-links.sh` — validate external links in README
 - `scripts/update-stars.sh` — refresh GitHub star counts (if present)
+- `scripts/install-local.sh <skill>... | --all` — copy skills into `~/.claude/skills`; re-run after pulling skill changes
 
 Run ad hoc from the repo root.
 
