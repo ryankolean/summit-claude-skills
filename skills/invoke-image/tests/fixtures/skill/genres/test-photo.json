@@ -1,0 +1,9 @@
+{
+  "name": "test-photo",
+  "model": "test-sdxl",
+  "allowed_models": ["test-sdxl", "test-nc"],
+  "positive": "{subject}, photograph, {brand}",
+  "negative": "blurry",
+  "steps": 30,
+  "cfg": 5.0
+}

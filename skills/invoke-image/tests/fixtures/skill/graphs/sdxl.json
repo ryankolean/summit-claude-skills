@@ -1,0 +1,12 @@
+{
+  "id": "fixture",
+  "nodes": {
+    "pos": {"id": "pos", "type": "sdxl_compel_prompt", "prompt": "{{positive}}"},
+    "neg": {"id": "neg", "type": "sdxl_compel_prompt", "prompt": "{{negative}}"},
+    "noise": {"id": "noise", "type": "noise", "seed": "{{seed}}", "width": "{{width}}", "height": "{{height}}"},
+    "denoise": {"id": "denoise", "type": "denoise_latents", "steps": "{{steps}}", "cfg_scale": "{{cfg}}"},
+    "model": {"id": "model", "type": "sdxl_model_loader", "model": "{{model}}"},
+    "l2i": {"id": "l2i", "type": "l2i", "board": "{{board}}", "is_intermediate": false}
+  },
+  "edges": []
+}
