@@ -81,3 +81,42 @@ def test_version_gate():
     with pytest.raises(invoke.VersionMismatch, match="9.9.9"):
         invoke.check_version("5.0.0", {"invokeai_version": "9.9.9"}, accept=False)
     invoke.check_version("5.0.0", {"invokeai_version": "9.9.9"}, accept=True)
+
+
+def test_capture_templatizes_raw_batch(tmp_path, capsys):
+    skill = tmp_path / "skill"
+    (skill / "graphs").mkdir(parents=True)
+    raw = {"batch": {"graph": {"id": "x", "nodes": {
+        "pos": {"prompt": "XPOSX"}, "noise": {"seed": 0, "width": 1152, "height": 896},
+        "m": {"model": {"key": "mk", "name": "J"}}, "out": {"board": {"board_id": "bid"}}}, "edges": []},
+        "data": [[{"node_path": "noise", "field_name": "seed", "items": [424242]}]]}}
+    raw_path = tmp_path / "raw.json"
+    raw_path.write_text(json.dumps(raw))
+    code = invoke.main(["--skill-dir", str(skill), "capture", "--raw", str(raw_path), "--name", "sdxl",
+                        "--positive", "XPOSX", "--seed", "424242", "--width", "1152", "--height", "896",
+                        "--model-key", "mk", "--board-id", "bid"])
+    assert code == 0
+    written = json.loads((skill / "graphs" / "sdxl.json").read_text())
+    assert written["nodes"]["noise"] == {"seed": "{{seed}}", "width": "{{width}}", "height": "{{height}}"}
+    assert written["nodes"]["m"]["model"] == "{{model}}"
+
+
+def test_capture_unmatched_sentinel_exit_2(tmp_path, capsys):
+    skill = tmp_path / "skill"
+    (skill / "graphs").mkdir(parents=True)
+    raw_path = tmp_path / "raw.json"
+    raw_path.write_text(json.dumps({"batch": {"graph": {"nodes": {"pos": {"prompt": "XPOSX"}}}}}))
+    code = invoke.main(["--skill-dir", str(skill), "capture", "--raw", str(raw_path), "--name", "sdxl",
+                        "--positive", "XPOSX", "--steps", "23"])
+    assert code == 2 and "steps" in capsys.readouterr().err
+
+
+def test_adhoc_genre_is_plain():
+    g = invoke.adhoc_genre("selftest", "m", 4, 3.5)
+    assert g.positive == "{subject}" and g.allowed_models == ["m"] and g.steps == 4
+
+
+def test_gate_verdict():
+    assert invoke.gate_verdict(120.0) == "ok"
+    assert invoke.gate_verdict(301.0).startswith("SLOW")
+    assert invoke.gate_verdict(None).startswith("SLOW")
