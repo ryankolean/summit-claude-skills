@@ -635,7 +635,7 @@ def check_repo(repo: Path) -> None:
                 add("code", "eval", "medium", "eval or new Function in source", rel, "", "Remove dynamic code evaluation.")
 
     check_workflows(repo)
-    check_package(repo)
+    check_package(repo, tracked)
 
 
 def git_ls(repo: Path) -> list[str] | None:
@@ -706,23 +706,26 @@ def run_block_injection(text: str) -> bool:
     return False
 
 
-def check_package(repo: Path) -> None:
-    pkg = repo / "package.json"
-    if not pkg.exists():
-        return
-    locks = [n for n in ("package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb", "bun.lock") if (repo / n).exists()]
-    if not locks:
-        add("supply-chain", "no-lockfile", "medium", "No lockfile committed", "package.json", "",
-            "Commit the lockfile and install with npm ci / pnpm install --frozen-lockfile in CI.")
-    try:
-        data = json.loads(pkg.read_text())
-    except Exception:
-        return
-    for dep_type in ("dependencies", "devDependencies"):
-        for name, ver in (data.get(dep_type) or {}).items():
-            if isinstance(ver, str) and (ver in ("*", "latest") or ver.startswith(("http:", "git+http:"))):
-                add("supply-chain", "loose-version", "medium", f"Dependency {name} uses an unpinned or insecure spec: {ver}", "package.json", "",
-                    "Use a semver range from the registry and rely on the lockfile.")
+def check_package(repo: Path, tracked: list[str]) -> None:
+    # Every package.json counts, not only the root one (dev tooling in tools/,
+    # workspaces in packages/). A workspace member is covered by a lockfile in
+    # any directory above it.
+    for rel in sorted(f for f in tracked if os.path.basename(f) == "package.json" and "node_modules" not in Path(f).parts):
+        pkg = repo / rel
+        here = Path(rel).parent
+        if not any((repo / d / n).exists() for d in (here, *here.parents)
+                   for n in ("package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb", "bun.lock")):
+            add("supply-chain", "no-lockfile", "medium", "No lockfile committed", rel, "",
+                "Commit the lockfile and install with npm ci / pnpm install --frozen-lockfile in CI.")
+        try:
+            data = json.loads(pkg.read_text())
+        except Exception:
+            continue
+        for dep_type in ("dependencies", "devDependencies"):
+            for name, ver in (data.get(dep_type) or {}).items():
+                if isinstance(ver, str) and (ver in ("*", "latest") or ver.startswith(("http:", "git+http:"))):
+                    add("supply-chain", "loose-version", "medium", f"Dependency {name} uses an unpinned or insecure spec: {ver}", rel, "",
+                        "Use a semver range from the registry and rely on the lockfile.")
 
 
 # ---------------------------------------------------------------------------

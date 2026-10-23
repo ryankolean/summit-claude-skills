@@ -48,6 +48,11 @@ printf '<html><head><script src="https://cdn.example.com/lib.js"></script><scrip
 printf 'var key="%s.%s.fixturefixturefixturefixture";var aws="AKIAIOSFODNN7EXAMPLE";var pem="-----BEGIN PRIVATE KEY-----";\n//# sourceMappingURL=app.js.map\n' "$H" "$P" > dist/assets/app.js
 printf '{"version":3,"sources":["src/app.ts"]}' > dist/assets/app.js.map
 printf 'SECRET=1\nDB_PASS=topsecretvalue99\n' > dist/.env
+# Manifests below the root: tools/ has a lockfile with a known-vulnerable package, web/ has none.
+mkdir -p tools web
+printf '{"name":"tools","dependencies":{"minimist":"1.2.5"}}\n' > tools/package.json
+printf '{"name":"tools","lockfileVersion":3,"requires":true,"packages":{"":{"name":"tools","dependencies":{"minimist":"1.2.5"}},"node_modules/minimist":{"version":"1.2.5","resolved":"https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz"}}}\n' > tools/package-lock.json
+printf '{"name":"web","dependencies":{"left-pad":"*"}}\n' > web/package.json
 git add -A && git commit -qm fixture
 PORT=$(( 20000 + RANDOM % 20000 ))
 (cd dist && exec python3 -m http.server "$PORT" >/dev/null 2>&1) & SRV=$!
@@ -82,6 +87,28 @@ python3 -c "import json,sys;d=json.load(open(sys.argv[1]));v=[f['location'] for 
 python3 -c "import json,sys;d=json.load(open(sys.argv[1]));t=d['tools'].get('zizmor',{});sys.exit(0 if t.get('status')=='failed' else 1)" "$F" \
   && ok "garbage tool output reported as failed" || bad "garbage tool output reported as failed"
 [ "$RC" = 1 ] && ok "gate blocked (exit 1)" || bad "gate exit $RC (expected 1)"
+python3 -c "import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if any(f['category']=='dependency' and 'tools/package-lock.json' in f['location'] for f in d['findings']) else 1)" "$F" \
+  && ok "nested lockfile scanned" || bad "nested lockfile scanned"
+has no-lockfile web/package.json && ok "nested package.json without a lockfile" || bad "nested package.json without a lockfile"
+has loose-version web/package.json && ok "nested package.json versions checked" || bad "nested package.json versions checked"
+has no-lockfile tools/package.json && bad "tools/package.json flagged despite its lockfile" || ok "nested lockfile covers its package.json"
+
+# Without osv-scanner, npm audit runs on every package-lock.json, not only the root one.
+if command -v npm >/dev/null 2>&1; then
+  NOOSV="$T/no-osv-bin"; mkdir -p "$NOOSV"
+  for b in python3 git npm node; do ln -s "$(command -v "$b")" "$NOOSV/$b"; done
+  PATH="$NOOSV:/usr/bin:/bin" bash "$HERE/scripts/scan.sh" --repo "$R" --mode gate --out "$T/run-npm" >/dev/null 2>"$T/scan-npm.err"
+  python3 -c "import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if d['tools'].get('npm-audit',{}).get('status')=='ran' and any(f['tool']=='npm-audit' and f['location']=='tools/package-lock.json' for f in d['findings']) else 1)" "$T/run-npm/findings.json" \
+    && ok "npm audit fallback scans nested lockfiles" || bad "npm audit fallback scans nested lockfiles"
+else
+  echo "skip npm audit fallback (npm not installed)"
+fi
+
+# A repo with no manifests at all is not-applicable, not failed.
+E="$T/no-manifests"; mkdir -p "$E" && (cd "$E" && git init -q && printf 'hi\n' > README.md)
+bash "$HERE/scripts/scan.sh" --repo "$E" --mode gate --out "$T/run-empty" >/dev/null 2>"$T/scan-empty.err"
+python3 -c "import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if d['tools'].get('osv-scanner',{}).get('status')=='not-applicable' else 1)" "$T/run-empty/findings.json" \
+  && ok "no manifests is not-applicable" || bad "no manifests is not-applicable"
 grep -q '\[redacted' "$F" && ok "secrets redacted" || bad "secrets not redacted"
 for s in 51FixtureFixtureFixture00 SuperS3cretPw hunter2hunter2 topsecretvalue99 51AstroAstroAstroAstro000; do
   if grep -rq "$s" "$T/run"; then bad "plaintext secret '$s' written to the run directory"; fi

@@ -19,7 +19,7 @@ monthly per `update-watch.md`. "Version" is the latest seen on that date.
 | ZAP baseline | Passive DAST (spider + passive rules, no attacks) | `ghcr.io/zaproxy/zaproxy:stable`; action-baseline v0.15.0 | Apache-2.0 | Docker | Part of Checkmarx since 2024-09, still open source. Full scan attacks the target: staging only |
 | Nuclei | Exposure and misconfiguration templates | current | MIT | `brew install nuclei` | Opt-in `--active`, `-rl 10`. Breaking changes between releases |
 | checkdmarc | SPF, DMARC, MTA-STS, DNSSEC | current | Apache-2.0 | `pipx install checkdmarc` | DKIM needs selector names, not checked |
-| npm audit | Dependency fallback when OSV-Scanner is absent | npm 11 | Artistic-2.0 | bundled with Node | `npm audit signatures` checks provenance (provenance is not proof of safety: the Aug 2026 keyv worm shipped with valid provenance) |
+| npm audit | Dependency fallback when OSV-Scanner is absent; `npm_audit.py` runs it on every package-lock.json in the repo | npm 11 | Artistic-2.0 | bundled with Node | `npm audit signatures` checks provenance (provenance is not proof of safety: the Aug 2026 keyv worm shipped with valid provenance) |
 
 ## Recommended alongside
 
