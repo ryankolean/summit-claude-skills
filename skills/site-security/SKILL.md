@@ -175,7 +175,8 @@ changed. Do not rely on NVD alone: since 2026-04-15 NIST only enriches priority 
 - `scripts/scan.sh` orchestrator; `scripts/checks.py` built-in checks (stdlib only);
   `scripts/normalize.py` merges tool output, KEV enrichment, suppressions;
   `scripts/gate.py` decision; `scripts/strip_secrets.py` removes plaintext secrets from
-  scanner output; `scripts/install-tools.sh` macOS setup; `tests/run-fixture.sh` regression test
+  scanner output; `scripts/npm_audit.py` npm audit fallback across every package-lock.json;
+  `scripts/install-tools.sh` macOS setup; `tests/run-fixture.sh` regression test
 - `policy.json` default gate policy
 - `references/`: `tools.md`, `checklist.md`, `resolution-playbook.md`, `standards.md`,
   `findings-schema.md`, `update-watch.md`

@@ -125,20 +125,31 @@ if [ -n "$REPO" ]; then
   fi
 
   # ---- dependencies -------------------------------------------------------
-  HAS_LOCK=0
-  for f in package-lock.json pnpm-lock.yaml yarn.lock bun.lock bun.lockb requirements.txt poetry.lock uv.lock go.sum Cargo.lock composer.lock Gemfile.lock; do
-    [ -f "$REPO/$f" ] && HAS_LOCK=1
-  done
-  if [ $HAS_LOCK = 0 ]; then
-    if [ -f "$REPO/package.json" ]; then
-      record osv-scanner failed "" "package.json without a lockfile: dependencies unchecked"
+  # Manifests anywhere in the repo count, not only at the root: dev tooling in
+  # tools/, workspaces in packages/. osv-scanner -r skips gitignored files, so
+  # look at the files git would show it; outside git, walk the tree.
+  if git -C "$REPO" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    FILES="$(git -C "$REPO" -c core.quotePath=false ls-files -co --exclude-standard)"
+  else
+    FILES="$(cd "$REPO" && find . \( -name node_modules -o -name .git \) -prune -o -type f -print | sed 's#^\./##')"
+  fi
+  FILES="$(printf '%s\n' "$FILES" | grep -Ev '(^|/)node_modules/')"
+  LOCKS="$(printf '%s\n' "$FILES" | grep -E '(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb?|requirements\.txt|poetry\.lock|uv\.lock|go\.sum|Cargo\.lock|composer\.lock|Gemfile\.lock)$')"
+  NPM_LOCKS="$(printf '%s\n' "$LOCKS" | grep -E '(^|/)package-lock\.json$')"
+  if [ -z "$LOCKS" ]; then
+    PKG="$(printf '%s\n' "$FILES" | grep -E '(^|/)package\.json$' | head -n 1)"
+    if [ -n "$PKG" ]; then
+      record osv-scanner failed "" "$PKG without a lockfile: dependencies unchecked"
     else
       na osv-scanner "no dependency manifests"; na npm-audit "no dependency manifests"
     fi
   elif have osv-scanner; then
     run osv-scanner osv.json file "0 1" 0 osv-scanner scan source -r --format json --output-file "$OUT/raw/osv.json" "$REPO"
-  elif [ -f "$REPO/package-lock.json" ] && have npm; then
-    run npm-audit npm-audit.json stdout "0 1" 0 npm audit --json --prefix "$REPO"
+  elif [ -n "$NPM_LOCKS" ] && have npm; then
+    run npm-audit npm-audit.json stdout "0" 0 python3 "$HERE/npm_audit.py" "$REPO" "$NPM_LOCKS"
+    # npm audit reads only package-lock.json; anything else stays unchecked.
+    OTHER="$(printf '%s\n' "$LOCKS" | grep -Ev '(^|/)package-lock\.json$' | head -n 1)"
+    [ -n "$OTHER" ] && missing osv-scanner "brew install osv-scanner (npm audit cannot read $OTHER)"
   else
     missing osv-scanner "brew install osv-scanner"
   fi

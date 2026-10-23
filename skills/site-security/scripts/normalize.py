@@ -192,13 +192,14 @@ def p_npm_audit(data):
     if "error" in data:
         raise ShapeError(f"npm audit error: {str(data['error'])[:120]}")
     need("vulnerabilities" in data or "auditReportVersion" in data, "npm audit report")
-    for name, v in (data.get("vulnerabilities") or {}).items():
+    for key, v in (data.get("vulnerabilities") or {}).items():
+        name = v.get("name", key)
         sev = {"moderate": "medium"}.get(v.get("severity", "low"), v.get("severity", "low"))
         via = [x.get("title") for x in v.get("via", []) if isinstance(x, dict)]
         urls = [x.get("url") for x in v.get("via", []) if isinstance(x, dict) and x.get("url")]
         fix = v.get("fixAvailable")
         out.append(F("npm-audit", f"npm-{name}", "dependency", sev, f"{name} ({v.get('range', '')}): {via[0] if via else 'see advisory'}",
-                     "package-lock.json", "", "Fix available: run npm audit fix, or update the parent package." if fix else
+                     v.get("_lockfile", "package-lock.json"), "", "Fix available: run npm audit fix, or update the parent package." if fix else
                      "No automatic fix: check the advisory for a workaround or replace the package.", urls[:3]))
     return out
 
