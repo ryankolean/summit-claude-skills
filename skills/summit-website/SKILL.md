@@ -4,9 +4,10 @@ description: >
   Use when setting up, building, launching or adopting a client website with the Summit website
   framework (summit-components, SUMMIT-243): new client intake, bootstrapping a client repo,
   site.config.json decisions, proposals, building from the Astro or Next template, adding motion,
-  security checks, launch, or bringing an existing site (Umbo, Fly Trap, Meantime) into the
-  framework. Triggers on "new client site", "set up a website", "start a site for", "summit new",
-  "summit decide", "launch this site", "adopt this site", "what's the next step for this site".
+  security checks, launch, building the client brand hub, or bringing an existing site (Umbo, Fly
+  Trap, Meantime) into the framework. Triggers on "new client site", "set up a website", "start a
+  site for", "summit new", "summit decide", "launch this site", "adopt this site", "brand hub",
+  "brand guide for <client>", "send the brand to the client", "what's the next step for this site".
 ---
 
 # Summit Website
@@ -36,6 +37,7 @@ existing files; they overwrite. Read the existing `decisions/*.md` instead.
 | If the site has... | Next step |
 |---|---|
 | Nothing yet | 1 Intake |
+| Intake done, client needs brand guidelines (or brand-only engagement) | 1b Brand hub |
 | Existing site with intake and `decisions/` already in summit-intake | `summit decide validate`, then 10 Adopt from "PR 1" |
 | `~/code/summit-intake/<client>/site/*.json` but no client repo | 2 Bootstrap |
 | Client repo, no `decisions/site.config.json` | 3 Decide |
@@ -53,6 +55,24 @@ summit intake <existing-site-dir> --out ~/code/summit-intake/<client> --name "<N
 Writes public `site/entity.json` + `site/brand.json` (or `*.draft.json` to fill in and rename) and
 private `intake-report.md`, `entity-profile.md`, `style-guide.md`. No existing site: write
 `site/*.json` by hand against `packages/schemas/src/{entity,brand}.ts` in summit-components. Then `summit verify-split ~/code/summit-intake/<client>`.
+
+## 1b Brand hub (docs/BRAND_HUB.md)
+
+The client-facing brand deliverable. Send this, not `style-guide.md` (that stays an internal
+checklist). It can ship on its own as a brand engagement, before or without a website.
+
+1. Intake writes `~/code/summit-intake/<client>/brand-hub.draft.json`. Put logo source files
+   (SVG preferred) in `assets/logos/` and list them under `logos`, with `on` set to the color role
+   each logo sits on.
+2. Fill `summary`, `colorUsage`, `voice` (traits with do/don't, before/after examples), `imagery`
+   and `rules` from the owner's answers. Use **summit-marketing-team** role 2 (Brand Strategist) for
+   voice rules when the owner has none. Empty strings render as "Pending" under a draft banner.
+3. Build a review copy any time: `summit brand-hub ~/code/summit-intake/<client>`.
+4. Rename to `brand-hub.json`, rebuild, and clear every `warn:` line.
+5. Output: `~/code/summit-intake/<client>/out/brand-hub/index.html`, one self-contained file
+   (logos and token downloads inlined). Ryan reviews it, then sends it as an attachment or hosts it
+   on a private, noindex URL. Never put it or `brand-hub.json` in a site repo; `verify-split` fails.
+6. When `brand.json` changes later, rebuild and bump `version` in `brand-hub.json`.
 
 ## 2 Bootstrap
 
@@ -160,4 +180,5 @@ Keep the stack. Decisions stay in the intake repo until adoption. Then PR 1 "ado
 - summit-components: branch + PR, changeset per package change, never commit to main.
 - Client repos: follow their `AGENTS.md`; one PR per implementation-doc entry.
 - Nothing from `summit-intake` reaches a public repo except `site/*.json`; run `verify-split`.
+- The brand hub is the brand deliverable clients receive; never send `style-guide.md` or other intake docs.
 - Verify each UI step at 375 / 768 / 1280 with no horizontal overflow at 375.
