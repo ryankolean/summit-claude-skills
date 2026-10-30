@@ -32,10 +32,13 @@ Rules for the plan:
 | Hero | Ambient animated background | React Bits Backgrounds (`Aurora`, `Silk`, `Grainient`, `DarkVeil`) |
 | Hero | Image scales down from full bleed into the layout on scroll | GSAP ScrollTrigger `scrub` |
 | Hero | Scroll cue that fades as you leave | ScrollTrigger |
+| Hero | Paper-cutout collage: layers land with a small rotation and a stop-motion step | GSAP `steps()` ease, ScrollTrigger `scrub` per layer |
+| Hero | Kinetic type: oversized phrase in short beats, words slide, stretch or snap | GSAP SplitText + timeline |
 | Story / about | Pinned section, content steps through as you scroll | ScrollTrigger `pin` + timeline `scrub` |
 | Story / about | Text that brightens word by word as you read | React Bits `ScrollReveal`, GSAP SplitText + scrub |
 | Story / about | Horizontal scroll gallery inside vertical page | ScrollTrigger pin + x tween |
 | Story / about | Parallax layers at different speeds | ScrollTrigger `scrub`, or Lenis velocity |
+| Story / about | Blueprint reveal: grid, thin outlines draw, dimension lines and labels, one scan pass | GSAP DrawSVG + timeline |
 | Features / menu | Cards stagger in on enter | ScrollTrigger.batch, React Bits `AnimatedContent` |
 | Features / menu | Cards stack and pin as you scroll | React Bits `ScrollStack` |
 | Features / menu | Spotlight or tilt on hover | React Bits `SpotlightCard`, `TiltedCard` |
@@ -48,7 +51,10 @@ Rules for the plan:
 | Illustration / logo | Line drawing on scroll | GSAP DrawSVG |
 | Illustration / logo | Shape morph between states | GSAP MorphSVG |
 | Illustration / logo | Object follows a path as you scroll | GSAP MotionPath + ScrollTrigger |
+| Illustration / logo | Liquid morph: glossy blob stretches, merges, settles, loops | GSAP MorphSVG, React Bits `MetaBalls` (WebGL) |
+| Location / map | Route draws between places, marker rides it, labels appear on arrival, slow zoom to the destination | GSAP DrawSVG + MotionPath |
 | CTA | Magnetic button | React Bits `Magnet`, GSAP quickTo |
+| CTA | Opposing marquee rows of one repeated phrase | GSAP `xPercent` loop, React Bits `ScrollVelocity` (+motion) |
 | CTA | Border light travelling the outline | React Bits `StarBorder` |
 | CTA | Spark burst on click | React Bits `ClickSpark` |
 | Nav | Header hides on scroll down, shows on up | ScrollTrigger `onUpdate` direction, Lenis `direction` |
@@ -56,6 +62,28 @@ Rules for the plan:
 | Nav | Full-screen menu with staggered links | React Bits `StaggeredMenu`, GSAP timeline |
 | Footer | Oversized wordmark that reveals as you reach the end | ScrollTrigger scrub on clip-path |
 | Forms | Field focus, success check draws in | GSAP DrawSVG, React Bits Micro (`SpringCheck`) |
+
+## Self-contained SVG scenes
+
+Route map, paper cutout, blueprint, kinetic type and liquid morph each work as inline SVG (or stacked
+images) plus one GSAP timeline, no video file. Text stays real, colors stay themeable, the page stays
+light. Seen in https://www.instagram.com/p/De7J3kdANwB/ as Claude-generated HTML/SVG loops.
+
+| Scene | Build | Watch for |
+|---|---|---|
+| Route map | Arc `path` revealed with `drawSVG`, marker on the same path via `motionPath` with matching duration and ease, labels fade in at matching progress, then scale the group a little toward the destination | Trace outlines from real geodata or label it a stylized diagram. Interactive maps belong in MapLibre |
+| Paper cutout | 3 to 5 transparent PNG/WebP layers, irregular edges, limited palette, entrances on `ease: 'steps(6)'` with 2 to 5 degrees of rotation, slow drift at a different speed per layer | Bake shadows into the images; animating `filter: drop-shadow` repaints every frame |
+| Blueprint | Dark blue grid, parts drawn in a set order with `drawSVG`, then dimension lines, then labels (React Bits `TextType`, or a `clip-path` wipe), then one scan line on `y` | Measurements are real or marked illustrative |
+| Kinetic type | `SplitText` into words, one beat per word group, one accent color on the key word, hold the full phrase long enough to read | Use the client's exact copy. One real text node; repeated marquee rows get `aria-hidden` |
+| Liquid morph | One `path` with `morphSVG` through blob shapes, `repeat: -1`, `yoyo: true`, `power2.inOut`; gloss from an SVG `radialGradient`. `MetaBalls` or `MetallicPaint` when it should react to the cursor | Those two are WebGL and use the page's one slot. Never invent a client logo; ask for the SVG |
+
+Every scene:
+
+- Author the finished composition as the default markup and animate with `gsap.from`. No JS and
+  reduced motion then both show the final frame, never a blank one.
+- Text, colors and durations sit in CSS variables or one config object at the top.
+- A loop that runs past 5 seconds needs a visible pause control (WCAG 2.2.2).
+- Pause offscreen with ScrollTrigger `toggleActions: 'play pause resume pause'`.
 
 ## Choreography defaults
 
