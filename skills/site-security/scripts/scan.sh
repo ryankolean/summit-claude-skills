@@ -185,11 +185,20 @@ fi
 if [ -n "$URL" ]; then
   if have npx; then run observatory observatory.json stdout "0" 0 npx -y "$OBSERVATORY_PKG" "$HOST"
   else missing observatory "install Node.js (npx)"; fi
+  SHARED_HOST=0
+  case "$HOST" in *.github.io) SHARED_HOST=1 ;; esac
   if [ "$MODE" != gate ]; then
+    # A *.github.io preview sits on GitHub's shared TLS endpoint and mail domain: not ours to
+    # test, and the result says nothing about the site. Scan TLS and email DNS on the real domain.
     TESTSSL=""; have testssl && TESTSSL=testssl; [ -z "$TESTSSL" ] && have testssl.sh && TESTSSL=testssl.sh
-    if [ -n "$TESTSSL" ]; then run testssl testssl.json file "0" 0 "$TESTSSL" --quiet --jsonfile "$OUT/raw/testssl.json" "$HOST"
+    if [ "$SHARED_HOST" = 1 ]; then na testssl "shared host $HOST (GitHub Pages)"
+    # --ip one: GitHub Pages and CDNs publish 4+ A/AAAA records; testing each one serially,
+    # with default connect timeouts, can outrun any sane per-tool timeout.
+    elif [ -n "$TESTSSL" ]; then run testssl testssl.json file "0" 0 "$TESTSSL" --quiet --ip one \
+      --connect-timeout 10 --openssl-timeout 10 --jsonfile "$OUT/raw/testssl.json" "$HOST"
     else missing testssl "brew install testssl"; fi
-    if have checkdmarc; then run checkdmarc checkdmarc.json file "0" 0 checkdmarc "$APEX" -o "$OUT/raw/checkdmarc.json"
+    if [ "$SHARED_HOST" = 1 ]; then na checkdmarc "shared host $HOST (GitHub Pages)"
+    elif have checkdmarc; then run checkdmarc checkdmarc.json file "0" 0 checkdmarc "$APEX" -o "$OUT/raw/checkdmarc.json"
     else missing checkdmarc "pipx install checkdmarc"; fi
     if have docker && docker info >/dev/null 2>&1; then
       chmod a+rwx "$OUT/raw"

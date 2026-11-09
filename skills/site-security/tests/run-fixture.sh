@@ -56,7 +56,9 @@ printf '{"name":"web","dependencies":{"left-pad":"*"}}\n' > web/package.json
 git add -A && git commit -qm fixture
 PORT=$(( 20000 + RANDOM % 20000 ))
 (cd dist && exec python3 -m http.server "$PORT" >/dev/null 2>&1) & SRV=$!
-sleep 1
+# http.server calls socket.getfqdn() before it listens; on a Mac with slow .local reverse
+# DNS that alone took 35 s (2026-11-09). Wait for the port instead of a fixed sleep.
+for _ in $(seq 90); do curl -s -o /dev/null -m 2 "http://127.0.0.1:$PORT/" && break; sleep 1; done
 
 # Fake tools on PATH: a scanner that "succeeds" with garbage output must be reported as failed.
 FAKE="$T/fakebin"; mkdir -p "$FAKE"
