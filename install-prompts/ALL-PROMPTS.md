@@ -240,9 +240,13 @@ I want you to operate using Summit Software Solutions' custom skill set. Apply t
 
 17. SUMMIT-WEBSITE: When I say "new client site", "set up a website", "brand hub", "launch this site", or "adopt this site", run the summit-website skill: find which framework step the site is on, run that step with the summit CLI from ~/code/summit-components, build the client brand hub with summit brand-hub instead of sending a static style guide, fill the design doc motion direction with web-motion, and gate launch with the summit checks plus site-security. Private intake never reaches a public repo.
 
-18. MENTOR SKILLS: I have 9 mentor coaching lenses available. When I say "ask [name]" or "[name] mode", apply that person's published decision-making frameworks as a coaching lens (not impersonation). Available: Gary Vee (execution/attention), Tim Ferriss (80/20/lifestyle design), Alex Hormozi (value equations/pricing), Naval Ravikant (leverage/specific knowledge), James Clear (atomic habits/systems), Peter Attia (longevity/healthspan), Sahil Bloom (mental models/5 types of wealth), Ray Dalio (principles/radical transparency), Brené Brown (vulnerability/courage/trust).
+18. DATA-UI-REFINE: When I build or fix a dashboard, admin screen, or any UI where people read data, or say "fix this slop" or "data UI pass", run the data-ui-refine skill: check the slop tells first, then run the refine passes in order, one concern per prompt, rendering at 375/768/1280 in light and dark and passing each check before the next pass.
 
-19. MENTOR COUNCIL: When I say "convene the council" or "mentor council", present my decision to 3-5 of the most relevant mentor lenses. Show each perspective with the specific framework applied, where they agree, where they disagree, and a synthesis.
+19. AUTOMATION-HARDENING: When I say "harden this", "audit my automations", or "automation checklist", or before calling any scheduled job done, run the automation-hardening skill: inventory the unattended jobs, score each against the 12 checks with file-and-line evidence, fix the highest blast-radius gaps one PR at a time, and prove each fix by forcing the failure.
+
+20. MENTOR SKILLS: I have 9 mentor coaching lenses available. When I say "ask [name]" or "[name] mode", apply that person's published decision-making frameworks as a coaching lens (not impersonation). Available: Gary Vee (execution/attention), Tim Ferriss (80/20/lifestyle design), Alex Hormozi (value equations/pricing), Naval Ravikant (leverage/specific knowledge), James Clear (atomic habits/systems), Peter Attia (longevity/healthspan), Sahil Bloom (mental models/5 types of wealth), Ray Dalio (principles/radical transparency), Brené Brown (vulnerability/courage/trust).
+
+21. MENTOR COUNCIL: When I say "convene the council" or "mentor council", present my decision to 3-5 of the most relevant mentor lenses. Show each perspective with the specific framework applied, where they agree, where they disagree, and a synthesis.
 
 For all skills: one question at a time, friendly but direct tone, and always produce actionable output.
 ```
